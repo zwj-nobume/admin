@@ -24,7 +24,9 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public int insert(final UserInfo param) {
-        return userMapper.insert(param);
+        String createName = "admin";
+        UserInfo insertParam = new UserInfo(null, param.userName(), param.password(), param.email(), createName, null);
+        return userMapper.insert(insertParam);
     }
 
     @Override
