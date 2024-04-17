@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import cn.colonq.admin.entity.PageList;
+import cn.colonq.admin.entity.Result;
 import cn.colonq.admin.service.BaseService;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -34,17 +35,17 @@ public class BaseController<T, TService extends BaseService<T>> {
     }
 
     @PutMapping("/add")
-    protected int insert(@RequestBody T param) {
+    protected Result insert(@RequestBody T param) {
         return tService.insert(param);
     }
 
     @PostMapping("/edit")
-    protected int update(@RequestBody T param) {
+    protected Result update(@RequestBody T param) {
         return tService.update(param);
     }
 
     @DeleteMapping("/delete")
-    protected int delete(@RequestBody Set<String> ids) {
+    protected Result delete(@RequestBody Set<String> ids) {
         return tService.delete(ids);
     }
 }

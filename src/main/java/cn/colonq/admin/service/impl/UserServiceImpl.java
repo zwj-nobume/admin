@@ -5,6 +5,7 @@ import java.util.Set;
 import org.springframework.stereotype.Service;
 
 import cn.colonq.admin.entity.PageList;
+import cn.colonq.admin.entity.Result;
 import cn.colonq.admin.entity.UserInfo;
 import cn.colonq.admin.mapper.UserMapper;
 import cn.colonq.admin.service.IUserService;
@@ -23,19 +24,32 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public int insert(final UserInfo param) {
+    public Result insert(final UserInfo param) {
+        // TODO 获取登录用户名
         String createName = "admin";
         UserInfo insertParam = new UserInfo(null, param.userName(), param.password(), param.email(), createName, null);
-        return userMapper.insert(insertParam);
+        int row = userMapper.insert(insertParam);
+        if (row == 1) {
+            return Result.ok("新增用户成功");
+        }
+        throw new InternalError("新增用户失败, row = " + row);
     }
 
     @Override
-    public int update(final UserInfo param) {
-        return userMapper.update(param);
+    public Result update(final UserInfo param) {
+        int row = userMapper.update(param);
+        if (row == 1) {
+            return Result.ok("修改用户成功");
+        }
+        throw new InternalError("修改用户失败, row = " + row);
     }
 
     @Override
-    public int delete(final Set<String> ids) {
-        return userMapper.delete(UserInfo.class, ids);
+    public Result delete(final Set<String> ids) {
+        int row = userMapper.delete(UserInfo.class, ids);
+        if (row > 0) {
+            return Result.ok("删除用户成功");
+        }
+        throw new InternalError("删除用户失败, row = " + row);
     }
 }
