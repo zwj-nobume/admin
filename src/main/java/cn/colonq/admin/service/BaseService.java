@@ -7,11 +7,11 @@ import cn.colonq.admin.entity.Result;
 
 public interface BaseService<T> {
 
-    PageList<T> selectPage(final T param, final long pageNum, final long pageSize);
+	PageList<T> selectPage(final T param, final long pageNum, final long pageSize);
 
-    Result insert(final T param);
+	Result insert(final T param);
 
-    Result update(final T param);
+	Result update(final T param);
 
-    Result delete(final Set<String> ids);
+	Result delete(final Set<String> ids);
 }

@@ -13,6 +13,6 @@ public record UserInfo(
 		@TableField(comp = CompEnum.like) String userName,
 		@TableField(select = false, insert = TableFuncEnum.pwd, isUpdate = false) String password,
 		@TableField(comp = CompEnum.like) String email,
-		@TableField(comp = CompEnum.like) String createName,
-		@TableField(comp = CompEnum.ge, isInsert = false) Date createTime) {
+		@TableField(comp = CompEnum.like, isUpdate = false) String createName,
+		@TableField(comp = CompEnum.ge, isInsert = false, isUpdate = false) Date createTime) {
 }

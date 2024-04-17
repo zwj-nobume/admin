@@ -2,6 +2,8 @@ package cn.colonq.admin.utils;
 
 import java.util.LinkedList;
 
+import cn.colonq.admin.config.ServiceException;
+
 public class ThreadSafePool<T> {
 	private final LinkedList<T> linked;
 
@@ -13,7 +15,7 @@ public class ThreadSafePool<T> {
 			try {
 				t = type.getDeclaredConstructor().newInstance();
 			} catch (Exception e) {
-				throw new InternalError(e);
+				throw new ServiceException(e.getMessage());
 			}
 			if (t != null) {
 				linked.add(t);
@@ -35,7 +37,7 @@ public class ThreadSafePool<T> {
 			try {
 				this.wait();
 			} catch (InterruptedException e) {
-				throw new InternalError(e);
+				throw new ServiceException(e.getMessage());
 			}
 		}
 		return linked.removeFirst();

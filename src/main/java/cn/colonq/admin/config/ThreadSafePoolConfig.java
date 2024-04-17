@@ -38,7 +38,7 @@ public class ThreadSafePoolConfig {
 				final MessageDigest digest = MessageDigest.getInstance("SHA-256");
 				linked.add(digest);
 			} catch (NoSuchAlgorithmException e) {
-				throw new InternalError(e);
+				throw new ServiceException(e.getMessage());
 			}
 		}
 		return new ThreadSafePool<>(linked);

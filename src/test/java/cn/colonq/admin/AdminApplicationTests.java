@@ -1,22 +1,20 @@
 package cn.colonq.admin;
 
-import java.lang.reflect.Field;
+import java.util.Date;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.sun.jna.platform.win32.Netapi32Util.UserInfo;
+import cn.colonq.admin.utils.DateUtils;
 
 @SpringBootTest
 class AdminApplicationTests {
+	@Autowired
+	private DateUtils dateUtils;
 
 	@Test
 	void contextLoads() {
-		Class<UserInfo> cls = UserInfo.class;
-		Field[] fields = cls.getDeclaredFields();
-		for (int i = 0; i < fields.length; i++) {
-			Field field = fields[i];
-			System.out.println(field.getGenericType());
-		}
+		System.out.println(dateUtils.format(new Date()));
 	}
 }

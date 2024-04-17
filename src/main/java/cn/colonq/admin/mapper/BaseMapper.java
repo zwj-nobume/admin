@@ -15,6 +15,7 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import cn.colonq.admin.anno.Table;
 import cn.colonq.admin.anno.TableField;
 import cn.colonq.admin.config.CompEnum;
+import cn.colonq.admin.config.ServiceException;
 import cn.colonq.admin.config.TableFuncEnum;
 import cn.colonq.admin.entity.PageList;
 import cn.colonq.admin.utils.DateUtils;
@@ -79,7 +80,7 @@ public class BaseMapper<T> {
 					valueStr = value.toString();
 				}
 			} catch (IllegalArgumentException | IllegalAccessException e) {
-				throw new InternalError(e);
+				throw new ServiceException(e.getMessage());
 			}
 			if (valueStr != null) {
 				builder.append(" AND ");
@@ -176,7 +177,7 @@ public class BaseMapper<T> {
 					valueStr = value.toString();
 				}
 			} catch (IllegalArgumentException | IllegalAccessException e) {
-				throw new InternalError(e);
+				throw new ServiceException(e.getMessage());
 			}
 			// 新增语句，数据库函数定制
 			if (anno == null || anno.insert() == TableFuncEnum.def) {
@@ -228,7 +229,7 @@ public class BaseMapper<T> {
 					valueStr = value.toString();
 				}
 			} catch (IllegalArgumentException | IllegalAccessException e) {
-				throw new InternalError(e);
+				throw new ServiceException(e.getMessage());
 			}
 			if (valueStr == null) {
 				continue;
@@ -324,7 +325,7 @@ public class BaseMapper<T> {
 					return cls.getDeclaredConstructor(parameterTypes).newInstance(initargs);
 				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 						| InvocationTargetException | NoSuchMethodException | SecurityException e) {
-					throw new InternalError(e);
+					throw new ServiceException(e.getMessage());
 				}
 			}
 		};

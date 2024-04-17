@@ -11,8 +11,11 @@ import cn.colonq.admin.utils.ThreadSafePool;
 @Component
 public class UserMapper extends BaseMapper<UserInfo> {
 
-    public UserMapper(DateUtils dateUtils, JdbcClient jdbcClient, StringUtils stringUtils,
-            ThreadSafePool<StringBuilder> stringBuilderPool) {
-        super(dateUtils, jdbcClient, stringUtils, stringBuilderPool);
-    }
+	public UserMapper(
+			final DateUtils dateUtils,
+			final JdbcClient jdbcClient,
+			final StringUtils stringUtils,
+			final ThreadSafePool<StringBuilder> stringBuilderPool) {
+		super(dateUtils, jdbcClient, stringUtils, stringBuilderPool);
+	}
 }

@@ -4,8 +4,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import org.springframework.stereotype.Component;
+
+import cn.colonq.admin.config.ServiceException;
 
 @Component
 public class DateUtils {
@@ -14,7 +17,8 @@ public class DateUtils {
 
 	public DateUtils(ThreadSafePool<Calendar> calendarPool) {
 		this.calendarPool = calendarPool;
-		this.sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		this.sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		this.sdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
 	}
 
 	public Date getNowDate() {
@@ -31,7 +35,7 @@ public class DateUtils {
 		try {
 			return sdf.parse(format);
 		} catch (ParseException e) {
-			throw new InternalError(e);
+			throw new ServiceException(e.getMessage());
 		}
 	}
 
