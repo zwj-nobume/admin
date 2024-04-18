@@ -9,7 +9,7 @@ import cn.colonq.admin.service.IMenuService;
 @Service
 public class MenuServiceImpl extends BaseServiceImpl<MenuInfo> implements IMenuService {
 
-    public MenuServiceImpl(MenuMapper menuMapper) {
+    public MenuServiceImpl(final MenuMapper menuMapper) {
         super(menuMapper);
     }
 }

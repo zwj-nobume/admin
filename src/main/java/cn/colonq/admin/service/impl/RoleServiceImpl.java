@@ -9,7 +9,7 @@ import cn.colonq.admin.service.IRoleService;
 @Service
 public class RoleServiceImpl extends BaseServiceImpl<RoleInfo> implements IRoleService {
 
-	public RoleServiceImpl(RoleMapper roleMapper) {
+	public RoleServiceImpl(final RoleMapper roleMapper) {
 		super(roleMapper);
 	}
 }

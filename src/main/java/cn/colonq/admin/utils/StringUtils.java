@@ -19,15 +19,15 @@ public class StringUtils {
 	}
 
 	public String humpToLine(String str) {
-		StringBuilder builder = stringBuilderPool.getItem();
+		final StringBuilder builder = stringBuilderPool.getItem();
 		builder.setLength(0);
-		Matcher matcher = humpPattern.matcher(str);
+		final Matcher matcher = humpPattern.matcher(str);
 		while (matcher.find()) {
 			matcher.appendReplacement(builder, "_" + matcher.group(0).toLowerCase());
 		}
 		matcher.appendTail(builder);
 
-		String value = builder.toString();
+		final String value = builder.toString();
 		stringBuilderPool.putItem(builder);
 		return value;
 	}

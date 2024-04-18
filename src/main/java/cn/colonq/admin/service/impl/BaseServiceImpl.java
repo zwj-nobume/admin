@@ -14,36 +14,36 @@ import cn.colonq.admin.service.BaseService;
 public class BaseServiceImpl<T> implements BaseService<T> {
     private final BaseMapper<T> baseMapper;
 
-    public BaseServiceImpl(BaseMapper<T> baseMapper) {
+    public BaseServiceImpl(final BaseMapper<T> baseMapper) {
         this.baseMapper = baseMapper;
     }
 
     @Override
-    public PageList<T> selectPage(T param, long pageNum, long pageSize) {
+    public PageList<T> selectPage(final T param, final long pageNum, final long pageSize) {
         return baseMapper.selectPage(param, pageNum, pageSize);
     }
 
     @Override
-    public Result insert(T param) {
+    public Result insert(final T param) {
         @SuppressWarnings("unchecked")
         final Class<T> cls = (Class<T>) param.getClass();
         final Field[] fields = cls.getDeclaredFields();
         final Class<?>[] parameterTypes = new Class<?>[fields.length];
         final Object[] initargs = new Object[fields.length];
         for (int i = 0; i < fields.length; i++) {
-            Field field = fields[i];
+            final Field field = fields[i];
             parameterTypes[i] = field.getType();
             if ("createName".equals(field.getName())) {
                 // TODO 获取登录用户名
                 initargs[i] = "admin";
                 continue;
             }
-            TableField anno = field.getAnnotation(TableField.class);
+            final TableField anno = field.getAnnotation(TableField.class);
             if (anno != null && !anno.isInsert()) {
                 initargs[i] = null;
                 continue;
             }
-            boolean canAccess = field.canAccess(param);
+            final boolean canAccess = field.canAccess(param);
             field.setAccessible(true);
             Object value = null;
             try {
@@ -69,7 +69,7 @@ public class BaseServiceImpl<T> implements BaseService<T> {
     }
 
     @Override
-    public Result update(T param) {
+    public Result update(final T param) {
         int row = baseMapper.update(param);
         if (row == 1) {
             return Result.ok("修改成功");
@@ -78,7 +78,7 @@ public class BaseServiceImpl<T> implements BaseService<T> {
     }
 
     @Override
-    public Result delete(Class<? extends T> cls, Set<String> ids) {
+    public Result delete(final Class<? extends T> cls, final Set<String> ids) {
         int row = baseMapper.delete(cls, ids);
         if (row > 0) {
             return Result.ok("删除成功");

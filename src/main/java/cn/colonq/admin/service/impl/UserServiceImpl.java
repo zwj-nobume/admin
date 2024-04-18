@@ -9,7 +9,7 @@ import cn.colonq.admin.service.IUserService;
 @Service
 public class UserServiceImpl extends BaseServiceImpl<UserInfo> implements IUserService {
 
-	public UserServiceImpl(UserMapper userMapper) {
+	public UserServiceImpl(final UserMapper userMapper) {
 		super(userMapper);
 	}
 }
