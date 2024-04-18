@@ -18,5 +18,4 @@ public class MenuMapper extends BaseMapper<MenuInfo> {
             final ThreadSafePool<StringBuilder> stringBuilderPool) {
         super(dateUtils, jdbcClient, stringUtils, stringBuilderPool);
     }
-
 }

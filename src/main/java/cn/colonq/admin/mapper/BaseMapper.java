@@ -283,6 +283,12 @@ public class BaseMapper<T> {
 		return jdbcClient.sql(sql).update();
 	}
 
+	public int deleteLink(final String tableName, final String columName, final Set<String> ids) {
+		final String idStr = '\'' + String.join("','", ids) + '\'';
+		final String sql = "DELETE FROM " + tableName + " WHERE " + columName + " in (:ids)";
+		return jdbcClient.sql(sql).param("ids", idStr).update();
+	}
+
 	private String getTableName(Class<?> cls) {
 		final Table anno = cls.getAnnotation(Table.class);
 		return anno.tableName();

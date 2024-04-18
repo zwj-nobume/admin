@@ -10,5 +10,7 @@ import java.lang.annotation.Target;
 public @interface Table {
     String tableName();
 
+    String[] linkTable();
+
     String idName();
 }

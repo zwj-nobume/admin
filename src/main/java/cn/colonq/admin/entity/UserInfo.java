@@ -7,7 +7,7 @@ import cn.colonq.admin.anno.TableField;
 import cn.colonq.admin.config.CompEnum;
 import cn.colonq.admin.config.TableFuncEnum;
 
-@Table(tableName = "user_info", idName = "user_id")
+@Table(tableName = "user_info", linkTable = "user_role_link", idName = "user_id")
 public record UserInfo(
 		@TableField(query = false, isInsert = false) String userId,
 		@TableField(comp = CompEnum.like) String userName,

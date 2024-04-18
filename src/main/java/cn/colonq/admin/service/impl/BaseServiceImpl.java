@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 
+import cn.colonq.admin.anno.Table;
 import cn.colonq.admin.anno.TableField;
 import cn.colonq.admin.config.ServiceException;
 import cn.colonq.admin.entity.PageList;
@@ -81,6 +82,11 @@ public class BaseServiceImpl<T> implements BaseService<T> {
     public Result delete(final Class<? extends T> cls, final Set<String> ids) {
         int row = baseMapper.delete(cls, ids);
         if (row > 0) {
+            final Table anno = cls.getAnnotation(Table.class);
+            final String idName = anno.idName();
+            for (String tableName : anno.linkTable()) {
+                baseMapper.deleteLink(tableName, idName, ids);
+            }
             return Result.ok("删除成功");
         }
         throw new ServiceException("删除失败, row = " + row);
