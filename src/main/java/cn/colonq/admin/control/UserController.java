@@ -14,6 +14,6 @@ public class UserController extends BaseController<UserInfo, IUserService> {
     public UserController(
             final HttpServletRequest request,
             final IUserService tService) {
-        super(request, tService);
+        super(request, tService, UserInfo.class);
     }
 }

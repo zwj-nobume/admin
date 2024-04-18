@@ -17,10 +17,12 @@ import jakarta.servlet.http.HttpServletRequest;
 public class BaseController<T, TService extends BaseService<T>> {
     private final HttpServletRequest request;
     private final TService tService;
+    private final Class<T> clsT;
 
-    public BaseController(final HttpServletRequest request, final TService tService) {
+    public BaseController(final HttpServletRequest request, final TService tService, final Class<T> clsT) {
         this.request = request;
         this.tService = tService;
+        this.clsT = clsT;
     }
 
     protected String getToken() {
@@ -46,6 +48,6 @@ public class BaseController<T, TService extends BaseService<T>> {
 
     @DeleteMapping("/delete")
     protected Result delete(@RequestBody Set<String> ids) {
-        return tService.delete(ids);
+        return tService.delete(clsT, ids);
     }
 }

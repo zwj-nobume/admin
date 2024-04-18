@@ -1,20 +1,20 @@
 package cn.colonq.admin;
 
-import java.util.Date;
+import java.lang.reflect.Field;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import cn.colonq.admin.utils.DateUtils;
+import cn.colonq.admin.entity.MenuInfo;
 
 @SpringBootTest
 class AdminApplicationTests {
-	@Autowired
-	private DateUtils dateUtils;
 
 	@Test
 	void contextLoads() {
-		System.out.println(dateUtils.format(new Date()));
+		Class<MenuInfo> cls = MenuInfo.class;
+		for (Field field : cls.getDeclaredFields()) {
+			System.out.println(field.getName().equals("createName"));
+		}
 	}
 }

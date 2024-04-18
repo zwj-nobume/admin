@@ -41,7 +41,7 @@ public class BaseMapper<T> {
 
 	public PageList<T> selectPage(final T param, final long pageNum, final long pageSize) {
 		@SuppressWarnings("unchecked")
-		Class<T> cls = (Class<T>) param.getClass();
+		final Class<T> cls = (Class<T>) param.getClass();
 		final String tableName = getTableName(cls);
 		final StringBuilder builder = stringBuilderPool.getItem();
 		builder.setLength(0);
@@ -66,7 +66,7 @@ public class BaseMapper<T> {
 			if (anno != null && !anno.select()) {
 				return;
 			}
-			boolean canAccess = field.canAccess(param);
+			final boolean canAccess = field.canAccess(param);
 			field.setAccessible(true);
 			String valueStr = null;
 			try {
@@ -114,7 +114,7 @@ public class BaseMapper<T> {
 			}
 			field.setAccessible(canAccess);
 		});
-		long offset = (pageNum - 1) * pageSize;
+		final long offset = (pageNum - 1) * pageSize;
 		builder.append(" LIMIT ");
 		builder.append(pageSize);
 		if (offset != 0) {
@@ -128,7 +128,7 @@ public class BaseMapper<T> {
 		builder.insert(0, "SELECT COUNT(1)");
 		final String countSql = builder.toString();
 		stringBuilderPool.putItem(builder);
-		long total = jdbcClient.sql(countSql).query(Long.class).single();
+		final long total = jdbcClient.sql(countSql).query(Long.class).single();
 		List<T> list = null;
 		if (total > 0) {
 			list = jdbcClient.sql(sql).query(getRowMapper(cls)).list();
@@ -138,7 +138,7 @@ public class BaseMapper<T> {
 
 	public int insert(final T param) {
 		@SuppressWarnings("unchecked")
-		Class<T> cls = (Class<T>) param.getClass();
+		final Class<T> cls = (Class<T>) param.getClass();
 		final String tableName = getTableName(cls);
 		final StringBuilder builder = stringBuilderPool.getItem();
 		builder.setLength(0);
@@ -266,8 +266,8 @@ public class BaseMapper<T> {
 	}
 
 	public int delete(Class<? extends T> cls, final Set<String> ids) {
-		String tableName = getTableName(cls);
-		String idName = getIdName(cls);
+		final String tableName = getTableName(cls);
+		final String idName = getIdName(cls);
 		final StringBuilder builder = stringBuilderPool.getItem();
 		builder.setLength(0);
 		builder.append("DELETE FROM ");
@@ -284,12 +284,12 @@ public class BaseMapper<T> {
 	}
 
 	private String getTableName(Class<?> cls) {
-		Table anno = cls.getAnnotation(Table.class);
+		final Table anno = cls.getAnnotation(Table.class);
 		return anno.tableName();
 	}
 
 	private String getIdName(Class<?> cls) {
-		Table anno = cls.getAnnotation(Table.class);
+		final Table anno = cls.getAnnotation(Table.class);
 		return anno.idName();
 	}
 
@@ -297,9 +297,9 @@ public class BaseMapper<T> {
 		return new RowMapper<T>() {
 			@Override
 			public T mapRow(ResultSet rs, int rowNum) throws SQLException {
-				Field[] fields = cls.getDeclaredFields();
-				Class<?>[] parameterTypes = new Class<?>[fields.length];
-				Object[] initargs = new Object[fields.length];
+				final Field[] fields = cls.getDeclaredFields();
+				final Class<?>[] parameterTypes = new Class<?>[fields.length];
+				final Object[] initargs = new Object[fields.length];
 				for (int i = 0; i < fields.length; i++) {
 					Field field = fields[i];
 					parameterTypes[i] = field.getType();

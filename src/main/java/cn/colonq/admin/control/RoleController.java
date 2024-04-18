@@ -14,6 +14,6 @@ public class RoleController extends BaseController<RoleInfo, IRoleService> {
 	public RoleController(
 			final HttpServletRequest request,
 			final IRoleService tService) {
-		super(request, tService);
+		super(request, tService, RoleInfo.class);
 	}
 }
