@@ -80,7 +80,7 @@ public class BaseServiceImpl<T> implements BaseService<T> {
 
     @Override
     public Result delete(final Class<? extends T> cls, final Set<String> ids) {
-        int row = baseMapper.delete(cls, ids);
+        int row = baseMapper.delete(ids);
         if (row > 0) {
             final Table anno = cls.getAnnotation(Table.class);
             final String idName = anno.idName();

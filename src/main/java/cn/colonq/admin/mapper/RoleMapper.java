@@ -16,6 +16,6 @@ public class RoleMapper extends BaseMapper<RoleInfo> {
 			final JdbcClient jdbcClient,
 			final StringUtils stringUtils,
 			final ThreadSafePool<StringBuilder> stringBuilderPool) {
-		super(dateUtils, jdbcClient, stringUtils, stringBuilderPool);
+		super(RoleInfo.class, dateUtils, jdbcClient, stringUtils, stringBuilderPool);
 	}
 }

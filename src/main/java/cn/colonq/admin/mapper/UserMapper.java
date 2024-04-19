@@ -16,6 +16,6 @@ public class UserMapper extends BaseMapper<UserInfo> {
 			final JdbcClient jdbcClient,
 			final StringUtils stringUtils,
 			final ThreadSafePool<StringBuilder> stringBuilderPool) {
-		super(dateUtils, jdbcClient, stringUtils, stringBuilderPool);
+		super(UserInfo.class, dateUtils, jdbcClient, stringUtils, stringBuilderPool);
 	}
 }

@@ -16,6 +16,6 @@ public class MenuMapper extends BaseMapper<MenuInfo> {
             final JdbcClient jdbcClient,
             final StringUtils stringUtils,
             final ThreadSafePool<StringBuilder> stringBuilderPool) {
-        super(dateUtils, jdbcClient, stringUtils, stringBuilderPool);
+        super(MenuInfo.class, dateUtils, jdbcClient, stringUtils, stringBuilderPool);
     }
 }

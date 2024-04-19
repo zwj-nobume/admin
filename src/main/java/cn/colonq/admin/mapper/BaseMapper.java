@@ -23,33 +23,38 @@ import cn.colonq.admin.utils.StringUtils;
 import cn.colonq.admin.utils.ThreadSafePool;
 
 public class BaseMapper<T> {
+	protected final Class<T> cls;
 	protected final DateUtils dateUtils;
 	protected final JdbcClient jdbcClient;
 	protected final StringUtils stringUtils;
 	protected final ThreadSafePool<StringBuilder> stringBuilderPool;
 
 	public BaseMapper(
+			final Class<T> cls,
 			final DateUtils dateUtils,
 			final JdbcClient jdbcClient,
 			final StringUtils stringUtils,
 			final ThreadSafePool<StringBuilder> stringBuilderPool) {
+		this.cls = cls;
 		this.dateUtils = dateUtils;
 		this.jdbcClient = jdbcClient;
 		this.stringUtils = stringUtils;
 		this.stringBuilderPool = stringBuilderPool;
 	}
 
-	public <TS> int selectCountIds(Class<? extends TS> cls, final Set<String> ids) {
-		final String tableName = getTableName(cls);
-		final String idName = getIdName(cls);
+	public int selectCountIds(final Set<String> ids) {
+		return selectCountIds(cls, ids);
+	}
+
+	public <TS> int selectCountIds(Class<? extends TS> clst, final Set<String> ids) {
+		final String tableName = getTableName(clst);
+		final String idName = getIdName(clst);
 		final String sql = "SELECT COUNT(1) FROM " + tableName +
 				" WHERE " + idName + " in ('" + String.join("','", ids) + "')";
 		return jdbcClient.sql(sql).query(Integer.class).single();
 	}
 
 	public PageList<T> selectPage(final T param, final long pageNum, final long pageSize) {
-		@SuppressWarnings("unchecked")
-		final Class<T> cls = (Class<T>) param.getClass();
 		final String tableName = getTableName(cls);
 		final StringBuilder builder = stringBuilderPool.getItem();
 		builder.setLength(0);
@@ -139,14 +144,12 @@ public class BaseMapper<T> {
 		final long total = jdbcClient.sql(countSql).query(Long.class).single();
 		List<T> list = null;
 		if (total > 0) {
-			list = jdbcClient.sql(sql).query(getRowMapper(cls)).list();
+			list = jdbcClient.sql(sql).query(getRowMapper()).list();
 		}
 		return new PageList<>(pageNum, pageSize, total, list);
 	}
 
 	public int insert(final T param) {
-		@SuppressWarnings("unchecked")
-		final Class<T> cls = (Class<T>) param.getClass();
 		final String tableName = getTableName(cls);
 		final StringBuilder builder = stringBuilderPool.getItem();
 		builder.setLength(0);
@@ -239,8 +242,6 @@ public class BaseMapper<T> {
 	}
 
 	public int update(final T param) {
-		@SuppressWarnings("unchecked")
-		Class<T> cls = (Class<T>) param.getClass();
 		final String tableName = getTableName(cls);
 		final String idName = getIdName(cls);
 		String idValue = null;
@@ -304,7 +305,7 @@ public class BaseMapper<T> {
 		return jdbcClient.sql(sql).update();
 	}
 
-	public int delete(Class<? extends T> cls, final Set<String> ids) {
+	public int delete(final Set<String> ids) {
 		final String tableName = getTableName(cls);
 		final String idName = getIdName(cls);
 		final StringBuilder builder = stringBuilderPool.getItem();
@@ -328,17 +329,17 @@ public class BaseMapper<T> {
 		return jdbcClient.sql(sql).param("ids", idStr).update();
 	}
 
-	private String getTableName(Class<?> cls) {
-		final Table anno = cls.getAnnotation(Table.class);
+	private String getTableName(Class<?> clst) {
+		final Table anno = clst.getAnnotation(Table.class);
 		return anno.tableName();
 	}
 
-	private String getIdName(Class<?> cls) {
-		final Table anno = cls.getAnnotation(Table.class);
+	private String getIdName(Class<?> clst) {
+		final Table anno = clst.getAnnotation(Table.class);
 		return anno.idName();
 	}
 
-	private RowMapper<T> getRowMapper(Class<T> cls) {
+	private RowMapper<T> getRowMapper() {
 		return new RowMapper<T>() {
 			@Override
 			public T mapRow(ResultSet rs, int rowNum) throws SQLException {
