@@ -13,7 +13,7 @@ import cn.colonq.admin.mapper.BaseMapper;
 import cn.colonq.admin.service.BaseService;
 
 public class BaseServiceImpl<T> implements BaseService<T> {
-    private final BaseMapper<T> baseMapper;
+    protected final BaseMapper<T> baseMapper;
 
     public BaseServiceImpl(final BaseMapper<T> baseMapper) {
         this.baseMapper = baseMapper;

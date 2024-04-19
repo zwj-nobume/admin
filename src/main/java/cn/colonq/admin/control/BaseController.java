@@ -16,7 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 public class BaseController<T, TService extends BaseService<T>> {
     private final HttpServletRequest request;
-    private final TService tService;
+    protected final TService tService;
     private final Class<T> clsT;
 
     public BaseController(final HttpServletRequest request, final TService tService, final Class<T> clsT) {

@@ -39,6 +39,14 @@ public class BaseMapper<T> {
 		this.stringBuilderPool = stringBuilderPool;
 	}
 
+	public <TS> int selectCountIds(Class<? extends TS> cls, final Set<String> ids) {
+		final String tableName = getTableName(cls);
+		final String idName = getIdName(cls);
+		final String sql = "SELECT COUNT(1) FROM " + tableName +
+				" WHERE " + idName + " in ('" + String.join("','", ids) + "')";
+		return jdbcClient.sql(sql).query(Integer.class).single();
+	}
+
 	public PageList<T> selectPage(final T param, final long pageNum, final long pageSize) {
 		@SuppressWarnings("unchecked")
 		final Class<T> cls = (Class<T>) param.getClass();
@@ -196,6 +204,37 @@ public class BaseMapper<T> {
 
 		final String sql = builder.toString();
 		stringBuilderPool.putItem(builder);
+		return jdbcClient.sql(sql).update();
+	}
+
+	public int link(
+			final String tableName,
+			final String columName1,
+			final String columName2,
+			final String id1,
+			final Set<String> ids2) {
+		final StringBuilder builder = stringBuilderPool.getItem();
+		builder.setLength(0);
+		builder.append("INSERT INTO ");
+		builder.append(tableName);
+		builder.append(" (");
+		builder.append(columName1);
+		builder.append(',');
+		builder.append(columName2);
+		builder.append(") VALUES ");
+		ids2.forEach(id2 -> {
+			builder.append("('");
+			builder.append(id1);
+			builder.append("','");
+			builder.append(id2);
+			builder.append("'),");
+		});
+		builder.deleteCharAt(builder.length() - 1);
+
+		final String sql = builder.toString();
+		stringBuilderPool.putItem(builder);
+		final String delSql = "DELETE FROM " + tableName + " WHERE " + columName1 + " = '" + id1 + '\'';
+		jdbcClient.sql(delSql).update();
 		return jdbcClient.sql(sql).update();
 	}
 
