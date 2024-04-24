@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import cn.colonq.admin.config.PermissionAnnotation;
 import cn.colonq.admin.entity.LinkInfo;
 import cn.colonq.admin.entity.Result;
 import cn.colonq.admin.entity.UserInfo;
@@ -12,6 +13,7 @@ import cn.colonq.admin.service.IUserService;
 
 @RestController
 @RequestMapping("/user")
+@PermissionAnnotation("system:user:")
 public class UserController extends BaseController<UserInfo, IUserService> {
 
     public UserController(final IUserService userService) {
@@ -29,6 +31,7 @@ public class UserController extends BaseController<UserInfo, IUserService> {
     }
 
     @PostMapping("/link")
+    @PermissionAnnotation("edit")
     public Result link(@RequestBody LinkInfo info) {
         return super.tService.linkUserRole(info);
     }

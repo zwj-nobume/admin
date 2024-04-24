@@ -1,5 +1,7 @@
 package cn.colonq.admin.mapper;
 
+import java.util.List;
+
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Component;
 
@@ -30,5 +32,15 @@ public class UserMapper extends BaseMapper<UserInfo> {
 	public int regenerateSalt(final String userId) {
 		String sql = "UPDATE user_info SET salt = SHA2(MD5(RAND()),256) WHERE user_id = '" + userId + '\'';
 		return super.jdbcClient.sql(sql).update();
+	}
+
+	public List<String> selectUserPermission(String userId) {
+		String sql = """
+				SELECT mi.permission FROM menu_info mi
+				LEFT JOIN role_menu_link rml ON rml.menu_id = mi.menu_id
+				LEFT JOIN user_role_link url ON url.role_id = rml.role_id
+				WHERE url.user_id = :userId
+					""";
+		return super.jdbcClient.sql(sql).param("userId", userId).query(String.class).list();
 	}
 }

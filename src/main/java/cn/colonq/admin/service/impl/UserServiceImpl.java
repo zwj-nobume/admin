@@ -3,6 +3,7 @@ package cn.colonq.admin.service.impl;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -62,5 +63,14 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfo, UserMapper> imple
 			return Result.ok("链接成功");
 		}
 		throw new ServiceException("链接失败, row = " + row);
+	}
+
+	@Override
+	public boolean checkPermission(String permission) {
+		UserInfo payload = jwt.getPayload();
+		List<String> permissions = super.tmapper.selectUserPermission(payload.userId());
+		return permissions.stream()
+				.filter(perm -> perm.equals(permission))
+				.findFirst().isPresent();
 	}
 }

@@ -3,6 +3,7 @@ package cn.colonq.admin.config;
 import java.io.IOException;
 
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -40,6 +41,13 @@ public class GlobalExceptionHandler {
     public Result handleServiceError(ServiceException e) {
         // TODO 入日志库
         return Result.error(e);
+    }
+
+    @ResponseBody
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public Result handleHttpMessageNotReadable(HttpMessageNotReadableException e) {
+        // TODO 入日志库
+        return Result.error("无法解析请求Body");
     }
 
     public void filterServiceError(ServiceException e, HttpServletResponse response) {

@@ -11,4 +11,6 @@ public interface IUserService extends BaseService<UserInfo> {
     Result regenerateSalt();
 
     Result linkUserRole(final LinkInfo info);
+
+    boolean checkPermission(String value);
 }
