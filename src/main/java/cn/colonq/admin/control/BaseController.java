@@ -12,21 +12,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import cn.colonq.admin.entity.PageList;
 import cn.colonq.admin.entity.Result;
 import cn.colonq.admin.service.BaseService;
-import jakarta.servlet.http.HttpServletRequest;
 
 public class BaseController<T, TService extends BaseService<T>> {
-    private final HttpServletRequest request;
     protected final TService tService;
     private final Class<T> clsT;
 
-    public BaseController(final HttpServletRequest request, final TService tService, final Class<T> clsT) {
-        this.request = request;
+    public BaseController(final TService tService, final Class<T> clsT) {
         this.tService = tService;
         this.clsT = clsT;
-    }
-
-    protected String getToken() {
-        return request.getHeader("Authorization");
     }
 
     @GetMapping("/page")

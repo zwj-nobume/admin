@@ -54,6 +54,29 @@ public class BaseMapper<T> {
 		return jdbcClient.sql(sql).query(Integer.class).single();
 	}
 
+	public T selectOne(final String indexName, final String indexValue) {
+		final String tableName = getTableName(cls);
+		final StringBuilder builder = stringBuilderPool.getItem();
+		builder.setLength(0);
+		builder.append("SELECT ");
+		Arrays.asList(cls.getDeclaredFields()).stream()
+				.map(Field::getName)
+				.map(str -> str + ',')
+				.map(stringUtils::humpToLine)
+				.forEach(builder::append);
+		builder.deleteCharAt(builder.length() - 1);
+		builder.append(" FROM ");
+		builder.append(stringUtils.humpToLine(tableName));
+		builder.append(" WHERE ");
+		builder.append(indexName);
+		builder.append(" = '");
+		builder.append(indexValue);
+		builder.append('\'');
+		String sql = builder.toString();
+		stringBuilderPool.putItem(builder);
+		return jdbcClient.sql(sql).query(cls).single();
+	}
+
 	public PageList<T> selectPage(final T param, final long pageNum, final long pageSize) {
 		final String tableName = getTableName(cls);
 		final StringBuilder builder = stringBuilderPool.getItem();

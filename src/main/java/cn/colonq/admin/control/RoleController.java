@@ -9,16 +9,13 @@ import cn.colonq.admin.entity.LinkInfo;
 import cn.colonq.admin.entity.Result;
 import cn.colonq.admin.entity.RoleInfo;
 import cn.colonq.admin.service.IRoleService;
-import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/role")
 public class RoleController extends BaseController<RoleInfo, IRoleService> {
 
-	public RoleController(
-			final HttpServletRequest request,
-			final IRoleService roleService) {
-		super(request, roleService, RoleInfo.class);
+	public RoleController(final IRoleService roleService) {
+		super(roleService, RoleInfo.class);
 	}
 
 	@PostMapping("/linkRM")

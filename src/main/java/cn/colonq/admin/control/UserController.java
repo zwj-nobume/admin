@@ -9,16 +9,23 @@ import cn.colonq.admin.entity.LinkInfo;
 import cn.colonq.admin.entity.Result;
 import cn.colonq.admin.entity.UserInfo;
 import cn.colonq.admin.service.IUserService;
-import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/user")
 public class UserController extends BaseController<UserInfo, IUserService> {
 
-    public UserController(
-            final HttpServletRequest request,
-            final IUserService userService) {
-        super(request, userService, UserInfo.class);
+    public UserController(final IUserService userService) {
+        super(userService, UserInfo.class);
+    }
+
+    @PostMapping("/login")
+    public Result login(@RequestBody UserInfo info) {
+        return super.tService.login(info);
+    }
+
+    @PostMapping("/salt")
+    public Result salt() {
+        return super.tService.regenerateSalt();
     }
 
     @PostMapping("/link")

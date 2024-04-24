@@ -9,11 +9,15 @@ import java.util.Base64.Encoder;
 import java.util.Calendar;
 import java.util.LinkedList;
 
+import javax.crypto.Mac;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import cn.colonq.admin.utils.ThreadSafePool;
 
@@ -30,6 +34,11 @@ public class ThreadSafePoolConfig {
 		return new ThreadSafePool<>(StringBuilder.class);
 	}
 
+	@Bean(name = "objectMapperPool")
+	public ThreadSafePool<ObjectMapper> objectMapperPool() {
+		return new ThreadSafePool<>(ObjectMapper.class);
+	}
+
 	@Bean(name = "sha256DigestPool")
 	public ThreadSafePool<MessageDigest> sha256DigestPool() {
 		final LinkedList<MessageDigest> linked = new LinkedList<>();
@@ -37,6 +46,20 @@ public class ThreadSafePoolConfig {
 			try {
 				final MessageDigest digest = MessageDigest.getInstance("SHA-256");
 				linked.add(digest);
+			} catch (NoSuchAlgorithmException e) {
+				throw new ServiceException(e.getMessage());
+			}
+		}
+		return new ThreadSafePool<>(linked);
+	}
+
+	@Bean(name = "hmacSHA256Pool")
+	public ThreadSafePool<Mac> hmacSHA256Pool() {
+		final LinkedList<Mac> linked = new LinkedList<>();
+		for (int i = 0; i < this.maxThread; i++) {
+			try {
+				final Mac mac = Mac.getInstance("HmacSHA256");
+				linked.add(mac);
 			} catch (NoSuchAlgorithmException e) {
 				throw new ServiceException(e.getMessage());
 			}

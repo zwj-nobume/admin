@@ -18,4 +18,17 @@ public class UserMapper extends BaseMapper<UserInfo> {
 			final ThreadSafePool<StringBuilder> stringBuilderPool) {
 		super(UserInfo.class, dateUtils, jdbcClient, stringUtils, stringBuilderPool);
 	}
+
+	public boolean checkPwd(final String userName, final String password) {
+		String sql = "SELECT password = PASSWORD(:password) FROM user_info WHERE user_name = :userName";
+		return super.jdbcClient.sql(sql)
+				.param("password", password)
+				.param("userName", userName)
+				.query(Boolean.class).single();
+	}
+
+	public int regenerateSalt(final String userId) {
+		String sql = "UPDATE user_info SET salt = SHA2(MD5(RAND()),256) WHERE user_id = '" + userId + '\'';
+		return super.jdbcClient.sql(sql).update();
+	}
 }

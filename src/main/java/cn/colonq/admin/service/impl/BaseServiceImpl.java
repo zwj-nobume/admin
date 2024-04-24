@@ -12,16 +12,25 @@ import cn.colonq.admin.entity.Result;
 import cn.colonq.admin.mapper.BaseMapper;
 import cn.colonq.admin.service.BaseService;
 
-public class BaseServiceImpl<T> implements BaseService<T> {
-    protected final BaseMapper<T> baseMapper;
+public class BaseServiceImpl<T, Tmapper extends BaseMapper<T>> implements BaseService<T> {
+    protected final Tmapper tmapper;
 
-    public BaseServiceImpl(final BaseMapper<T> baseMapper) {
-        this.baseMapper = baseMapper;
+    public BaseServiceImpl(final Tmapper tmapper) {
+        this.tmapper = tmapper;
+    }
+
+    @Override
+    public T selectOne(T param) {
+        PageList<T> page = tmapper.selectPage(param, 1, 1);
+        if (page != null && page.data() != null && page.data().size() >= 1) {
+            return page.data().get(0);
+        }
+        throw new ServiceException("查询不到匹配数据");
     }
 
     @Override
     public PageList<T> selectPage(final T param, final long pageNum, final long pageSize) {
-        return baseMapper.selectPage(param, pageNum, pageSize);
+        return tmapper.selectPage(param, pageNum, pageSize);
     }
 
     @Override
@@ -62,7 +71,7 @@ public class BaseServiceImpl<T> implements BaseService<T> {
                 | NoSuchMethodException | SecurityException e) {
             throw new ServiceException(e.getMessage());
         }
-        int row = baseMapper.insert(insertParam);
+        int row = tmapper.insert(insertParam);
         if (row == 1) {
             return Result.ok("新增成功");
         }
@@ -71,7 +80,7 @@ public class BaseServiceImpl<T> implements BaseService<T> {
 
     @Override
     public Result update(final T param) {
-        int row = baseMapper.update(param);
+        int row = tmapper.update(param);
         if (row == 1) {
             return Result.ok("修改成功");
         }
@@ -80,12 +89,12 @@ public class BaseServiceImpl<T> implements BaseService<T> {
 
     @Override
     public Result delete(final Class<? extends T> cls, final Set<String> ids) {
-        int row = baseMapper.delete(ids);
+        int row = tmapper.delete(ids);
         if (row > 0) {
             final Table anno = cls.getAnnotation(Table.class);
             final String idName = anno.idName();
             for (String tableName : anno.linkTable()) {
-                baseMapper.deleteLink(tableName, idName, ids);
+                tmapper.deleteLink(tableName, idName, ids);
             }
             return Result.ok("删除成功");
         }

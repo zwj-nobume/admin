@@ -12,7 +12,7 @@ import cn.colonq.admin.mapper.RoleMapper;
 import cn.colonq.admin.service.IRoleService;
 
 @Service
-public class RoleServiceImpl extends BaseServiceImpl<RoleInfo> implements IRoleService {
+public class RoleServiceImpl extends BaseServiceImpl<RoleInfo, RoleMapper> implements IRoleService {
 
 	public RoleServiceImpl(final RoleMapper roleMapper) {
 		super(roleMapper);
@@ -20,11 +20,11 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleInfo> implements IRoleS
 
 	@Override
 	public Result linkUserRole(final LinkInfo info) {
-		int count = baseMapper.selectCountIds(UserInfo.class, info.ids());
+		int count = super.tmapper.selectCountIds(UserInfo.class, info.ids());
 		if (count != info.ids().size()) {
 			throw new ServiceException("链接失败, ids数量不匹配, count = " + count);
 		}
-		int row = baseMapper.link("user_role_link", "role_id", "user_id", info.id(), info.ids());
+		int row = super.tmapper.link("user_role_link", "role_id", "user_id", info.id(), info.ids());
 		if (row != 0) {
 			return Result.ok("链接成功");
 		}
@@ -33,11 +33,11 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleInfo> implements IRoleS
 
 	@Override
 	public Result linkRoleMenu(final LinkInfo info) {
-		int count = baseMapper.selectCountIds(MenuInfo.class, info.ids());
+		int count = super.tmapper.selectCountIds(MenuInfo.class, info.ids());
 		if (count != info.ids().size()) {
 			throw new ServiceException("链接失败, ids数量不匹配, count = " + count);
 		}
-		int row = baseMapper.link("role_menu_link", "role_id", "menu_id", info.id(), info.ids());
+		int row = super.tmapper.link("role_menu_link", "role_id", "menu_id", info.id(), info.ids());
 		if (row != 0) {
 			return Result.ok("链接成功");
 		}
