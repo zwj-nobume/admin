@@ -62,7 +62,7 @@ public class TokenFilter implements Filter {
                 handler.filterServiceError(new ServiceException(HttpStatus.UNAUTHORIZED, "登录已过期, 请重新登录"), response);
                 return;
             }
-            UserInfo payload = jwt.getPayload(UserInfo.class);
+            UserInfo payload = jwt.getPayload();
             if (payload == null) {
                 handler.filterServiceError(new ServiceException(HttpStatus.UNAUTHORIZED, "登录已过期, 请重新登录"), response);
                 return;

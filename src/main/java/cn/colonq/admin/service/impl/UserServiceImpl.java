@@ -19,11 +19,9 @@ import cn.colonq.admin.utils.StringUtils;
 
 @Service
 public class UserServiceImpl extends BaseServiceImpl<UserInfo, UserMapper> implements IUserService {
-	private final JWT jwt;
 
 	public UserServiceImpl(final UserMapper userMapper, final StringUtils stringUtils, final JWT jwt) {
-		super(userMapper);
-		this.jwt = jwt;
+		super(userMapper, jwt);
 	}
 
 	@Override
@@ -31,11 +29,11 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfo, UserMapper> imple
 		boolean chk = super.tmapper.checkPwd(info.userName(), info.password());
 		if (chk) {
 			final UserInfo user = super.tmapper.selectOne("user_name", info.userName());
-			final UserInfo payload = new UserInfo(null, user.userName(), null,
+			final UserInfo payload = new UserInfo(user.userId(), user.userName(), null,
 					user.email(), null, user.createName(), user.createTime());
 			Header header = new Header("HmacSHA256", "JWT");
 			try {
-				return Result.ok("登录成功", jwt.generateToken(header, payload, user.salt()));
+				return Result.ok("登录成功", super.jwt.generateToken(header, payload, user.salt()));
 			} catch (InvalidKeyException | NoSuchAlgorithmException | UnsupportedEncodingException e) {
 				throw new ServiceException(e.getMessage());
 			}
@@ -45,9 +43,8 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfo, UserMapper> imple
 
 	@Override
 	public Result regenerateSalt() {
-		// TODO 获取当前登录用户ID
-		String userId = "d08ecc4d-fb30-11ee-9405-f0d41530a047";
-		int row = super.tmapper.regenerateSalt(userId);
+		UserInfo payload = super.jwt.getPayload();
+		int row = super.tmapper.regenerateSalt(payload.userId());
 		if (row == 1) {
 			return Result.ok("重新生成盐值成功");
 		}

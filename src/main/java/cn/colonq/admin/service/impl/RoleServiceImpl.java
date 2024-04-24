@@ -10,12 +10,13 @@ import cn.colonq.admin.entity.RoleInfo;
 import cn.colonq.admin.entity.UserInfo;
 import cn.colonq.admin.mapper.RoleMapper;
 import cn.colonq.admin.service.IRoleService;
+import cn.colonq.admin.utils.JWT;
 
 @Service
 public class RoleServiceImpl extends BaseServiceImpl<RoleInfo, RoleMapper> implements IRoleService {
 
-	public RoleServiceImpl(final RoleMapper roleMapper) {
-		super(roleMapper);
+	public RoleServiceImpl(final RoleMapper roleMapper, final JWT jwt) {
+		super(roleMapper, jwt);
 	}
 
 	@Override

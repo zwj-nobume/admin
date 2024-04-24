@@ -9,12 +9,13 @@ import cn.colonq.admin.entity.Result;
 import cn.colonq.admin.entity.RoleInfo;
 import cn.colonq.admin.mapper.MenuMapper;
 import cn.colonq.admin.service.IMenuService;
+import cn.colonq.admin.utils.JWT;
 
 @Service
 public class MenuServiceImpl extends BaseServiceImpl<MenuInfo, MenuMapper> implements IMenuService {
 
-    public MenuServiceImpl(final MenuMapper menuMapper) {
-        super(menuMapper);
+    public MenuServiceImpl(final MenuMapper menuMapper, final JWT jwt) {
+        super(menuMapper, jwt);
     }
 
     @Override

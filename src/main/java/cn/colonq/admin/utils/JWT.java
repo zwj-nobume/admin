@@ -12,6 +12,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.springframework.stereotype.Component;
 
 import cn.colonq.admin.entity.Header;
+import cn.colonq.admin.entity.UserInfo;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Component
@@ -68,7 +69,7 @@ public class JWT {
         return stringUtils.jsonToObj(headerStr, Header.class);
     }
 
-    public <T> T getPayload(Class<? extends T> cls) {
+    public UserInfo getPayload() {
         final String payloadBase64 = getField(1);
         if (payloadBase64 == null) {
             return null;
@@ -76,10 +77,10 @@ public class JWT {
         final Decoder decoder = base64DecoderPool.getItem();
         final String payloadStr = new String(decoder.decode(payloadBase64));
         base64DecoderPool.putItem(decoder);
-        return stringUtils.jsonToObj(payloadStr, cls);
+        return stringUtils.jsonToObj(payloadStr, UserInfo.class);
     }
 
-    public String generateToken(final Header header, final Object payload, final String salt)
+    public String generateToken(final Header header, final UserInfo payload, final String salt)
             throws NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException {
         final String headerJson = stringUtils.toJsonString(header);
         final String payloadJson = stringUtils.toJsonString(payload);

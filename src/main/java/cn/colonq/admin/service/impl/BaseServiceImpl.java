@@ -9,14 +9,18 @@ import cn.colonq.admin.anno.TableField;
 import cn.colonq.admin.config.ServiceException;
 import cn.colonq.admin.entity.PageList;
 import cn.colonq.admin.entity.Result;
+import cn.colonq.admin.entity.UserInfo;
 import cn.colonq.admin.mapper.BaseMapper;
 import cn.colonq.admin.service.BaseService;
+import cn.colonq.admin.utils.JWT;
 
 public class BaseServiceImpl<T, Tmapper extends BaseMapper<T>> implements BaseService<T> {
     protected final Tmapper tmapper;
+    protected final JWT jwt;
 
-    public BaseServiceImpl(final Tmapper tmapper) {
+    public BaseServiceImpl(final Tmapper tmapper, final JWT jwt) {
         this.tmapper = tmapper;
+        this.jwt = jwt;
     }
 
     @Override
@@ -44,8 +48,8 @@ public class BaseServiceImpl<T, Tmapper extends BaseMapper<T>> implements BaseSe
             final Field field = fields[i];
             parameterTypes[i] = field.getType();
             if ("createName".equals(field.getName())) {
-                // TODO 获取登录用户名
-                initargs[i] = "admin";
+                UserInfo payload = jwt.getPayload();
+                initargs[i] = payload.userName();
                 continue;
             }
             final TableField anno = field.getAnnotation(TableField.class);
