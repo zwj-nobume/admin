@@ -13,7 +13,7 @@ import cn.colonq.admin.service.IMenuService;
 
 @RestController
 @RequestMapping("/menu")
-@PermissionAnnotation("system:menu:")
+@PermissionAnnotation("system:menu")
 public class MenuController extends BaseController<MenuInfo, IMenuService> {
 
     public MenuController(final IMenuService menuService) {
@@ -21,7 +21,7 @@ public class MenuController extends BaseController<MenuInfo, IMenuService> {
     }
 
     @PostMapping("/link")
-    @PermissionAnnotation("edit")
+    @PermissionAnnotation(":edit")
     public Result link(@RequestBody LinkInfo info) {
         return super.tService.linkRoleMenu(info);
     }

@@ -13,7 +13,7 @@ import cn.colonq.admin.service.IRoleService;
 
 @RestController
 @RequestMapping("/role")
-@PermissionAnnotation("system:role:")
+@PermissionAnnotation("system:role")
 public class RoleController extends BaseController<RoleInfo, IRoleService> {
 
 	public RoleController(final IRoleService roleService) {
@@ -21,13 +21,13 @@ public class RoleController extends BaseController<RoleInfo, IRoleService> {
 	}
 
 	@PostMapping("/linkRM")
-	@PermissionAnnotation("edit")
+	@PermissionAnnotation(":edit")
 	public Result linkRM(@RequestBody LinkInfo info) {
 		return super.tService.linkRoleMenu(info);
 	}
 
 	@PostMapping("/linkUR")
-	@PermissionAnnotation("edit")
+	@PermissionAnnotation(":edit")
 	public Result linkUR(@RequestBody LinkInfo info) {
 		return super.tService.linkUserRole(info);
 	}

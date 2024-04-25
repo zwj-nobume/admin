@@ -24,7 +24,7 @@ public class BaseController<T, TService extends BaseService<T>> {
     }
 
     @GetMapping("/page")
-    @PermissionAnnotation("page")
+    @PermissionAnnotation(":page")
     protected PageList<T> page(T param,
             @RequestParam(name = "pageNum", defaultValue = "1") Long pageNum,
             @RequestParam(name = "pageSize", defaultValue = "20") Long pageSize) {
@@ -32,19 +32,19 @@ public class BaseController<T, TService extends BaseService<T>> {
     }
 
     @PutMapping("/add")
-    @PermissionAnnotation("add")
+    @PermissionAnnotation(":add")
     protected Result insert(@RequestBody T param) {
         return tService.insert(param);
     }
 
     @PostMapping("/edit")
-    @PermissionAnnotation("edit")
+    @PermissionAnnotation(":edit")
     protected Result update(@RequestBody T param) {
         return tService.update(param);
     }
 
     @DeleteMapping("/delete")
-    @PermissionAnnotation("delete")
+    @PermissionAnnotation(":delete")
     protected Result delete(@RequestBody Set<String> ids) {
         return tService.delete(clsT, ids);
     }

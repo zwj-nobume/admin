@@ -13,7 +13,7 @@ import cn.colonq.admin.service.IUserService;
 
 @RestController
 @RequestMapping("/user")
-@PermissionAnnotation("system:user:")
+@PermissionAnnotation("system:user")
 public class UserController extends BaseController<UserInfo, IUserService> {
 
     public UserController(final IUserService userService) {
@@ -31,7 +31,7 @@ public class UserController extends BaseController<UserInfo, IUserService> {
     }
 
     @PostMapping("/link")
-    @PermissionAnnotation("edit")
+    @PermissionAnnotation(":edit")
     public Result link(@RequestBody LinkInfo info) {
         return super.tService.linkUserRole(info);
     }
