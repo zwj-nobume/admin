@@ -19,7 +19,6 @@
 -- Table structure for table `menu_info`
 --
 
-
 -- 导出 colonq 的数据库结构
 DROP DATABASE IF EXISTS `colonq`;
 CREATE DATABASE IF NOT EXISTS `colonq` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */;
