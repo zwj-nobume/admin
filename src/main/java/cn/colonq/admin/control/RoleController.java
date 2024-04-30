@@ -20,15 +20,15 @@ public class RoleController extends BaseController<RoleInfo, IRoleService> {
 		super(roleService);
 	}
 
-	@PostMapping("/linkRM")
-	@PermissionAnnotation(":edit")
-	public Result linkRM(@RequestBody LinkInfo info) {
-		return super.tService.linkRoleMenu(info);
-	}
-
 	@PostMapping("/linkUR")
 	@PermissionAnnotation(":edit")
 	public Result linkUR(@RequestBody LinkInfo info) {
 		return super.tService.linkUserRole(info);
+	}
+
+	@PostMapping("/linkRM")
+	@PermissionAnnotation(":edit")
+	public Result linkRM(@RequestBody LinkInfo info) {
+		return super.tService.linkRoleMenu(info);
 	}
 }

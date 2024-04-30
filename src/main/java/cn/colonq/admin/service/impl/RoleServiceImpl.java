@@ -1,5 +1,7 @@
 package cn.colonq.admin.service.impl;
 
+import java.util.Set;
+
 import org.springframework.stereotype.Service;
 
 import cn.colonq.admin.config.ServiceException;
@@ -25,7 +27,11 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleInfo, RoleMapper> imple
 
 	@Override
 	public Result linkUserRole(final LinkInfo info) {
-		int count = super.tmapper.selectCountIds(UserInfo.class, info.ids());
+		int count = super.tmapper.selectCountIds(Set.of(info.id()));
+		if (count == 0) {
+			throw new ServiceException("链接失败, id不匹配, count = " + count);
+		}
+		count = super.tmapper.selectCountIds(UserInfo.class, info.ids());
 		if (count != info.ids().size()) {
 			throw new ServiceException("链接失败, ids数量不匹配, count = " + count);
 		}
@@ -38,7 +44,11 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleInfo, RoleMapper> imple
 
 	@Override
 	public Result linkRoleMenu(final LinkInfo info) {
-		int count = super.tmapper.selectCountIds(MenuInfo.class, info.ids());
+		int count = super.tmapper.selectCountIds(Set.of(info.id()));
+		if (count == 0) {
+			throw new ServiceException("链接失败, id不匹配, count = " + count);
+		}
+		count = super.tmapper.selectCountIds(MenuInfo.class, info.ids());
 		if (count != info.ids().size()) {
 			throw new ServiceException("链接失败, ids数量不匹配, count = " + count);
 		}

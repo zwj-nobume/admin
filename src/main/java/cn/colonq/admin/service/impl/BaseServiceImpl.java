@@ -97,6 +97,26 @@ public class BaseServiceImpl<T, Tmapper extends BaseMapper<T>> implements BaseSe
 
 	@Override
 	public Result update(final T param) {
+		final Field[] fields = cls.getDeclaredFields();
+		for (int i = 0; i < fields.length; i++) {
+			final Field field = fields[i];
+			final TableField anno = field.getAnnotation(TableField.class);
+			final boolean canAccess = field.canAccess(param);
+			field.setAccessible(true);
+			Object value = null;
+			try {
+				value = field.get(param);
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+				throw new ServiceException(e.getMessage());
+			}
+			if (anno != null && anno.parent() && value != null) {
+				int count = tmapper.selectCountIds(Set.of(stringUtils.objToString(value)));
+				if (count == 0) {
+					throw new ServiceException("查询不到此父级ID");
+				}
+			}
+			field.setAccessible(canAccess);
+		}
 		int row = tmapper.update(param);
 		if (row == 1) {
 			return Result.ok("修改成功");

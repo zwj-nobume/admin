@@ -16,23 +16,23 @@ import cn.colonq.admin.service.IUserService;
 @PermissionAnnotation("system:user")
 public class UserController extends BaseController<UserInfo, IUserService> {
 
-    public UserController(final IUserService userService) {
-        super(userService);
-    }
+	public UserController(final IUserService userService) {
+		super(userService);
+	}
 
-    @PostMapping("/login")
-    public Result login(@RequestBody UserInfo info) {
-        return super.tService.login(info);
-    }
+	@PostMapping("/login")
+	public Result login(@RequestBody UserInfo info) {
+		return super.tService.login(info);
+	}
 
-    @PostMapping("/salt")
-    public Result salt() {
-        return super.tService.regenerateSalt();
-    }
+	@PostMapping("/salt")
+	public Result salt() {
+		return super.tService.regenerateSalt();
+	}
 
-    @PostMapping("/link")
-    @PermissionAnnotation(":edit")
-    public Result link(@RequestBody LinkInfo info) {
-        return super.tService.linkUserRole(info);
-    }
+	@PostMapping("/link")
+	@PermissionAnnotation(":edit")
+	public Result link(@RequestBody LinkInfo info) {
+		return super.tService.linkUserRole(info);
+	}
 }
