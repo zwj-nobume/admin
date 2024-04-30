@@ -17,7 +17,7 @@ import cn.colonq.admin.service.IUserService;
 public class UserController extends BaseController<UserInfo, IUserService> {
 
     public UserController(final IUserService userService) {
-        super(userService, UserInfo.class);
+        super(userService);
     }
 
     @PostMapping("/login")

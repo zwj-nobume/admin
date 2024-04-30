@@ -23,14 +23,14 @@ import cn.colonq.admin.utils.StringUtils;
 import cn.colonq.admin.utils.ThreadSafePool;
 
 public class BaseMapper<T> {
-	protected final Class<T> cls;
+	protected final Class<? extends T> cls;
 	protected final DateUtils dateUtils;
 	protected final JdbcClient jdbcClient;
 	protected final StringUtils stringUtils;
 	protected final ThreadSafePool<StringBuilder> stringBuilderPool;
 
 	public BaseMapper(
-			final Class<T> cls,
+			final Class<? extends T> cls,
 			final DateUtils dateUtils,
 			final JdbcClient jdbcClient,
 			final StringUtils stringUtils,
@@ -150,8 +150,8 @@ public class BaseMapper<T> {
 			}
 			field.setAccessible(canAccess);
 		});
+		builder.append(" ORDER BY create_time LIMIT ");
 		final long offset = (pageNum - 1) * pageSize;
-		builder.append(" LIMIT ");
 		builder.append(pageSize);
 		if (offset != 0) {
 			builder.append(" OFFSET ");
@@ -160,7 +160,7 @@ public class BaseMapper<T> {
 
 		final String sql = builder.toString();
 		builder.delete(0, selectLength);
-		builder.delete(builder.lastIndexOf(" LIMIT "), builder.length());
+		builder.delete(builder.lastIndexOf(" ORDER BY "), builder.length());
 		builder.insert(0, "SELECT COUNT(1)");
 		final String countSql = builder.toString();
 		stringBuilderPool.putItem(builder);
@@ -205,11 +205,7 @@ public class BaseMapper<T> {
 					builder.append("NULL,");
 					return;
 				}
-				if (value instanceof Date) {
-					valueStr = dateUtils.format((Date) value);
-				} else {
-					valueStr = value.toString();
-				}
+				valueStr = stringUtils.objToString(value);
 			} catch (IllegalArgumentException | IllegalAccessException e) {
 				throw new ServiceException(e.getMessage());
 			}

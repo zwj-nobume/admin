@@ -7,7 +7,7 @@ import cn.colonq.admin.config.ServiceException;
 public class ThreadSafePool<T> {
 	private final LinkedList<T> linked;
 
-	public ThreadSafePool(final Class<T> type) {
+	public ThreadSafePool(final Class<? extends T> type) {
 		final int maxThread = Runtime.getRuntime().availableProcessors();
 		linked = new LinkedList<>();
 		for (int i = 0; i < maxThread; i++) {

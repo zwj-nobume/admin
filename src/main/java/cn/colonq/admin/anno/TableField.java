@@ -19,6 +19,8 @@ public @interface TableField {
 
     boolean isInsert() default true;
 
+	String parentName() default "";
+
     boolean isUpdate() default true;
 
     CompEnum comp() default CompEnum.eq;

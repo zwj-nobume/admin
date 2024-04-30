@@ -21,8 +21,11 @@ import cn.colonq.admin.utils.StringUtils;
 @Service
 public class UserServiceImpl extends BaseServiceImpl<UserInfo, UserMapper> implements IUserService {
 
-	public UserServiceImpl(final UserMapper userMapper, final StringUtils stringUtils, final JWT jwt) {
-		super(userMapper, jwt);
+	public UserServiceImpl(
+			final StringUtils stringUtils,
+			final UserMapper userMapper,
+			final JWT jwt) {
+		super(stringUtils, UserInfo.class, userMapper, jwt);
 	}
 
 	@Override

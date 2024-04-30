@@ -15,37 +15,35 @@ import cn.colonq.admin.entity.Result;
 import cn.colonq.admin.service.BaseService;
 
 public class BaseController<T, TService extends BaseService<T>> {
-    protected final TService tService;
-    private final Class<T> clsT;
+	protected final TService tService;
 
-    public BaseController(final TService tService, final Class<T> clsT) {
-        this.tService = tService;
-        this.clsT = clsT;
-    }
+	public BaseController(final TService tService) {
+		this.tService = tService;
+	}
 
-    @GetMapping("/page")
-    @PermissionAnnotation(":page")
-    protected PageList<T> page(T param,
-            @RequestParam(name = "pageNum", defaultValue = "1") Long pageNum,
-            @RequestParam(name = "pageSize", defaultValue = "20") Long pageSize) {
-        return tService.selectPage(param, pageNum, pageSize);
-    }
+	@GetMapping("/page")
+	@PermissionAnnotation(":page")
+	protected PageList<T> page(T param,
+			@RequestParam(name = "pageNum", defaultValue = "1") Long pageNum,
+			@RequestParam(name = "pageSize", defaultValue = "20") Long pageSize) {
+		return tService.selectPage(param, pageNum, pageSize);
+	}
 
-    @PutMapping("/add")
-    @PermissionAnnotation(":add")
-    protected Result insert(@RequestBody T param) {
-        return tService.insert(param);
-    }
+	@PutMapping("/add")
+	@PermissionAnnotation(":add")
+	protected Result insert(@RequestBody T param) {
+		return tService.insert(param);
+	}
 
-    @PostMapping("/edit")
-    @PermissionAnnotation(":edit")
-    protected Result update(@RequestBody T param) {
-        return tService.update(param);
-    }
+	@PostMapping("/edit")
+	@PermissionAnnotation(":edit")
+	protected Result update(@RequestBody T param) {
+		return tService.update(param);
+	}
 
-    @DeleteMapping("/delete")
-    @PermissionAnnotation(":delete")
-    protected Result delete(@RequestBody Set<String> ids) {
-        return tService.delete(clsT, ids);
-    }
+	@DeleteMapping("/delete")
+	@PermissionAnnotation(":delete")
+	protected Result delete(@RequestBody Set<String> ids) {
+		return tService.delete(ids);
+	}
 }

@@ -12,7 +12,7 @@ public record MenuInfo(
 		@TableField(comp = CompEnum.like) String menuName,
 		@TableField(comp = CompEnum.like) String menuLabel,
 		String permission,
-		String parentId,
+		@TableField(parentName = "menu_id") String parentId,
 		@TableField(comp = CompEnum.like, isUpdate = false) String createName,
 		@TableField(comp = CompEnum.ge, isInsert = false, isUpdate = false) Date createTime) {
 }

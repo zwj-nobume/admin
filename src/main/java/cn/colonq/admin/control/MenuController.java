@@ -17,7 +17,7 @@ import cn.colonq.admin.service.IMenuService;
 public class MenuController extends BaseController<MenuInfo, IMenuService> {
 
     public MenuController(final IMenuService menuService) {
-        super(menuService, MenuInfo.class);
+        super(menuService);
     }
 
     @PostMapping("/link")

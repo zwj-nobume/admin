@@ -17,7 +17,7 @@ import cn.colonq.admin.service.IRoleService;
 public class RoleController extends BaseController<RoleInfo, IRoleService> {
 
 	public RoleController(final IRoleService roleService) {
-		super(roleService, RoleInfo.class);
+		super(roleService);
 	}
 
 	@PostMapping("/linkRM")

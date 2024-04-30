@@ -1,5 +1,6 @@
 package cn.colonq.admin.utils;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -18,12 +19,15 @@ public class StringUtils {
 	private final Pattern humpPattern = Pattern.compile("[A-Z]");
 	private final ThreadSafePool<StringBuilder> stringBuilderPool;
 	private final ThreadSafePool<ObjectMapper> objectMapperPool;
+	private final DateUtils dateUtils;
 
 	public StringUtils(
 			final ThreadSafePool<StringBuilder> stringBuilderPool,
-			final ThreadSafePool<ObjectMapper> objectMapperPool) {
+			final ThreadSafePool<ObjectMapper> objectMapperPool,
+			final DateUtils dateUtils) {
 		this.stringBuilderPool = stringBuilderPool;
 		this.objectMapperPool = objectMapperPool;
+		this.dateUtils = dateUtils;
 	}
 
 	public boolean isEmpty(Object value) {
@@ -83,5 +87,16 @@ public class StringUtils {
 		}
 		final String matchStr = matches.get(i);
 		return uri.matches(matchStr) || matches(uri, matches, i + 1);
+	}
+
+	public String objToString(Object value) {
+		if (value == null) {
+			return null;
+		}
+		if (value instanceof Date) {
+			return dateUtils.format((Date) value);
+		} else {
+			return value.toString();
+		}
 	}
 }

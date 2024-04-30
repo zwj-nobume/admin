@@ -15,5 +15,5 @@ public interface BaseService<T> {
 
 	Result update(final T param);
 
-	Result delete(final Class<? extends T> cls, final Set<String> ids);
+	Result delete(final Set<String> ids);
 }
