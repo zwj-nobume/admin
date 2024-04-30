@@ -19,7 +19,7 @@ public @interface TableField {
 
     boolean isInsert() default true;
 
-	String parentName() default "";
+	boolean parent() default false;
 
     boolean isUpdate() default true;
 

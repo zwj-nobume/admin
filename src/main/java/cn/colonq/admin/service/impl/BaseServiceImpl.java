@@ -72,7 +72,7 @@ public class BaseServiceImpl<T, Tmapper extends BaseMapper<T>> implements BaseSe
 			} catch (IllegalArgumentException | IllegalAccessException e) {
 				throw new ServiceException(e.getMessage());
 			}
-			if (anno != null && !"".equals(anno.parentName()) && value != null) {
+			if (anno != null && anno.parent() && value != null) {
 				int count = tmapper.selectCountIds(Set.of(stringUtils.objToString(value)));
 				if (count == 0) {
 					throw new ServiceException("查询不到此父级ID");
