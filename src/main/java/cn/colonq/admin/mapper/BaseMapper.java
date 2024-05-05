@@ -229,6 +229,16 @@ public class BaseMapper<T> {
 		return jdbcClient.sql(sql).update();
 	}
 
+	/**
+	 * 删除链接表内columName1的数据后重新链接
+	 * 
+	 * @param tableName
+	 * @param columName1
+	 * @param columName2
+	 * @param id1
+	 * @param ids2
+	 * @return
+	 */
 	public int link(
 			final String tableName,
 			final String columName1,
@@ -324,27 +334,23 @@ public class BaseMapper<T> {
 		return jdbcClient.sql(sql).update();
 	}
 
-	public int delete(final Set<String> ids) {
-		final String tableName = getTableName(cls);
-		final String idName = getIdName(cls);
-		final StringBuilder builder = stringBuilderPool.getItem();
-		builder.setLength(0);
-		builder.append("DELETE FROM ");
-		builder.append(tableName);
-		builder.append(" WHERE ");
-		builder.append(idName);
-		builder.append(" in ('");
-		builder.append(String.join("','", ids));
-		builder.append("')");
-
-		final String sql = builder.toString();
-		stringBuilderPool.putItem(builder);
-		return jdbcClient.sql(sql).update();
+	public int updateParentNull(final String tableName, final String parentName, final Set<String> ids) {
+		final String idStr = '\'' + String.join("','", ids) + '\'';
+		final String sql = "UPDATE " + tableName + " SET " + parentName + " = NULL WHERE " + parentName + " in (:ids)";
+		return jdbcClient.sql(sql).param("ids", idStr).update();
 	}
 
-	public int deleteLink(final String tableName, final String columName, final Set<String> ids) {
+	public int delete(final Set<String> ids) {
 		final String idStr = '\'' + String.join("','", ids) + '\'';
-		final String sql = "DELETE FROM " + tableName + " WHERE " + columName + " in (:ids)";
+		final String idName = getIdName(cls);
+		final String tableName = getTableName(cls);
+		final String sql = getDelSql(tableName, idName);
+		return jdbcClient.sql(sql).param("ids", idStr).update();
+	}
+
+	public int deleteLink(final String tableName, final String idName, final Set<String> ids) {
+		final String idStr = '\'' + String.join("','", ids) + '\'';
+		final String sql = getDelSql(tableName, idName);
 		return jdbcClient.sql(sql).param("ids", idStr).update();
 	}
 
@@ -356,6 +362,10 @@ public class BaseMapper<T> {
 	private String getIdName(Class<?> clst) {
 		final Table anno = clst.getAnnotation(Table.class);
 		return anno.idName();
+	}
+
+	private String getDelSql(final String tableName, final String idName) {
+		return "DELETE FROM " + tableName + " WHERE " + idName + " in (:ids)";
 	}
 
 	private RowMapper<T> getRowMapper() {

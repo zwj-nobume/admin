@@ -129,6 +129,14 @@ public class BaseServiceImpl<T, Tmapper extends BaseMapper<T>> implements BaseSe
 		int row = tmapper.delete(ids);
 		if (row > 0) {
 			final Table anno = cls.getAnnotation(Table.class);
+			for (Field field : cls.getDeclaredFields()) {
+				final TableField fieldAnno = field.getAnnotation(TableField.class);
+				if (fieldAnno != null && fieldAnno.parent()) {
+					final String tableName = anno.tableName();
+					final String parentName = stringUtils.humpToLine(field.getName());
+					tmapper.updateParentNull(tableName, parentName, ids);
+				}
+			}
 			final String idName = anno.idName();
 			for (String tableName : anno.linkTable()) {
 				tmapper.deleteLink(tableName, idName, ids);
