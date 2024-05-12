@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 
 import cn.colonq.admin.anno.Table;
 import cn.colonq.admin.anno.TableField;
+import cn.colonq.admin.config.CacheAble;
 import cn.colonq.admin.config.CompEnum;
 import cn.colonq.admin.config.ServiceException;
 import cn.colonq.admin.config.TableFuncEnum;
@@ -77,6 +78,7 @@ public class BaseMapper<T> {
 		return jdbcClient.sql(sql).query(cls).single();
 	}
 
+	@CacheAble(cacheName = "BaseMapper.selectPage")
 	public PageList<T> selectPage(final T param, final long pageNum, final long pageSize) {
 		final String tableName = getTableName(cls);
 		final StringBuilder builder = stringBuilderPool.getItem();
