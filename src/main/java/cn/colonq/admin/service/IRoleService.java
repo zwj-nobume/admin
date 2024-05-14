@@ -6,7 +6,11 @@ import cn.colonq.admin.entity.RoleInfo;
 
 public interface IRoleService extends BaseService<RoleInfo> {
 
-    Result linkUserRole(final LinkInfo info);
+	Result selectUserIds(final String roleId);
 
-    Result linkRoleMenu(final LinkInfo info);
+	Result selectMenuIds(final String roleId);
+
+	Result linkUserRole(final LinkInfo info);
+
+	Result linkRoleMenu(final LinkInfo info);
 }

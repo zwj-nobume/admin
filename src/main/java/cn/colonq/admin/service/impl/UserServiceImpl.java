@@ -57,6 +57,12 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfo, UserMapper> imple
 	}
 
 	@Override
+	public Result selectRoleIds(String userId) {
+		final Set<String> roleIds = super.tmapper.selectLinkById("user_role_link", "user_id", "role_id", userId);
+		return Result.ok(roleIds);
+	}
+
+	@Override
 	public Result linkUserRole(final LinkInfo info) {
 		int count = super.tmapper.selectCountIds(Set.of(info.id()));
 		if (count == 0) {

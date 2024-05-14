@@ -6,5 +6,7 @@ import cn.colonq.admin.entity.Result;
 
 public interface IMenuService extends BaseService<MenuInfo> {
 
-    Result linkRoleMenu(final LinkInfo info);
+	Result selectRoleIds(final String menuId);
+
+	Result linkRoleMenu(final LinkInfo info);
 }

@@ -1,5 +1,6 @@
 package cn.colonq.admin.control;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,13 +17,19 @@ import cn.colonq.admin.service.IMenuService;
 @PermissionAnnotation("system:menu")
 public class MenuController extends BaseController<MenuInfo, IMenuService> {
 
-    public MenuController(final IMenuService menuService) {
-        super(menuService);
-    }
+	public MenuController(final IMenuService menuService) {
+		super(menuService);
+	}
 
-    @PostMapping("/link")
-    @PermissionAnnotation(":edit")
-    public Result link(@RequestBody LinkInfo info) {
-        return super.tService.linkRoleMenu(info);
-    }
+	@GetMapping("/roleIds")
+	@PermissionAnnotation(":query")
+	public Result roleIds(String menuId) {
+		return super.tService.selectRoleIds(menuId);
+	}
+
+	@PostMapping("/link")
+	@PermissionAnnotation(":edit")
+	public Result link(@RequestBody LinkInfo info) {
+		return super.tService.linkRoleMenu(info);
+	}
 }

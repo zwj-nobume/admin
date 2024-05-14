@@ -25,6 +25,12 @@ public class MenuServiceImpl extends BaseServiceImpl<MenuInfo, MenuMapper> imple
 	}
 
 	@Override
+	public Result selectRoleIds(String menuId) {
+		final Set<String> roleIds = super.tmapper.selectLinkById("role_menu_link", "menu_id", "role_id", menuId);
+		return Result.ok(roleIds);
+	}
+
+	@Override
 	public Result linkRoleMenu(final LinkInfo info) {
 		int count = super.tmapper.selectCountIds(Set.of(info.id()));
 		if (count == 0) {

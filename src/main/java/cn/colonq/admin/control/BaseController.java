@@ -22,7 +22,7 @@ public class BaseController<T, TService extends BaseService<T>> {
 	}
 
 	@GetMapping("/page")
-	@PermissionAnnotation(":page")
+	@PermissionAnnotation(":query")
 	protected PageList<T> page(T param,
 			@RequestParam(name = "pageNum", defaultValue = "1") Long pageNum,
 			@RequestParam(name = "pageSize", defaultValue = "20") Long pageSize) {

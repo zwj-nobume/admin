@@ -6,11 +6,13 @@ import cn.colonq.admin.entity.UserInfo;
 
 public interface IUserService extends BaseService<UserInfo> {
 
-    Result login(final UserInfo info);
+	Result login(final UserInfo info);
 
-    Result regenerateSalt();
+	Result regenerateSalt();
 
-    Result linkUserRole(final LinkInfo info);
+	Result selectRoleIds(final String userId);
 
-    boolean checkPermission(String value);
+	Result linkUserRole(final LinkInfo info);
+
+	boolean checkPermission(String value);
 }

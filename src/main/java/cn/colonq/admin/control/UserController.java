@@ -1,5 +1,6 @@
 package cn.colonq.admin.control;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +29,12 @@ public class UserController extends BaseController<UserInfo, IUserService> {
 	@PostMapping("/salt")
 	public Result salt() {
 		return super.tService.regenerateSalt();
+	}
+
+	@GetMapping("/roleIds")
+	@PermissionAnnotation(":query")
+	public Result roleIds(String userId) {
+		return super.tService.selectRoleIds(userId);
 	}
 
 	@PostMapping("/link")
