@@ -47,7 +47,7 @@ public class BaseMapper<T> {
 		return selectCountIds(cls, ids);
 	}
 
-	public <TS> int selectCountIds(Class<? extends TS> clst, final Set<String> ids) {
+	public <TS> int selectCountIds(final Class<? extends TS> clst, final Set<String> ids) {
 		final String tableName = getTableName(clst);
 		final String idName = getIdName(clst);
 		final String sql = "SELECT COUNT(1) FROM " + tableName +
@@ -55,6 +55,18 @@ public class BaseMapper<T> {
 		return jdbcClient.sql(sql).query(Integer.class).single();
 	}
 
+	@CacheAble(cacheName = "BaseMapper.selectLinkById")
+	public Set<String> selectLinkById(
+			final String tableName,
+			final String columName,
+			final String targetName,
+			final String columId) {
+		final String sql = "SELECT " + targetName + " FROM " + tableName
+				+ " WHERE " + columName + " = '" + columId + '\'';
+		return jdbcClient.sql(sql).query(String.class).set();
+	}
+
+	@CacheAble(cacheName = "BaseMapper.selectOne")
 	public T selectOne(final String indexName, final String indexValue) {
 		final String tableName = getTableName(cls);
 		final StringBuilder builder = stringBuilderPool.getItem();
