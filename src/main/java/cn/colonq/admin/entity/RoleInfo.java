@@ -8,7 +8,7 @@ import cn.colonq.admin.config.CompEnum;
 
 @Table(tableName = "role_info", linkTable = { "user_role_link", "role_menu_link" }, idName = "role_id")
 public record RoleInfo(
-		@TableField(query = false, isInsert = false) String roleId,
+		@TableField(isInsert = false) String roleId,
 		@TableField(comp = CompEnum.like) String roleName,
 		@TableField(comp = CompEnum.like) String roleLabel,
 		@TableField(comp = CompEnum.like, isUpdate = false) String createName,

@@ -11,7 +11,7 @@ import cn.colonq.admin.config.TableFuncEnum;
 
 @Table(tableName = "user_info", linkTable = "user_role_link", idName = "user_id")
 public record UserInfo(
-		@TableField(query = false, isInsert = false) String userId,
+		@TableField(isInsert = false) String userId,
 		@TableField(comp = CompEnum.like) String userName,
 		@TableField(select = false, insert = TableFuncEnum.pwd, isUpdate = false) String password,
 		@TableField(comp = CompEnum.like) String email,

@@ -198,7 +198,7 @@ public class BaseMapper<T> {
 
 		Arrays.asList(cls.getDeclaredFields()).forEach(field -> {
 			TableField anno = field.getAnnotation(TableField.class);
-			if (anno != null && anno.isInsert() == false) {
+			if (anno != null && !anno.isInsert()) {
 				return;
 			}
 			final String fieldName = stringUtils.humpToLine(field.getName());
@@ -209,7 +209,7 @@ public class BaseMapper<T> {
 		builder.append(") VALUES (");
 		Arrays.asList(cls.getDeclaredFields()).forEach(field -> {
 			TableField anno = field.getAnnotation(TableField.class);
-			if (anno != null && anno.isInsert() == false) {
+			if (anno != null && !anno.isInsert()) {
 				return;
 			}
 			boolean canAccess = field.canAccess(param);
@@ -299,7 +299,7 @@ public class BaseMapper<T> {
 		builder.append(" SET ");
 		for (Field field : cls.getDeclaredFields()) {
 			TableField anno = field.getAnnotation(TableField.class);
-			if (anno != null && anno.isUpdate() == false) {
+			if (anno != null && !anno.isUpdate()) {
 				continue;
 			}
 			boolean canAccess = field.canAccess(param);

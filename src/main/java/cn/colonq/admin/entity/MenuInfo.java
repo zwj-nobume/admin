@@ -8,7 +8,7 @@ import cn.colonq.admin.config.CompEnum;
 
 @Table(tableName = "menu_info", linkTable = "role_menu_link", idName = "menu_id")
 public record MenuInfo(
-		@TableField(query = false, isInsert = false) String menuId,
+		@TableField(isInsert = false) String menuId,
 		@TableField(comp = CompEnum.like) String menuName,
 		@TableField(comp = CompEnum.like) String menuLabel,
 		String permission,

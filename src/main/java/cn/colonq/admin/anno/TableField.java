@@ -11,7 +11,6 @@ import cn.colonq.admin.config.TableFuncEnum;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TableField {
-    boolean query() default true;
 
     boolean select() default true;
 
