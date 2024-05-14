@@ -47,7 +47,7 @@ public class AspectConfig {
 		final MethodSignature methodSignature = (MethodSignature) point.getSignature();
 		final Method method = methodSignature.getMethod();
 		if (method == null) {
-			throw new ServiceException("PermissionAspect check methodSignature.getMethod null");
+			throw new ServiceException("Permission check methodSignature.getMethod null");
 		}
 		final Class<? extends Object> controlCls = point.getTarget().getClass();
 		final PermissionAnnotation controlAnno = controlCls.getAnnotation(PermissionAnnotation.class);
@@ -65,10 +65,13 @@ public class AspectConfig {
 	public Object cacheAble(ProceedingJoinPoint point) throws Throwable {
 		final MethodSignature methodSignature = (MethodSignature) point.getSignature();
 		final Method method = methodSignature.getMethod();
+		if (method == null) {
+			throw new ServiceException("CacheAble methodSignature.getMethod null");
+		}
 		final String controlName = point.getTarget().getClass().getName();
-		final String mapperCacheName = method.getAnnotation(CacheAble.class).cacheName();
+		final String cacheName = method.getAnnotation(CacheAble.class).cacheName();
 		final String params = Arrays.toString(point.getArgs());
-		final String cacheParam = controlName + ':' + mapperCacheName + ':' + params;
+		final String cacheParam = controlName + ':' + cacheName + ':' + params;
 		Object value = cacheData.get(cacheParam);
 		if (value == null) {
 			value = point.proceed(point.getArgs());
@@ -78,7 +81,36 @@ public class AspectConfig {
 	}
 
 	@After("cacheEvictPointcut()")
-	public Object cacheEvict(JoinPoint point) {
-		return null;
+	public void cacheEvict(JoinPoint point) {
+		final MethodSignature methodSignature = (MethodSignature) point.getSignature();
+		final Method method = methodSignature.getMethod();
+		if (method == null) {
+			throw new ServiceException("CacheEvict methodSignature.getMethod null");
+		}
+		final String defaultControlName = point.getTarget().getClass().getName();
+		CacheEvict cacheEvict = method.getAnnotation(CacheEvict.class);
+		for (String cacheName : cacheEvict.cacheName()) {
+			if (cacheEvict.controlNames().length == 0) {
+				final String cacheStart = defaultControlName + ':' + cacheName;
+				deleteCache(cacheStart);
+			} else {
+				for (String controlName : cacheEvict.controlNames()) {
+					final String cacheStart = controlName + ':' + cacheName;
+					deleteCache(cacheStart);
+				}
+			}
+		}
+	}
+
+	/**
+	 * 删除以字符串开头的缓存
+	 * 
+	 * @param cacheStart
+	 */
+	private void deleteCache(final String cacheStart) {
+		Object[] arr = cacheData.keys().stream().filter(key -> key.startsWith(cacheStart)).toArray();
+		if (arr.length != 0) {
+			cacheData.delete(arr);
+		}
 	}
 }

@@ -15,6 +15,7 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import cn.colonq.admin.anno.Table;
 import cn.colonq.admin.anno.TableField;
 import cn.colonq.admin.config.CacheAble;
+import cn.colonq.admin.config.CacheEvict;
 import cn.colonq.admin.config.CompEnum;
 import cn.colonq.admin.config.ServiceException;
 import cn.colonq.admin.config.TableFuncEnum;
@@ -186,6 +187,7 @@ public class BaseMapper<T> {
 		return new PageList<>(pageNum, pageSize, total, list);
 	}
 
+	@CacheEvict(cacheName = { "BaseMapper.selectPage" })
 	public int insert(final T param) {
 		final String tableName = getTableName(cls);
 		final StringBuilder builder = stringBuilderPool.getItem();
@@ -253,6 +255,7 @@ public class BaseMapper<T> {
 	 * @param ids2
 	 * @return
 	 */
+	@CacheEvict(cacheName = { "BaseMapper.selectLinkById" })
 	public int link(
 			final String tableName,
 			final String columName1,
@@ -284,6 +287,7 @@ public class BaseMapper<T> {
 		return jdbcClient.sql(sql).update();
 	}
 
+	@CacheEvict(cacheName = { "BaseMapper.selectOne", "BaseMapper.selectPage" })
 	public int update(final T param) {
 		final String tableName = getTableName(cls);
 		final String idName = getIdName(cls);
@@ -348,12 +352,14 @@ public class BaseMapper<T> {
 		return jdbcClient.sql(sql).update();
 	}
 
+	@CacheEvict(cacheName = { "BaseMapper.selectOne", "BaseMapper.selectPage" })
 	public int updateParentNull(final String tableName, final String parentName, final Set<String> ids) {
 		final String idStr = '\'' + String.join("','", ids) + '\'';
 		final String sql = "UPDATE " + tableName + " SET " + parentName + " = NULL WHERE " + parentName + " in (:ids)";
 		return jdbcClient.sql(sql).param("ids", idStr).update();
 	}
 
+	@CacheEvict(cacheName = { "BaseMapper.selectOne", "BaseMapper.selectPage" })
 	public int delete(final Set<String> ids) {
 		final String idStr = '\'' + String.join("','", ids) + '\'';
 		final String idName = getIdName(cls);
@@ -362,6 +368,7 @@ public class BaseMapper<T> {
 		return jdbcClient.sql(sql).param("ids", idStr).update();
 	}
 
+	@CacheEvict(cacheName = { "BaseMapper.selectLinkById" })
 	public int deleteLink(final String tableName, final String idName, final Set<String> ids) {
 		final String idStr = '\'' + String.join("','", ids) + '\'';
 		final String sql = getDelSql(tableName, idName);

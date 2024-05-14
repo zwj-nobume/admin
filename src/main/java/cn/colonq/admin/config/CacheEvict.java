@@ -8,5 +8,7 @@ import java.lang.annotation.Target;
 @Target({ ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface CacheEvict {
-	String cacheName();
+	String[] controlNames() default {};
+
+	String[] cacheName();
 }
