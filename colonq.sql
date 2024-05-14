@@ -48,15 +48,15 @@ CREATE TABLE `menu_info` (
 LOCK TABLES `menu_info` WRITE;
 /*!40000 ALTER TABLE `menu_info` DISABLE KEYS */;
 INSERT INTO `menu_info` VALUES
-('0ab4e3e1-0745-11ef-88a5-c6d2cc8741ac','system_user_page','用户分页','system:user:page','e13f27bd-06da-11ef-892a-c7d9e8014b74','nobume','2024-05-01 06:57:38'),
+('0ab4e3e1-0745-11ef-88a5-c6d2cc8741ac','system_user_query','用户查询','system:user:query','e13f27bd-06da-11ef-892a-c7d9e8014b74','nobume','2024-05-01 06:57:38'),
 ('1ce1e75f-0745-11ef-88a5-c6d2cc8741ac','system_user_add','用户新增','system:user:add','e13f27bd-06da-11ef-892a-c7d9e8014b74','nobume','2024-05-01 06:58:09'),
 ('aab253bf-0745-11ef-88a5-c6d2cc8741ac','system_user_edit','用户修改','system:user:edit','e13f27bd-06da-11ef-892a-c7d9e8014b74','nobume','2024-05-01 07:02:06'),
 ('bee5af14-0745-11ef-88a5-c6d2cc8741ac','system_user_delete','用户删除','system:user:delete','e13f27bd-06da-11ef-892a-c7d9e8014b74','nobume','2024-05-01 07:02:40'),
-('f55e7164-0745-11ef-88a5-c6d2cc8741ac','system_role_page','角色分页','system:role:page','458e05f5-06e1-11ef-892a-c7d9e8014b74','nobume','2024-05-01 07:04:12'),
+('f55e7164-0745-11ef-88a5-c6d2cc8741ac','system_role_query','角色查询','system:role:query','458e05f5-06e1-11ef-892a-c7d9e8014b74','nobume','2024-05-01 07:04:12'),
 ('fe23035c-0745-11ef-88a5-c6d2cc8741ac','system_role_add','角色新增','system:role:add','458e05f5-06e1-11ef-892a-c7d9e8014b74','nobume','2024-05-01 07:04:26'),
 ('05c17b81-0746-11ef-88a5-c6d2cc8741ac','system_role_edit','角色修改','system:role:edit','458e05f5-06e1-11ef-892a-c7d9e8014b74','nobume','2024-05-01 07:04:39'),
 ('1032e829-0746-11ef-88a5-c6d2cc8741ac','system_role_delete','角色删除','system:role:delete','458e05f5-06e1-11ef-892a-c7d9e8014b74','nobume','2024-05-01 07:04:57'),
-('54a89b10-0746-11ef-88a5-c6d2cc8741ac','system_menu_page','菜单分页','system:menu:page','f5fb4553-06e1-11ef-892a-c7d9e8014b74','nobume','2024-05-01 07:06:52'),
+('54a89b10-0746-11ef-88a5-c6d2cc8741ac','system_menu_query','菜单查询','system:menu:query','f5fb4553-06e1-11ef-892a-c7d9e8014b74','nobume','2024-05-01 07:06:52'),
 ('4b7f8977-0748-11ef-88a5-c6d2cc8741ac','system_menu_add','菜单新增','system:menu:add','f5fb4553-06e1-11ef-892a-c7d9e8014b74','nobume','2024-05-01 07:20:55'),
 ('554ae313-0748-11ef-88a5-c6d2cc8741ac','system_menu_edit','菜单修改','system:menu:edit','f5fb4553-06e1-11ef-892a-c7d9e8014b74','nobume','2024-05-01 07:21:12'),
 ('5f4dbce5-0748-11ef-88a5-c6d2cc8741ac','system_menu_delete','菜单删除','system:menu:delete','f5fb4553-06e1-11ef-892a-c7d9e8014b74','nobume','2024-05-01 07:21:28'),
