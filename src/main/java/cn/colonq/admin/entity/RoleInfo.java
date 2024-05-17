@@ -2,15 +2,45 @@ package cn.colonq.admin.entity;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import cn.colonq.admin.anno.Table;
 import cn.colonq.admin.anno.TableField;
 import cn.colonq.admin.config.CompEnum;
+import cn.colonq.admin.group.Insert;
+import cn.colonq.admin.group.Query;
+import cn.colonq.admin.group.Update;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Null;
+import jakarta.validation.constraints.Size;
 
 @Table(tableName = "role_info", linkTable = { "user_role_link", "role_menu_link" }, idName = "role_id")
 public record RoleInfo(
-		@TableField(isInsert = false) String roleId,
-		@TableField(comp = CompEnum.like) String roleName,
-		@TableField(comp = CompEnum.like) String roleLabel,
-		@TableField(comp = CompEnum.like, isUpdate = false) String createName,
-		@TableField(comp = CompEnum.ge, isInsert = false, isUpdate = false) Date createTime) {
+		@Null(message = "新增角色时无需ID", groups = {
+				Insert.class
+		}) @NotBlank(message = "角色ID不得为空", groups = {
+				Update.class
+		}) @Size(min = 36, max = 36, message = "角色ID长度异常", groups = {
+				Query.class, Update.class
+		}) @TableField(isInsert = false) String roleId,
+
+		@NotBlank(message = "角色名不得为空", groups = {
+				Insert.class
+		}) @Size(min = 6, max = 20, message = "角色名长度必须在6到20之间", groups = {
+				Insert.class, Update.class
+		}) @TableField(comp = CompEnum.like) String roleName,
+
+		@NotBlank(message = "角色标签不得为空", groups = {
+				Insert.class
+		}) @Size(min = 6, max = 20, message = "角色标签长度必须在6到20之间", groups = {
+				Insert.class, Update.class
+		}) @TableField(comp = CompEnum.like) String roleLabel,
+
+		@Null(message = "新增修改时无需createName", groups = {
+				Insert.class, Update.class
+		}) @TableField(comp = CompEnum.like, isUpdate = false) String createName,
+
+		@Null(message = "新增修改时无需createTime", groups = {
+				Insert.class, Update.class
+		}) @TableField(comp = CompEnum.ge, isInsert = false, isUpdate = false) @JsonFormat(pattern = "yyyy-MM-dd HH:mm:dd", timezone = "GMT+8") Date createTime){
 }

@@ -2,6 +2,7 @@ package cn.colonq.admin.control;
 
 import java.util.Set;
 
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import cn.colonq.admin.config.PermissionAnnotation;
 import cn.colonq.admin.entity.PageList;
 import cn.colonq.admin.entity.Result;
+import cn.colonq.admin.group.Insert;
+import cn.colonq.admin.group.Query;
+import cn.colonq.admin.group.Update;
 import cn.colonq.admin.service.BaseService;
 
 public class BaseController<T, TService extends BaseService<T>> {
@@ -23,7 +27,7 @@ public class BaseController<T, TService extends BaseService<T>> {
 
 	@GetMapping("/page")
 	@PermissionAnnotation(":query")
-	protected PageList<T> page(T param,
+	protected PageList<T> page(@Validated(value = { Query.class }) T param,
 			@RequestParam(name = "pageNum", defaultValue = "1") Long pageNum,
 			@RequestParam(name = "pageSize", defaultValue = "20") Long pageSize) {
 		return tService.selectPage(param, pageNum, pageSize);
@@ -31,13 +35,13 @@ public class BaseController<T, TService extends BaseService<T>> {
 
 	@PutMapping("/add")
 	@PermissionAnnotation(":add")
-	protected Result insert(@RequestBody T param) {
+	protected Result insert(@Validated(value = { Insert.class }) @RequestBody T param) {
 		return tService.insert(param);
 	}
 
 	@PostMapping("/edit")
 	@PermissionAnnotation(":edit")
-	protected Result update(@RequestBody T param) {
+	protected Result update(@Validated(value = { Update.class }) @RequestBody T param) {
 		return tService.update(param);
 	}
 

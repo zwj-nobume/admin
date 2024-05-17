@@ -11,6 +11,8 @@ import cn.colonq.admin.entity.LinkInfo;
 import cn.colonq.admin.entity.Result;
 import cn.colonq.admin.entity.RoleInfo;
 import cn.colonq.admin.service.IRoleService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 
 @RestController
 @RequestMapping("/role")
@@ -23,25 +25,25 @@ public class RoleController extends BaseController<RoleInfo, IRoleService> {
 
 	@GetMapping("/userIds")
 	@PermissionAnnotation(":query")
-	public Result userIds(String roleId) {
+	public Result userIds(@NotBlank(message = "角色ID不得为空") String roleId) {
 		return super.tService.selectUserIds(roleId);
 	}
 
 	@GetMapping("/menuIds")
 	@PermissionAnnotation(":query")
-	public Result menuIds(String roleId) {
+	public Result menuIds(@NotBlank(message = "角色ID不得为空") String roleId) {
 		return super.tService.selectMenuIds(roleId);
 	}
 
 	@PostMapping("/linkUR")
 	@PermissionAnnotation(":edit")
-	public Result linkUR(@RequestBody LinkInfo info) {
+	public Result linkUR(@Valid @RequestBody LinkInfo info) {
 		return super.tService.linkUserRole(info);
 	}
 
 	@PostMapping("/linkRM")
 	@PermissionAnnotation(":edit")
-	public Result linkRM(@RequestBody LinkInfo info) {
+	public Result linkRM(@Valid @RequestBody LinkInfo info) {
 		return super.tService.linkRoleMenu(info);
 	}
 }

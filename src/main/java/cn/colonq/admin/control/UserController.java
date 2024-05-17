@@ -1,5 +1,6 @@
 package cn.colonq.admin.control;
 
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,7 +11,10 @@ import cn.colonq.admin.config.PermissionAnnotation;
 import cn.colonq.admin.entity.LinkInfo;
 import cn.colonq.admin.entity.Result;
 import cn.colonq.admin.entity.UserInfo;
+import cn.colonq.admin.group.Login;
 import cn.colonq.admin.service.IUserService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 
 @RestController
 @RequestMapping("/user")
@@ -22,7 +26,7 @@ public class UserController extends BaseController<UserInfo, IUserService> {
 	}
 
 	@PostMapping("/login")
-	public Result login(@RequestBody UserInfo info) {
+	public Result login(@Validated(value = { Login.class }) @RequestBody UserInfo info) {
 		return super.tService.login(info);
 	}
 
@@ -33,13 +37,13 @@ public class UserController extends BaseController<UserInfo, IUserService> {
 
 	@GetMapping("/roleIds")
 	@PermissionAnnotation(":query")
-	public Result roleIds(String userId) {
+	public Result roleIds(@NotBlank(message = "用户ID不得为空") String userId) {
 		return super.tService.selectRoleIds(userId);
 	}
 
 	@PostMapping("/link")
 	@PermissionAnnotation(":edit")
-	public Result link(@RequestBody LinkInfo info) {
+	public Result link(@Valid @RequestBody LinkInfo info) {
 		return super.tService.linkUserRole(info);
 	}
 }
