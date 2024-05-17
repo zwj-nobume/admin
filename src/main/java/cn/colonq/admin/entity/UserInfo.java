@@ -15,6 +15,7 @@ import cn.colonq.admin.group.Update;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Null;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 @Table(tableName = "user_info", linkTable = "user_role_link", idName = "user_id")
@@ -30,7 +31,9 @@ public record UserInfo(
 		@NotBlank(message = "用户名不得为空", groups = {
 				Insert.class, Login.class
 		}) @Size(min = 6, max = 20, message = "用户名长度必须在6到20之间", groups = {
-				Insert.class, Update.class, Login.class
+				Insert.class, Update.class
+		}) @Pattern(regexp = "^(admin|.{6,20})$", message = "用户名长度必须在6到20之间", groups = {
+				Login.class
 		}) @TableField(comp = CompEnum.like) String userName,
 
 		@Null(groups = {
