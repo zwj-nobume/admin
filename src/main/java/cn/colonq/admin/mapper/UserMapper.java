@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Component;
 
+import cn.colonq.admin.config.CacheAble;
 import cn.colonq.admin.entity.UserInfo;
 import cn.colonq.admin.utils.DateUtils;
 import cn.colonq.admin.utils.StringUtils;
@@ -34,6 +35,7 @@ public class UserMapper extends BaseMapper<UserInfo> {
 		return super.jdbcClient.sql(sql).update();
 	}
 
+	@CacheAble(cacheName = "UserMapper.selectUserPermission")
 	public List<String> selectUserPermission(String userId) {
 		String sql = """
 				SELECT mi.permission FROM menu_info mi
