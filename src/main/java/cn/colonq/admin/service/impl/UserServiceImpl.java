@@ -48,12 +48,19 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfo, UserMapper> imple
 
 	@Override
 	public Result regenerateSalt() {
-		UserInfo payload = super.jwt.getPayload();
-		int row = super.tmapper.regenerateSalt(payload.userId());
+		final UserInfo payload = super.jwt.getPayload();
+		final int row = super.tmapper.regenerateSalt(payload.userId());
 		if (row == 1) {
 			return Result.ok("重新生成盐值成功");
 		}
 		throw new ServiceException("重新生成盐值失败, row = " + row);
+	}
+
+	@Override
+	public Result permission() {
+		final UserInfo payload = super.jwt.getPayload();
+		final List<String> permission = super.tmapper.selectUserPermission(payload.userId());
+		return Result.ok(permission);
 	}
 
 	@Override
@@ -72,7 +79,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfo, UserMapper> imple
 		if (count != info.ids().size()) {
 			throw new ServiceException("链接失败, ids数量不匹配, count = " + count);
 		}
-		int row = super.tmapper.link("user_role_link", "user_id", "role_id", info.id(), info.ids());
+		final int row = super.tmapper.link("user_role_link", "user_id", "role_id", info.id(), info.ids());
 		if (row != 0) {
 			return Result.ok("链接成功");
 		}
@@ -81,9 +88,9 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfo, UserMapper> imple
 
 	@Override
 	public boolean checkPermission(String permission) {
-		UserInfo payload = jwt.getPayload();
-		List<String> permissions = super.tmapper.selectUserPermission(payload.userId());
-		return permissions.stream()
+		final UserInfo payload = jwt.getPayload();
+		final List<String> permissionList = super.tmapper.selectUserPermission(payload.userId());
+		return permissionList.stream()
 				.filter(perm -> perm.equals(permission))
 				.findFirst().isPresent();
 	}

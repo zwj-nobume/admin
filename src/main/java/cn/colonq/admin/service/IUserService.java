@@ -10,6 +10,8 @@ public interface IUserService extends BaseService<UserInfo> {
 
 	Result regenerateSalt();
 
+	Result permission();
+
 	Result selectRoleIds(final String userId);
 
 	Result linkUserRole(final LinkInfo info);

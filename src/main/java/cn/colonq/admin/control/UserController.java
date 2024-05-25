@@ -30,9 +30,24 @@ public class UserController extends BaseController<UserInfo, IUserService> {
 		return super.tService.login(info);
 	}
 
+	/**
+	 * 重置当前登录用户的盐值
+	 * 
+	 * @return
+	 */
 	@PostMapping("/salt")
 	public Result salt() {
 		return super.tService.regenerateSalt();
+	}
+
+	/**
+	 * 获取当前登录用户的权限
+	 * 
+	 * @return
+	 */
+	@GetMapping("/permission")
+	public Result permission() {
+		return super.tService.permission();
 	}
 
 	@GetMapping("/roleIds")
