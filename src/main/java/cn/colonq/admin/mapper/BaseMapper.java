@@ -138,9 +138,13 @@ public class BaseMapper<T> {
 				builder.append(stringUtils.humpToLine(field.getName()));
 				TableField tableField = field.getAnnotation(TableField.class);
 				if (tableField == null || CompEnum.eq == tableField.comp()) {
-					builder.append("='");
-					builder.append(valueStr);
-					builder.append('\'');
+					if ("NULL".equals(valueStr)) {
+						builder.append(" IS NULL");
+					} else {
+						builder.append("='");
+						builder.append(valueStr);
+						builder.append('\'');
+					}
 				} else if (CompEnum.like == tableField.comp()) {
 					builder.append(" LIKE CONCAT('%','");
 					builder.append(valueStr);

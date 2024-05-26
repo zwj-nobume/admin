@@ -12,6 +12,7 @@ import cn.colonq.admin.group.Query;
 import cn.colonq.admin.group.Update;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Null;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 @Table(tableName = "menu_info", linkTable = "role_menu_link", idName = "menu_id")
@@ -42,7 +43,7 @@ public record MenuInfo(
 				Insert.class, Update.class
 		}) @TableField(comp = CompEnum.like) String permission,
 
-		@Size(min = 36, max = 36, message = "父级ID长度异常", groups = {
+		@Pattern(regexp = "^(NULL|.{36,36})$", message = "父级ID长度异常", groups = {
 				Query.class, Insert.class, Update.class
 		}) @TableField(parent = true) String parentId,
 
