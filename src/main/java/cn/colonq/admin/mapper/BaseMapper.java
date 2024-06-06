@@ -359,24 +359,20 @@ public class BaseMapper<T> {
 	@CacheEvict(cacheName = { "BaseMapper.selectOne", "BaseMapper.selectPage" })
 	public int updateParentNull(final String tableName, final String parentName, final Set<String> ids) {
 		final String idStr = '\'' + String.join("','", ids) + '\'';
-		final String sql = "UPDATE " + tableName + " SET " + parentName + " = NULL WHERE " + parentName + " in (:ids)";
-		return jdbcClient.sql(sql).param("ids", idStr).update();
+		final String sql = "UPDATE " + tableName + " SET " + parentName + " = NULL WHERE " + parentName + " in (" + idStr + ")";
+		return jdbcClient.sql(sql).update();
 	}
 
 	@CacheEvict(cacheName = { "BaseMapper.selectOne", "BaseMapper.selectPage" })
 	public int delete(final Set<String> ids) {
-		final String idStr = '\'' + String.join("','", ids) + '\'';
 		final String idName = getIdName(cls);
 		final String tableName = getTableName(cls);
-		final String sql = getDelSql(tableName, idName);
-		return jdbcClient.sql(sql).param("ids", idStr).update();
+		return defaultDelete(tableName, idName, ids);
 	}
 
 	@CacheEvict(cacheName = { "BaseMapper.selectLinkById" })
 	public int deleteLink(final String tableName, final String idName, final Set<String> ids) {
-		final String idStr = '\'' + String.join("','", ids) + '\'';
-		final String sql = getDelSql(tableName, idName);
-		return jdbcClient.sql(sql).param("ids", idStr).update();
+		return defaultDelete(tableName, idName, ids);
 	}
 
 	private String getTableName(Class<?> clst) {
@@ -389,8 +385,10 @@ public class BaseMapper<T> {
 		return anno.idName();
 	}
 
-	private String getDelSql(final String tableName, final String idName) {
-		return "DELETE FROM " + tableName + " WHERE " + idName + " in (:ids)";
+	private int defaultDelete(final String tableName, final String idName, final Set<String> ids) {
+		final String idStr = '\'' + String.join("','", ids) + '\'';
+		final String sql = "DELETE FROM " + tableName + " WHERE " + idName + " in (" + idStr + ")";
+		return jdbcClient.sql(sql).update();
 	}
 
 	private RowMapper<T> getRowMapper() {
