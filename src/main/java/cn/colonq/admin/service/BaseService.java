@@ -9,7 +9,7 @@ public interface BaseService<T> {
 
 	T selectOne(final T param);
 
-	PageList<T> selectPage(final T param, final long pageNum, final long pageSize);
+	PageList<T> selectPage(final T param, final long pageNum, final long pageSize, final String sortFlag);
 
 	Result insert(final T param);
 

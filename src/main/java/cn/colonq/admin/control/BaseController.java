@@ -29,8 +29,9 @@ public class BaseController<T, TService extends BaseService<T>> {
 	@PermissionAnnotation(":query")
 	protected PageList<T> page(@Validated(value = { Query.class }) T param,
 			@RequestParam(name = "pageNum", defaultValue = "1") Long pageNum,
-			@RequestParam(name = "pageSize", defaultValue = "20") Long pageSize) {
-		return tService.selectPage(param, pageNum, pageSize);
+			@RequestParam(name = "pageSize", defaultValue = "20") Long pageSize,
+			@RequestParam(name = "sortFlag", defaultValue = "create_time") String sortFlag) {
+		return tService.selectPage(param, pageNum, pageSize, sortFlag);
 	}
 
 	@PutMapping("/add")

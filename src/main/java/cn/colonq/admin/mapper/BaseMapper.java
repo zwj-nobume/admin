@@ -92,7 +92,7 @@ public class BaseMapper<T> {
 	}
 
 	@CacheAble(cacheName = "BaseMapper.selectPage")
-	public PageList<T> selectPage(final T param, final long pageNum, final long pageSize) {
+	public PageList<T> selectPage(final T param, final long pageNum, final long pageSize, final String sortFlag) {
 		final String tableName = getTableName(cls);
 		final StringBuilder builder = stringBuilderPool.getItem();
 		builder.setLength(0);
@@ -169,7 +169,7 @@ public class BaseMapper<T> {
 			}
 			field.setAccessible(canAccess);
 		});
-		builder.append(" ORDER BY create_time LIMIT ");
+		builder.append(" ORDER BY " + sortFlag + " LIMIT ");
 		final long offset = (pageNum - 1) * pageSize;
 		builder.append(pageSize);
 		if (offset != 0) {

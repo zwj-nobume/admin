@@ -34,7 +34,7 @@ public class BaseServiceImpl<T, Tmapper extends BaseMapper<T>> implements BaseSe
 
 	@Override
 	public T selectOne(T param) {
-		PageList<T> page = tmapper.selectPage(param, 1, 1);
+		PageList<T> page = tmapper.selectPage(param, 1, 1, "create_time");
 		if (page != null && page.data() != null && page.data().size() >= 1) {
 			return page.data().get(0);
 		}
@@ -42,8 +42,8 @@ public class BaseServiceImpl<T, Tmapper extends BaseMapper<T>> implements BaseSe
 	}
 
 	@Override
-	public PageList<T> selectPage(final T param, final long pageNum, final long pageSize) {
-		return tmapper.selectPage(param, pageNum, pageSize);
+	public PageList<T> selectPage(final T param, final long pageNum, final long pageSize, final String sortFlag) {
+		return tmapper.selectPage(param, pageNum, pageSize, sortFlag);
 	}
 
 	@Override
