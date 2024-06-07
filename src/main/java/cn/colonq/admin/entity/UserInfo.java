@@ -36,7 +36,7 @@ public record UserInfo(
 				Login.class
 		}) @TableField(comp = CompEnum.like) String userName,
 
-		@Null(groups = {
+		@Null(message = "查询、修改时无需password", groups = {
 				Query.class, Update.class
 		}) @NotBlank(message = "用户密码不得为空", groups = {
 				Insert.class, Login.class
@@ -44,21 +44,21 @@ public record UserInfo(
 				Insert.class, Login.class
 		}) @TableField(select = false, insert = TableFuncEnum.pwd, isUpdate = false) String password,
 
-		@Null(groups = {
+		@Null(message = "登录时无需邮箱", groups = {
 				Login.class
 		}) @Email(message = "邮箱格式不正确", groups = {
 				Insert.class, Update.class
 		}) @TableField(comp = CompEnum.like) String email,
 
-		@Null(groups = {
+		@Null(message = "无法接收盐值", groups = {
 				Query.class, Insert.class, Update.class, Login.class
 		}) @TableField(select = false, isInsert = false, isUpdate = false) String salt,
 
-		@Null(message = "新增、修改、登录用户时无需createName", groups = {
-				Insert.class, Update.class, Login.class
+		@Null(message = "新增、登录用户时无需createName", groups = {
+				Insert.class, Login.class
 		}) @TableField(comp = CompEnum.like, isUpdate = false) String createName,
 
-		@Null(message = "新增、修改、登录用户时无需createTime", groups = {
-				Insert.class, Update.class, Login.class
+		@Null(message = "新增、登录用户时无需createTime", groups = {
+				Insert.class, Login.class
 		}) @TableField(comp = CompEnum.ge, isInsert = false, isUpdate = false) @JsonFormat(pattern = "yyyy-MM-dd HH:mm:dd", timezone = "GMT+8") Date createTime){
 }

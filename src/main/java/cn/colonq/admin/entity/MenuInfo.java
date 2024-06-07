@@ -47,11 +47,11 @@ public record MenuInfo(
 				Query.class, Insert.class, Update.class
 		}) @TableField(parent = true) String parentId,
 
-		@Null(message = "新增、修改菜单时无需createName", groups = {
-				Insert.class, Update.class
+		@Null(message = "新增菜单时无需createName", groups = {
+				Insert.class
 		}) @TableField(comp = CompEnum.like, isUpdate = false) String createName,
 
-		@Null(message = "新增、修改菜单时无需createTime", groups = {
-				Insert.class, Update.class
+		@Null(message = "新增菜单时无需createTime", groups = {
+				Insert.class
 		}) @TableField(comp = CompEnum.ge, isInsert = false, isUpdate = false) @JsonFormat(pattern = "yyyy-MM-dd HH:mm:dd", timezone = "GMT+8") Date createTime){
 }
