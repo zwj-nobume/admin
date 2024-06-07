@@ -4,7 +4,9 @@ import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 
@@ -90,8 +92,9 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfo, UserMapper> imple
 	public boolean checkPermission(String permission) {
 		final UserInfo payload = jwt.getPayload();
 		final List<String> permissionList = super.tmapper.selectUserPermission(payload.userId());
-		return permissionList.stream()
-				.filter(perm -> perm.equals(permission))
-				.findFirst().isPresent();
+		Stream<String> stream = permissionList.stream();
+		Optional<String> first = stream.filter(perm -> perm.equals(permission)).findFirst();
+		stream.close();
+		return first.isPresent();
 	}
 }

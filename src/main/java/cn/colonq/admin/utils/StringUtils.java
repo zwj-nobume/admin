@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.stereotype.Component;
 
@@ -73,7 +74,8 @@ public class StringUtils {
 	}
 
 	public boolean matches(String uri, Set<String> matches) {
-		List<String> matchesList = matches.stream().collect(Collectors.toList());
+		Stream<String> stream = matches.stream();
+		List<String> matchesList = stream.collect(Collectors.toList());
 		return matches(uri, matchesList, 0);
 	}
 

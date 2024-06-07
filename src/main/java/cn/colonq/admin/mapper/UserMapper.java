@@ -1,11 +1,14 @@
 package cn.colonq.admin.mapper;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Component;
 
 import cn.colonq.admin.config.CacheAble;
+import cn.colonq.admin.config.CacheEvict;
 import cn.colonq.admin.entity.UserInfo;
 import cn.colonq.admin.utils.DateUtils;
 import cn.colonq.admin.utils.StringUtils;
@@ -22,14 +25,19 @@ public class UserMapper extends BaseMapper<UserInfo> {
 		super(UserInfo.class, dateUtils, jdbcClient, stringUtils, stringBuilderPool);
 	}
 
+	@CacheAble(cacheName = "UserMapper.checkPwd")
 	public boolean checkPwd(final String userName, final String password) {
 		String sql = "SELECT password = PASSWORD(:password) FROM user_info WHERE user_name = :userName";
-		return super.jdbcClient.sql(sql)
+		Stream<Boolean> stream = super.jdbcClient.sql(sql)
 				.param("password", password)
 				.param("userName", userName)
-				.query(Boolean.class).single();
+				.query(Boolean.class).stream();
+		Optional<Boolean> first = stream.findFirst();
+		stream.close();
+		return first.isPresent() && first.get();
 	}
 
+	@CacheEvict(cacheName = { "UserMapper.checkPwd" })
 	public int regenerateSalt(final String userId) {
 		String sql = "UPDATE user_info SET salt = SHA2(MD5(RAND()),256) WHERE user_id = '" + userId + '\'';
 		return super.jdbcClient.sql(sql).update();

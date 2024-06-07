@@ -7,7 +7,9 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.JdbcClient;
@@ -73,11 +75,9 @@ public class BaseMapper<T> {
 		final StringBuilder builder = stringBuilderPool.getItem();
 		builder.setLength(0);
 		builder.append("SELECT ");
-		Arrays.asList(cls.getDeclaredFields()).stream()
-				.map(Field::getName)
-				.map(str -> str + ',')
-				.map(stringUtils::humpToLine)
-				.forEach(builder::append);
+		Stream<Field> fieldStream = Arrays.asList(cls.getDeclaredFields()).stream();
+		fieldStream.map(Field::getName).map(str -> str + ',').map(stringUtils::humpToLine).forEach(builder::append);
+		fieldStream.close();
 		builder.deleteCharAt(builder.length() - 1);
 		builder.append(" FROM ");
 		builder.append(stringUtils.humpToLine(tableName));
@@ -88,7 +88,13 @@ public class BaseMapper<T> {
 		builder.append('\'');
 		String sql = builder.toString();
 		stringBuilderPool.putItem(builder);
-		return jdbcClient.sql(sql).query(cls).single();
+		Stream<? extends T> stream = jdbcClient.sql(sql).query(cls).stream();
+		Optional<? extends T> first = stream.findFirst();
+		stream.close();
+		if (first.isPresent()) {
+			return first.get();
+		}
+		return null;
 	}
 
 	@CacheAble(cacheName = "BaseMapper.selectPage")
@@ -97,22 +103,20 @@ public class BaseMapper<T> {
 		final StringBuilder builder = stringBuilderPool.getItem();
 		builder.setLength(0);
 		builder.append("SELECT ");
-		Arrays.asList(cls.getDeclaredFields()).stream()
-				.filter(field -> {
-					TableField anno = field.getAnnotation(TableField.class);
-					return anno == null || anno.select();
-				})
-				.map(Field::getName)
-				.map(str -> str + ',')
-				.map(stringUtils::humpToLine)
-				.forEach(builder::append);
+		Stream<Field> stream = Arrays.asList(cls.getDeclaredFields()).stream();
+		stream.filter(field -> {
+			TableField anno = field.getAnnotation(TableField.class);
+			return anno == null || anno.select();
+		}).map(Field::getName).map(str -> str + ',').map(stringUtils::humpToLine).forEach(builder::append);
+		stream.close();
 		builder.deleteCharAt(builder.length() - 1);
 		final int selectLength = builder.length();
 		builder.append(" FROM ");
 		builder.append(stringUtils.humpToLine(tableName));
 		builder.append(" WHERE 1=1");
 
-		Arrays.asList(cls.getDeclaredFields()).stream().forEach(field -> {
+		stream = Arrays.asList(cls.getDeclaredFields()).stream();
+		stream.forEach(field -> {
 			TableField anno = field.getAnnotation(TableField.class);
 			if (anno != null && !anno.select()) {
 				return;
@@ -169,6 +173,7 @@ public class BaseMapper<T> {
 			}
 			field.setAccessible(canAccess);
 		});
+		stream.close();
 		builder.append(" ORDER BY " + sortFlag + " LIMIT ");
 		final long offset = (pageNum - 1) * pageSize;
 		builder.append(pageSize);
@@ -291,7 +296,8 @@ public class BaseMapper<T> {
 		return jdbcClient.sql(sql).update();
 	}
 
-	@CacheEvict(cacheName = { "BaseMapper.selectOne", "BaseMapper.selectPage" })
+	@CacheEvict(controlNames = { "BaseMapper", "UserMapper" }, cacheName = { "BaseMapper.selectOne",
+			"BaseMapper.selectPage", "UserMapper.checkPwd" })
 	public int update(final T param) {
 		final String tableName = getTableName(cls);
 		final String idName = getIdName(cls);
@@ -356,14 +362,17 @@ public class BaseMapper<T> {
 		return jdbcClient.sql(sql).update();
 	}
 
-	@CacheEvict(cacheName = { "BaseMapper.selectOne", "BaseMapper.selectPage" })
+	@CacheEvict(controlNames = { "BaseMapper", "UserMapper" }, cacheName = { "BaseMapper.selectOne",
+			"BaseMapper.selectPage", "UserMapper.checkPwd" })
 	public int updateParentNull(final String tableName, final String parentName, final Set<String> ids) {
 		final String idStr = '\'' + String.join("','", ids) + '\'';
-		final String sql = "UPDATE " + tableName + " SET " + parentName + " = NULL WHERE " + parentName + " in (" + idStr + ")";
+		final String sql = "UPDATE " + tableName + " SET " + parentName + " = NULL WHERE " + parentName + " in ("
+				+ idStr + ")";
 		return jdbcClient.sql(sql).update();
 	}
 
-	@CacheEvict(cacheName = { "BaseMapper.selectOne", "BaseMapper.selectPage" })
+	@CacheEvict(controlNames = { "BaseMapper", "UserMapper" }, cacheName = { "BaseMapper.selectOne",
+			"BaseMapper.selectPage", "UserMapper.checkPwd" })
 	public int delete(final Set<String> ids) {
 		final String idName = getIdName(cls);
 		final String tableName = getTableName(cls);

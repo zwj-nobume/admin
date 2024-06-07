@@ -2,6 +2,7 @@ package cn.colonq.admin.config;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.stream.Stream;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -108,9 +109,11 @@ public class AspectConfig {
 	 * @param cacheStart
 	 */
 	private void deleteCache(final String cacheStart) {
-		Object[] arr = cacheData.keys().stream().filter(key -> key.startsWith(cacheStart)).toArray();
+		Stream<String> stream = cacheData.keys().stream();
+		Object[] arr = stream.filter(key -> key.startsWith(cacheStart)).toArray();
 		if (arr.length != 0) {
 			cacheData.delete(arr);
 		}
+		stream.close();
 	}
 }
