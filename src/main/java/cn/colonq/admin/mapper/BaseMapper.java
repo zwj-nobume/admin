@@ -296,8 +296,7 @@ public class BaseMapper<T> {
 		return jdbcClient.sql(sql).update();
 	}
 
-	@CacheEvict(controlNames = { "BaseMapper", "UserMapper" }, cacheName = { "BaseMapper.selectOne",
-			"BaseMapper.selectPage", "UserMapper.checkPwd" })
+	@CacheEvict(cacheName = { "BaseMapper.selectOne", "BaseMapper.selectPage", "UserMapper.checkPwd" })
 	public int update(final T param) {
 		final String tableName = getTableName(cls);
 		final String idName = getIdName(cls);
@@ -362,8 +361,7 @@ public class BaseMapper<T> {
 		return jdbcClient.sql(sql).update();
 	}
 
-	@CacheEvict(controlNames = { "BaseMapper", "UserMapper" }, cacheName = { "BaseMapper.selectOne",
-			"BaseMapper.selectPage", "UserMapper.checkPwd" })
+	@CacheEvict(cacheName = { "BaseMapper.selectOne", "BaseMapper.selectPage", "UserMapper.checkPwd" })
 	public int updateParentNull(final String tableName, final String parentName, final Set<String> ids) {
 		final String idStr = '\'' + String.join("','", ids) + '\'';
 		final String sql = "UPDATE " + tableName + " SET " + parentName + " = NULL WHERE " + parentName + " in ("
@@ -371,8 +369,7 @@ public class BaseMapper<T> {
 		return jdbcClient.sql(sql).update();
 	}
 
-	@CacheEvict(controlNames = { "BaseMapper", "UserMapper" }, cacheName = { "BaseMapper.selectOne",
-			"BaseMapper.selectPage", "UserMapper.checkPwd" })
+	@CacheEvict(cacheName = { "BaseMapper.selectOne", "BaseMapper.selectPage", "UserMapper.checkPwd" })
 	public int delete(final Set<String> ids) {
 		final String idName = getIdName(cls);
 		final String tableName = getTableName(cls);
