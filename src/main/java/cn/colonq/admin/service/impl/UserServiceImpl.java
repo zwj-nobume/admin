@@ -40,7 +40,11 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfo, UserMapper> imple
 					user.email(), null, user.createName(), user.createTime());
 			Header header = new Header("HmacSHA256", "JWT");
 			try {
-				return Result.ok("登录成功", super.jwt.generateToken(header, payload, user.salt()));
+				String token = super.jwt.generateToken(header, payload, user.salt());
+				if (token == null) {
+					throw new ServiceException("生成Token异常");
+				}
+				return Result.ok("登录成功", token);
 			} catch (InvalidKeyException | NoSuchAlgorithmException | UnsupportedEncodingException e) {
 				throw new ServiceException(e.getMessage());
 			}

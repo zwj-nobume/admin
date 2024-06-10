@@ -2,8 +2,6 @@ package cn.colonq.admin.mapper;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -398,39 +396,36 @@ public class BaseMapper<T> {
 	}
 
 	private RowMapper<T> getRowMapper() {
-		return new RowMapper<T>() {
-			@Override
-			public T mapRow(ResultSet rs, int rowNum) throws SQLException {
-				final Field[] fields = cls.getDeclaredFields();
-				final Class<?>[] parameterTypes = new Class<?>[fields.length];
-				final Object[] initargs = new Object[fields.length];
-				for (int i = 0; i < fields.length; i++) {
-					Field field = fields[i];
-					parameterTypes[i] = field.getType();
-					TableField anno = field.getAnnotation(TableField.class);
-					if (anno != null && !anno.select()) {
-						initargs[i] = null;
-						continue;
-					}
-					if (String.class.isAssignableFrom(parameterTypes[i])) {
-						initargs[i] = rs.getString(stringUtils.humpToLine(field.getName()));
-					}
-					if (Integer.class.isAssignableFrom(parameterTypes[i])) {
-						initargs[i] = rs.getInt(stringUtils.humpToLine(field.getName()));
-					}
-					if (Long.class.isAssignableFrom(parameterTypes[i])) {
-						initargs[i] = rs.getLong(stringUtils.humpToLine(field.getName()));
-					}
-					if (Date.class.isAssignableFrom(parameterTypes[i])) {
-						initargs[i] = rs.getTimestamp(stringUtils.humpToLine(field.getName()));
-					}
+		return (rs, rowNum) -> {
+			final Field[] fields = cls.getDeclaredFields();
+			final Class<?>[] parameterTypes = new Class<?>[fields.length];
+			final Object[] initargs = new Object[fields.length];
+			for (int i = 0; i < fields.length; i++) {
+				Field field = fields[i];
+				parameterTypes[i] = field.getType();
+				TableField anno = field.getAnnotation(TableField.class);
+				if (anno != null && !anno.select()) {
+					initargs[i] = null;
+					continue;
 				}
-				try {
-					return cls.getDeclaredConstructor(parameterTypes).newInstance(initargs);
-				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-						| InvocationTargetException | NoSuchMethodException | SecurityException e) {
-					throw new ServiceException(e.getMessage());
+				if (String.class.isAssignableFrom(parameterTypes[i])) {
+					initargs[i] = rs.getString(stringUtils.humpToLine(field.getName()));
 				}
+				if (Integer.class.isAssignableFrom(parameterTypes[i])) {
+					initargs[i] = rs.getInt(stringUtils.humpToLine(field.getName()));
+				}
+				if (Long.class.isAssignableFrom(parameterTypes[i])) {
+					initargs[i] = rs.getLong(stringUtils.humpToLine(field.getName()));
+				}
+				if (Date.class.isAssignableFrom(parameterTypes[i])) {
+					initargs[i] = rs.getTimestamp(stringUtils.humpToLine(field.getName()));
+				}
+			}
+			try {
+				return cls.getDeclaredConstructor(parameterTypes).newInstance(initargs);
+			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+					| InvocationTargetException | NoSuchMethodException | SecurityException e) {
+				throw new ServiceException(e.getMessage());
 			}
 		};
 	}

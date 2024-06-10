@@ -27,62 +27,67 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 @WebFilter(urlPatterns = { "/**" }, filterName = "tokenFilter")
 public class TokenFilter implements Filter {
-    private final GlobalExceptionHandler handler;
-    private final StringUtils stringUtils;
-    private final UserMapper userMapper;
-    private final Set<String> openPath;
-    private final JWT jwt;
+	private final GlobalExceptionHandler handler;
+	private final StringUtils stringUtils;
+	private final UserMapper userMapper;
+	private final Set<String> openPath;
+	private final JWT jwt;
 
-    public TokenFilter(
-            final GlobalExceptionHandler handler,
-            final StringUtils stringUtils,
-            final UserMapper userMapper,
-            final JWT jwt) {
-        this.handler = handler;
-        this.userMapper = userMapper;
-        this.stringUtils = stringUtils;
-        this.jwt = jwt;
-        this.openPath = new HashSet<>();
-        this.openPath.add("/user/login");
-        this.openPath.add("^/file/.*");
-    }
+	public TokenFilter(
+			final GlobalExceptionHandler handler,
+			final StringUtils stringUtils,
+			final UserMapper userMapper,
+			final JWT jwt) {
+		this.handler = handler;
+		this.userMapper = userMapper;
+		this.stringUtils = stringUtils;
+		this.jwt = jwt;
+		this.openPath = new HashSet<>();
+		this.openPath.add("/user/login");
+		this.openPath.add("^/file/.*");
+	}
 
-    @Override
-    public void doFilter(
-            final ServletRequest req,
-            final ServletResponse res,
-            final FilterChain chain)
-            throws IOException, ServletException {
-        final HttpServletRequest request = (HttpServletRequest) req;
-        final HttpServletResponse response = (HttpServletResponse) res;
-        String uri = request.getRequestURI();
-        if (!stringUtils.matches(uri, this.openPath)) {
-            Header header = jwt.getHeader();
-            if (header == null) {
-                handler.filterServiceError(new ServiceException(HttpStatus.UNAUTHORIZED, "登录已过期, 请重新登录"), response);
-                return;
-            }
-            UserInfo payload = jwt.getPayload();
-            if (payload == null) {
-                handler.filterServiceError(new ServiceException(HttpStatus.UNAUTHORIZED, "登录已过期, 请重新登录"), response);
-                return;
-            }
-            UserInfo user = this.userMapper.selectOne("user_name", payload.userName());
-            if (user == null) {
-                handler.filterServiceError(new ServiceException(HttpStatus.UNAUTHORIZED, "用户信息错误, 请重新登录"), response);
-                return;
-            }
-            try {
-                String token = jwt.generateToken(header, payload, user.salt());
-                if (!token.equals(jwt.getToken())) {
-                    handler.filterServiceError(new ServiceException(HttpStatus.UNAUTHORIZED, "登录已过期, 请重新登录"), response);
-                    return;
-                }
-            } catch (InvalidKeyException | NoSuchAlgorithmException | UnsupportedEncodingException e) {
-                handler.filterServiceError(new ServiceException(e.getMessage()), response);
-                return;
-            }
-        }
-        chain.doFilter(request, response);
-    }
+	@Override
+	public void doFilter(
+			final ServletRequest req,
+			final ServletResponse res,
+			final FilterChain chain)
+			throws IOException, ServletException {
+		final HttpServletRequest request = (HttpServletRequest) req;
+		final HttpServletResponse response = (HttpServletResponse) res;
+		String uri = request.getRequestURI();
+		if (!stringUtils.matches(uri, this.openPath)) {
+			Header header = jwt.getHeader();
+			if (header == null) {
+				handler.filterServiceError(new ServiceException(HttpStatus.UNAUTHORIZED, "登录已过期, 请重新登录"), response);
+				return;
+			}
+			UserInfo payload = jwt.getPayload();
+			if (payload == null) {
+				handler.filterServiceError(new ServiceException(HttpStatus.UNAUTHORIZED, "登录已过期, 请重新登录"), response);
+				return;
+			}
+			UserInfo user = this.userMapper.selectOne("user_name", payload.userName());
+			if (user == null) {
+				handler.filterServiceError(new ServiceException(HttpStatus.UNAUTHORIZED, "用户信息错误, 请重新登录"), response);
+				return;
+			}
+			try {
+				String token = jwt.generateToken(header, payload, user.salt());
+				if (token == null) {
+					handler.filterServiceError(new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, "生成Token异常"),
+							response);
+					return;
+				}
+				if (!token.equals(jwt.getToken())) {
+					handler.filterServiceError(new ServiceException(HttpStatus.UNAUTHORIZED, "登录已过期, 请重新登录"), response);
+					return;
+				}
+			} catch (InvalidKeyException | NoSuchAlgorithmException | UnsupportedEncodingException e) {
+				handler.filterServiceError(new ServiceException(e.getMessage()), response);
+				return;
+			}
+		}
+		chain.doFilter(request, response);
+	}
 }
