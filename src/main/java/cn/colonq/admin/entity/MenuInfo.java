@@ -33,7 +33,7 @@ public record MenuInfo(
 
 		@NotBlank(message = "菜单标签不得为空", groups = {
 				Insert.class
-		}) @Size(min = 6, max = 50, message = "菜单标签长度必须在6到50之间", groups = {
+		}) @Size(max = 50, message = "菜单标签长度不超过50", groups = {
 				Insert.class, Update.class
 		}) @TableField(comp = CompEnum.like) String menuLabel,
 

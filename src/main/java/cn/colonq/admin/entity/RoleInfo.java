@@ -26,14 +26,10 @@ public record RoleInfo(
 
 		@NotBlank(message = "角色名不得为空", groups = {
 				Insert.class
-		}) @Size(min = 6, max = 20, message = "角色名长度必须在6到20之间", groups = {
-				Insert.class, Update.class
 		}) @TableField(comp = CompEnum.like) String roleName,
 
 		@NotBlank(message = "角色标签不得为空", groups = {
 				Insert.class
-		}) @Size(min = 6, max = 20, message = "角色标签长度必须在6到20之间", groups = {
-				Insert.class, Update.class
 		}) @TableField(comp = CompEnum.like) String roleLabel,
 
 		@Null(message = "新增时无需createName", groups = {
