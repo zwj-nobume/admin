@@ -14,7 +14,7 @@ import cn.colonq.admin.service.IMenuService;
 import cn.colonq.admin.utils.JWT;
 import cn.colonq.admin.utils.StringUtils;
 
-@Service
+@Service(value = "menuService")
 public class MenuServiceImpl extends BaseServiceImpl<MenuInfo, MenuMapper> implements IMenuService {
 
 	public MenuServiceImpl(

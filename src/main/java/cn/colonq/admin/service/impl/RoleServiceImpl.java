@@ -15,7 +15,7 @@ import cn.colonq.admin.service.IRoleService;
 import cn.colonq.admin.utils.JWT;
 import cn.colonq.admin.utils.StringUtils;
 
-@Service
+@Service(value = "roleService")
 public class RoleServiceImpl extends BaseServiceImpl<RoleInfo, RoleMapper> implements IRoleService {
 
 	public RoleServiceImpl(

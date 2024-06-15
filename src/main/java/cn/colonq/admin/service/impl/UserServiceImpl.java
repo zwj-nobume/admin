@@ -21,7 +21,7 @@ import cn.colonq.admin.service.IUserService;
 import cn.colonq.admin.utils.JWT;
 import cn.colonq.admin.utils.StringUtils;
 
-@Service
+@Service(value = "userService")
 public class UserServiceImpl extends BaseServiceImpl<UserInfo, UserMapper> implements IUserService {
 
 	public UserServiceImpl(
