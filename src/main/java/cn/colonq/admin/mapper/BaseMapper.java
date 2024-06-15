@@ -262,7 +262,13 @@ public class BaseMapper<T> {
 	 * @param ids2
 	 * @return
 	 */
-	@CacheEvict(cacheName = { "BaseMapper.selectLinkById" })
+	@CacheEvict(controlNames = {
+			"cn.colonq.admin.mapper.UserMapper",
+			"cn.colonq.admin.mapper.RoleMapper",
+			"cn.colonq.admin.mapper.MenuMapper"
+	}, cacheName = {
+			"BaseMapper.selectLinkById",
+			"UserMapper.selectUserPermission" })
 	public int link(
 			final String tableName,
 			final String columName1,
