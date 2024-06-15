@@ -380,7 +380,13 @@ public class BaseMapper<T> {
 		return defaultDelete(tableName, idName, ids);
 	}
 
-	@CacheEvict(cacheName = { "BaseMapper.selectLinkById" })
+	@CacheEvict(controlNames = {
+			"cn.colonq.admin.mapper.UserMapper",
+			"cn.colonq.admin.mapper.RoleMapper",
+			"cn.colonq.admin.mapper.MenuMapper"
+	}, cacheName = {
+			"BaseMapper.selectLinkById",
+			"UserMapper.selectUserPermission" })
 	public int deleteLink(final String tableName, final String idName, final Set<String> ids) {
 		return defaultDelete(tableName, idName, ids);
 	}
