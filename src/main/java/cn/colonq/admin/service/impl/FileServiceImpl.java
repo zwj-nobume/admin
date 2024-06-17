@@ -52,15 +52,15 @@ public class FileServiceImpl implements IFileService {
 	}
 
 	@Override
-	public Result uploadFile(String basePath, MultipartFile[] files) {
-		if (stringUtils.isEmpty(basePath)) {
+	public Result uploadFile(String path, MultipartFile[] files) {
+		if (stringUtils.isEmpty(path)) {
 			return Result.error("文件上传路径为空");
 		}
 		List<String> successList = new ArrayList<>();
 		for (MultipartFile file : files) {
 			String fileName = file.getOriginalFilename();
 			try {
-				file.transferTo(Path.of(basePath, fileName));
+				file.transferTo(Path.of(path, fileName));
 			} catch (IllegalStateException | IOException e) {
 				throw new ServiceException("文件: " + fileName + " 上传失败");
 			}

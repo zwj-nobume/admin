@@ -38,7 +38,7 @@ public class FileController {
 	public Result list(HttpServletRequest request) {
 		final String url = request.getRequestURI();
 		final String tgtUrl = url.substring(10);
-		if (tgtUrl.startsWith("..")) {
+		if (tgtUrl.indexOf("/../") != -1) {
 			throw new ServiceException("路径异常");
 		}
 		Path path = Path.of(basePath, tgtUrl);
@@ -59,7 +59,7 @@ public class FileController {
 	public Result mkdir(HttpServletRequest request) {
 		final String url = request.getRequestURI();
 		final String tgtUrl = url.substring(11);
-		if (tgtUrl.startsWith("..")) {
+		if (tgtUrl.indexOf("/../") != -1) {
 			throw new ServiceException("路径异常");
 		}
 		Path path = Path.of(basePath, tgtUrl);
@@ -69,10 +69,19 @@ public class FileController {
 		return fileService.mkdir(path);
 	}
 
-	@PutMapping("/upload")
+	@PutMapping("/upload/**")
 	@PermissionAnnotation(":add")
-	public Result upload(@RequestParam(value = "files") MultipartFile[] files) {
-		return fileService.uploadFile(basePath, files);
+	public Result upload(HttpServletRequest request, @RequestParam(value = "files") MultipartFile[] files) {
+		final String url = request.getRequestURI();
+		final String tgtUrl = url.substring(12);
+		if (tgtUrl.indexOf("/../") != -1) {
+			throw new ServiceException("路径异常");
+		}
+		Path path = Path.of(basePath, tgtUrl);
+		if (!Files.exists(path)) {
+			throw new ServiceException("文件夹路径不存在");
+		}
+		return fileService.uploadFile(path.toAbsolutePath().toString(), files);
 	}
 
 	@GetMapping("/download/**")
@@ -80,7 +89,7 @@ public class FileController {
 	public ResponseEntity<Resource> download(HttpServletRequest request) {
 		final String url = request.getRequestURI();
 		final String tgtUrl = url.substring(14);
-		if (tgtUrl.startsWith("..")) {
+		if (tgtUrl.indexOf("/../") != -1) {
 			throw new ServiceException("路径异常");
 		}
 		Path path = Path.of(basePath, tgtUrl);

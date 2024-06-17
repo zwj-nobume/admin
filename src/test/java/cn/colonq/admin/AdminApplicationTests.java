@@ -1,6 +1,6 @@
 package cn.colonq.admin;
 
-import java.io.File;
+import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,7 +10,8 @@ class AdminApplicationTests {
 
 	@Test
 	void contextLoads() {
-		File file = new File("/home/nobume/AdminDir/test1/test2/test3");
-		file.mkdirs();
+		Path path = Path.of("/home/nobume/AdminDir", "VMware.vscode-boot-dev-pack-0.1.0.vsix");
+		String absolutePath = path.toAbsolutePath().toString();
+		System.out.println(absolutePath);
 	}
 }
