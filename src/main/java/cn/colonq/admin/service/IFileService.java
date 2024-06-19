@@ -16,5 +16,7 @@ public interface IFileService {
 
 	Result uploadFile(String path, MultipartFile[] files);
 
+    Result deleteFile(Path path);
+
 	ResponseEntity<Resource> download(Path path);
 }

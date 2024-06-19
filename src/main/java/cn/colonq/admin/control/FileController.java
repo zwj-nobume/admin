@@ -2,14 +2,16 @@ package cn.colonq.admin.control;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -71,7 +73,7 @@ public class FileController {
 
 	@PutMapping("/upload/**")
 	@PermissionAnnotation(":add")
-	public Result upload(HttpServletRequest request, @RequestParam(value = "files") MultipartFile[] files) {
+	public Result upload(HttpServletRequest request, MultipartFile[] files) {
 		final String url = request.getRequestURI();
 		final String tgtUrl = url.substring(12);
 		if (tgtUrl.indexOf("/../") != -1) {
@@ -82,6 +84,39 @@ public class FileController {
 			throw new ServiceException("文件夹路径不存在");
 		}
 		return fileService.uploadFile(path.toAbsolutePath().toString(), files);
+	}
+
+	@DeleteMapping("/delete/**")
+	@PermissionAnnotation(":delete")
+	public Result delete(HttpServletRequest request) {
+		final String url = request.getRequestURI();
+		final String tgtUrl = url.substring(12);
+		if (tgtUrl.indexOf("/../") != -1) {
+			throw new ServiceException("路径异常");
+		}
+		Path path = Path.of(basePath, tgtUrl);
+		if (!Files.exists(path)) {
+			throw new ServiceException("文件路径不存在");
+		}
+		return fileService.deleteFile(path);
+	}
+
+	@DeleteMapping("/deleteBatch/**")
+	@PermissionAnnotation(":delete")
+	public Result delete(HttpServletRequest request, @RequestBody Set<String> names) {
+		final String url = request.getRequestURI();
+		final String tgtUrl = url.substring(17);
+		if (tgtUrl.indexOf("/../") != -1) {
+			throw new ServiceException("路径异常");
+		}
+		for (String name : names) {
+			Path path = Path.of(basePath, tgtUrl, name);
+			if (!Files.exists(path)) {
+				throw new ServiceException("文件路径不存在");
+			}
+			fileService.deleteFile(path);
+		}
+		return Result.ok("批量删除成功");
 	}
 
 	@GetMapping("/download/**")

@@ -1,5 +1,6 @@
 package cn.colonq.admin;
 
+import java.io.File;
 import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
@@ -10,8 +11,20 @@ class AdminApplicationTests {
 
 	@Test
 	void contextLoads() {
-		Path path = Path.of("/home/nobume/AdminDir", "VMware.vscode-boot-dev-pack-0.1.0.vsix");
-		String absolutePath = path.toAbsolutePath().toString();
-		System.out.println(absolutePath);
+		Path path = Path.of("/home/nobume/Software/upload/test1");
+		File deleteFile = path.toFile();
+		recursionDelete(deleteFile);
+	}
+
+	void recursionDelete(File file) {
+		if (file == null || !file.exists()) {
+			return;
+		}
+		if (file.isDirectory()) {
+			for (File child : file.listFiles()) {
+				recursionDelete(child);
+			}
+		}
+		file.delete();
 	}
 }

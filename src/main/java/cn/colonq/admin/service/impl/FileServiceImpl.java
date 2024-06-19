@@ -70,7 +70,25 @@ public class FileServiceImpl implements IFileService {
 	}
 
 	@Override
+	public Result deleteFile(Path path) {
+		recursionDelete(path.toFile());
+		return Result.ok("删除成功");
+	}
+
+	@Override
 	public ResponseEntity<Resource> download(Path path) {
 		return ResponseEntity.ok(new FileSystemResource(path));
+	}
+
+	private void recursionDelete(File file) {
+		if (file == null || !file.exists()) {
+			return;
+		}
+		if (file.isDirectory()) {
+			for (File child : file.listFiles()) {
+				recursionDelete(child);
+			}
+		}
+		file.delete();
 	}
 }
