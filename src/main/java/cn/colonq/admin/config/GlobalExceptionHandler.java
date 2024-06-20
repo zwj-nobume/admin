@@ -61,10 +61,6 @@ public class GlobalExceptionHandler {
 		sendError(Result.error("无法解析请求Body"), res);
 	}
 
-	public void filterServiceError(ServiceException err, HttpServletResponse res) {
-		sendError(Result.error(err), res);
-	}
-
 	private void sendError(Result result, HttpServletResponse res) {
 		res.setStatus(result.status());
 		res.setHeader("Access-Control-Allow-Origin", "*");

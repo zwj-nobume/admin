@@ -58,33 +58,39 @@ public class TokenFilter implements Filter {
 		String uri = request.getRequestURI();
 		if (!stringUtils.matches(uri, this.openPath)) {
 			Header header = jwt.getHeader();
+			ServiceException err;
 			if (header == null) {
-				handler.filterServiceError(new ServiceException(HttpStatus.UNAUTHORIZED, "登录已过期, 请重新登录"), response);
+				err = new ServiceException(HttpStatus.UNAUTHORIZED, "登录已过期, 请重新登录");
+				handler.handleServiceError(err, response);
 				return;
 			}
 			UserInfo payload = jwt.getPayload();
 			if (payload == null) {
-				handler.filterServiceError(new ServiceException(HttpStatus.UNAUTHORIZED, "登录已过期, 请重新登录"), response);
+				err = new ServiceException(HttpStatus.UNAUTHORIZED, "登录已过期, 请重新登录");
+				handler.handleServiceError(err, response);
 				return;
 			}
 			UserInfo user = this.userMapper.selectOne("user_name", payload.userName());
 			if (user == null) {
-				handler.filterServiceError(new ServiceException(HttpStatus.UNAUTHORIZED, "用户信息错误, 请重新登录"), response);
+				err = new ServiceException(HttpStatus.UNAUTHORIZED, "用户信息错误, 请重新登录");
+				handler.handleServiceError(err, response);
 				return;
 			}
 			try {
 				String token = jwt.generateToken(header, payload, user.salt());
 				if (token == null) {
-					handler.filterServiceError(new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, "生成Token异常"),
-							response);
+					err = new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, "生成Token异常");
+					handler.handleServiceError(err, response);
 					return;
 				}
 				if (!token.equals(jwt.getToken())) {
-					handler.filterServiceError(new ServiceException(HttpStatus.UNAUTHORIZED, "登录已过期, 请重新登录"), response);
+					err = new ServiceException(HttpStatus.UNAUTHORIZED, "登录已过期, 请重新登录");
+					handler.handleServiceError(err, response);
 					return;
 				}
 			} catch (InvalidKeyException | NoSuchAlgorithmException | UnsupportedEncodingException e) {
-				handler.filterServiceError(new ServiceException(e.getMessage()), response);
+				err = new ServiceException(e.getMessage());
+				handler.handleServiceError(err, response);
 				return;
 			}
 		}
