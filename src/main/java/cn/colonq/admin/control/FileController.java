@@ -9,6 +9,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,23 +28,26 @@ import jakarta.servlet.http.HttpServletRequest;
 public class FileController {
 	private final String basePath;
 	private final IFileService fileService;
+	private final HttpServletRequest request;
 
 	public FileController(
 			@Value("${server.file.dir}") final String basePath,
-			final IFileService fileService) {
+			final IFileService fileService,
+			final HttpServletRequest request) {
 		this.basePath = basePath;
 		this.fileService = fileService;
+		this.request = request;
 	}
 
 	@GetMapping("/list/**")
 	@PermissionAnnotation(":query")
-	public Result list(HttpServletRequest request) {
-		final String url = request.getRequestURI();
+	public Result list() {
+		final String url = this.request.getRequestURI();
 		final String tgtUrl = url.substring(10);
 		if (tgtUrl.indexOf("/../") != -1) {
 			throw new ServiceException("路径异常");
 		}
-		Path path = Path.of(basePath, tgtUrl);
+		Path path = Path.of(this.basePath, tgtUrl);
 		if (!Files.exists(path)) {
 			throw new ServiceException("文件夹路径不存在");
 		}
@@ -53,81 +57,92 @@ public class FileController {
 		if (!Files.isReadable(path)) {
 			throw new ServiceException("此路径不可读");
 		}
-		return fileService.list(path);
+		return this.fileService.list(path);
 	}
 
 	@PutMapping("/mkdir/**")
 	@PermissionAnnotation(":add")
-	public Result mkdir(HttpServletRequest request) {
-		final String url = request.getRequestURI();
+	public Result mkdir() {
+		final String url = this.request.getRequestURI();
 		final String tgtUrl = url.substring(11);
 		if (tgtUrl.indexOf("/../") != -1) {
 			throw new ServiceException("路径异常");
 		}
-		Path path = Path.of(basePath, tgtUrl);
+		Path path = Path.of(this.basePath, tgtUrl);
 		if (Files.exists(path)) {
 			throw new ServiceException("文件夹路径已存在");
 		}
-		return fileService.mkdir(path);
+		return this.fileService.mkdir(path);
 	}
 
 	@PutMapping("/upload/**")
 	@PermissionAnnotation(":add")
-	public Result upload(HttpServletRequest request, MultipartFile[] files) {
-		final String url = request.getRequestURI();
+	public Result upload(MultipartFile[] files) {
+		final String url = this.request.getRequestURI();
 		final String tgtUrl = url.substring(12);
 		if (tgtUrl.indexOf("/../") != -1) {
 			throw new ServiceException("路径异常");
 		}
-		Path path = Path.of(basePath, tgtUrl);
+		Path path = Path.of(this.basePath, tgtUrl);
 		if (!Files.exists(path)) {
 			throw new ServiceException("文件夹路径不存在");
 		}
-		return fileService.uploadFile(path.toAbsolutePath().toString(), files);
+		return this.fileService.uploadFile(path.toAbsolutePath().toString(), files);
+	}
+
+	@PostMapping("/move/**")
+	@PermissionAnnotation(":edit")
+	public Result move(@RequestBody Set<String> fromPath) {
+		final String url = this.request.getRequestURI();
+		final String tgtUrl = url.substring(10);
+		if (tgtUrl.indexOf("/../") != -1) {
+			throw new ServiceException("路径异常");
+		}
+		return Result.ok();
 	}
 
 	@DeleteMapping("/delete/**")
 	@PermissionAnnotation(":delete")
-	public Result delete(HttpServletRequest request) {
-		final String url = request.getRequestURI();
+	public Result delete() {
+		final String url = this.request.getRequestURI();
 		final String tgtUrl = url.substring(12);
 		if (tgtUrl.indexOf("/../") != -1) {
 			throw new ServiceException("路径异常");
 		}
-		Path path = Path.of(basePath, tgtUrl);
+		Path path = Path.of(this.basePath, tgtUrl);
 		if (!Files.exists(path)) {
 			throw new ServiceException("文件路径不存在");
 		}
-		return fileService.deleteFile(path);
+		return this.fileService.deleteFile(path);
 	}
 
 	@DeleteMapping("/deleteBatch/**")
 	@PermissionAnnotation(":delete")
-	public Result delete(HttpServletRequest request, @RequestBody Set<String> names) {
-		final String url = request.getRequestURI();
+	public Result delete(@RequestBody Set<String> names) {
+		final String url = this.request.getRequestURI();
 		final String tgtUrl = url.substring(17);
 		if (tgtUrl.indexOf("/../") != -1) {
 			throw new ServiceException("路径异常");
 		}
 		for (String name : names) {
-			Path path = Path.of(basePath, tgtUrl, name);
+			Path path = Path.of(this.basePath, tgtUrl, name);
 			if (!Files.exists(path)) {
 				throw new ServiceException("文件路径不存在");
 			}
-			fileService.deleteFile(path);
+			this.fileService.deleteFile(path);
 		}
 		return Result.ok("批量删除成功");
 	}
 
 	@GetMapping("/download/**")
 	@PermissionAnnotation(":download")
-	public ResponseEntity<Resource> download(HttpServletRequest request) {
-		final String url = request.getRequestURI();
+	public ResponseEntity<Resource> download() {
+		final String url = this.request.getRequestURI();
 		final String tgtUrl = url.substring(14);
 		if (tgtUrl.indexOf("/../") != -1) {
 			throw new ServiceException("路径异常");
 		}
-		Path path = Path.of(basePath, tgtUrl);
+		Path path = Path.of(this.basePath, tgtUrl);
 		if (!Files.exists(path)) {
 			throw new ServiceException("文件不存在");
 		}
@@ -137,6 +152,6 @@ public class FileController {
 		if (Files.isDirectory(path)) {
 			throw new ServiceException("此路径是文件夹");
 		}
-		return fileService.download(path);
+		return this.fileService.download(path);
 	}
 }
