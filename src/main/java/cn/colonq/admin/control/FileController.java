@@ -42,12 +42,8 @@ public class FileController {
 	@GetMapping("/list/**")
 	@PermissionAnnotation(":query")
 	public Result list() {
-		final String url = this.request.getRequestURI();
-		final String tgtUrl = url.substring(10);
-		if (tgtUrl.indexOf("/../") != -1) {
-			throw new ServiceException("路径异常");
-		}
-		Path path = Path.of(this.basePath, tgtUrl);
+		final String targetUrl = getTargetUrl();
+		Path path = Path.of(this.basePath, targetUrl);
 		if (!Files.exists(path)) {
 			throw new ServiceException("文件夹路径不存在");
 		}
@@ -63,12 +59,8 @@ public class FileController {
 	@PutMapping("/mkdir/**")
 	@PermissionAnnotation(":add")
 	public Result mkdir() {
-		final String url = this.request.getRequestURI();
-		final String tgtUrl = url.substring(11);
-		if (tgtUrl.indexOf("/../") != -1) {
-			throw new ServiceException("路径异常");
-		}
-		Path path = Path.of(this.basePath, tgtUrl);
+		final String targetUrl = getTargetUrl();
+		Path path = Path.of(this.basePath, targetUrl);
 		if (Files.exists(path)) {
 			throw new ServiceException("文件夹路径已存在");
 		}
@@ -78,12 +70,8 @@ public class FileController {
 	@PutMapping("/upload/**")
 	@PermissionAnnotation(":add")
 	public Result upload(MultipartFile[] files) {
-		final String url = this.request.getRequestURI();
-		final String tgtUrl = url.substring(12);
-		if (tgtUrl.indexOf("/../") != -1) {
-			throw new ServiceException("路径异常");
-		}
-		Path path = Path.of(this.basePath, tgtUrl);
+		final String targetUrl = getTargetUrl();
+		Path path = Path.of(this.basePath, targetUrl);
 		if (!Files.exists(path)) {
 			throw new ServiceException("文件夹路径不存在");
 		}
@@ -92,24 +80,16 @@ public class FileController {
 
 	@PostMapping("/move/**")
 	@PermissionAnnotation(":edit")
-	public Result move(@RequestBody Set<String> fromPath) {
-		final String url = this.request.getRequestURI();
-		final String tgtUrl = url.substring(10);
-		if (tgtUrl.indexOf("/../") != -1) {
-			throw new ServiceException("路径异常");
-		}
-		return Result.ok();
+	public Result move(@RequestBody Set<String> fromUrlSet) {
+		final String targetUrl = getTargetUrl();
+		return this.fileService.moveFile(fromUrlSet, targetUrl);
 	}
 
 	@DeleteMapping("/delete/**")
 	@PermissionAnnotation(":delete")
 	public Result delete() {
-		final String url = this.request.getRequestURI();
-		final String tgtUrl = url.substring(12);
-		if (tgtUrl.indexOf("/../") != -1) {
-			throw new ServiceException("路径异常");
-		}
-		Path path = Path.of(this.basePath, tgtUrl);
+		final String targetUrl = getTargetUrl();
+		Path path = Path.of(this.basePath, targetUrl);
 		if (!Files.exists(path)) {
 			throw new ServiceException("文件路径不存在");
 		}
@@ -118,14 +98,10 @@ public class FileController {
 
 	@DeleteMapping("/deleteBatch/**")
 	@PermissionAnnotation(":delete")
-	public Result delete(@RequestBody Set<String> names) {
-		final String url = this.request.getRequestURI();
-		final String tgtUrl = url.substring(17);
-		if (tgtUrl.indexOf("/../") != -1) {
-			throw new ServiceException("路径异常");
-		}
+	public Result deleteBatch(@RequestBody Set<String> names) {
+		final String targetUrl = getTargetUrl();
 		for (String name : names) {
-			Path path = Path.of(this.basePath, tgtUrl, name);
+			Path path = Path.of(this.basePath, targetUrl, name);
 			if (!Files.exists(path)) {
 				throw new ServiceException("文件路径不存在");
 			}
@@ -137,12 +113,8 @@ public class FileController {
 	@GetMapping("/download/**")
 	@PermissionAnnotation(":download")
 	public ResponseEntity<Resource> download() {
-		final String url = this.request.getRequestURI();
-		final String tgtUrl = url.substring(14);
-		if (tgtUrl.indexOf("/../") != -1) {
-			throw new ServiceException("路径异常");
-		}
-		Path path = Path.of(this.basePath, tgtUrl);
+		final String targetUrl = getTargetUrl();
+		Path path = Path.of(this.basePath, targetUrl);
 		if (!Files.exists(path)) {
 			throw new ServiceException("文件不存在");
 		}
@@ -153,5 +125,15 @@ public class FileController {
 			throw new ServiceException("此路径是文件夹");
 		}
 		return this.fileService.download(path);
+	}
+
+	private String getTargetUrl() {
+		String methodName = Thread.currentThread().getStackTrace()[2].getMethodName();
+		final String url = this.request.getRequestURI();
+		final String targetUrl = url.substring(methodName.length() + 6);
+		if (targetUrl.indexOf("/../") != -1) {
+			throw new ServiceException("路径异常");
+		}
+		return targetUrl;
 	}
 }
