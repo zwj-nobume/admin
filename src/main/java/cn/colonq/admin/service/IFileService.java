@@ -1,6 +1,7 @@
 package cn.colonq.admin.service;
 
 import java.nio.file.Path;
+import java.util.Set;
 
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
@@ -10,13 +11,15 @@ import cn.colonq.admin.entity.Result;
 
 public interface IFileService {
 
-	Result list(Path path);
+	Result list(final Path path);
 
-	Result mkdir(Path path);
+	Result mkdir(final Path path);
 
-	Result uploadFile(String path, MultipartFile[] files);
+	Result uploadFile(final String path, final MultipartFile[] files);
 
-    Result deleteFile(Path path);
+	Result moveFile(final Set<String> fromUrlSet, final String targetUrl);
 
-	ResponseEntity<Resource> download(Path path);
+    Result deleteFile(final Path path);
+
+	ResponseEntity<Resource> download(final Path path);
 }
