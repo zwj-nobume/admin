@@ -17,7 +17,7 @@ public interface IFileService {
 
 	Result uploadFile(final String path, final MultipartFile[] files);
 
-	Result moveFile(final Set<String> fromUrlSet, final String targetUrl);
+	Result moveFile(final String basePath, final Set<String> fromUrlSet, final String targetUrl);
 
     Result deleteFile(final Path path);
 

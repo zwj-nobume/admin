@@ -73,23 +73,23 @@ public class FileServiceImpl implements IFileService {
 	}
 
 	@Override
-	public Result moveFile(final Set<String> fromUrlSet, final String targetUrl) {
+	public Result moveFile(final String basePath, final Set<String> fromUrlSet, final String targetUrl) {
 		if (fromUrlSet == null || fromUrlSet.size() == 0) {
 			throw new ServiceException("文件修改失败, 源路径错误");
 		}
 		if (fromUrlSet.size() == 1) {
 			final String fromUrl = fromUrlSet.iterator().next();
-			final Path source = Path.of(fromUrl);
-			final Path target = Path.of(targetUrl);
+			final Path source = Path.of(basePath, fromUrl);
+			final Path target = Path.of(basePath, targetUrl);
 			move(source, target);
 		} else {
 			for (final String fromUrl : fromUrlSet) {
-				final Path targetPath = Path.of(targetUrl);
+				final Path targetPath = Path.of(basePath, targetUrl);
 				if (!Files.exists(targetPath) && targetPath.toFile().mkdirs()) {
 					throw new ServiceException("文件修改失败, 目标路径错误, 无法创建文件夹");
 				}
-				final Path source = Path.of(fromUrl);
-				final Path target = Path.of(targetUrl, source.getFileName().toString());
+				final Path source = Path.of(basePath, fromUrl);
+				final Path target = Path.of(basePath, targetUrl, source.getFileName().toString());
 				move(source, target);
 			}
 		}

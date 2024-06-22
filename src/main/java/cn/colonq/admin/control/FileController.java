@@ -84,7 +84,7 @@ public class FileController {
 	@PermissionAnnotation(":edit")
 	public Result move(@RequestBody Set<String> fromUrlSet) throws UnsupportedEncodingException {
 		final String targetUrl = getTargetUrl();
-		return this.fileService.moveFile(fromUrlSet, targetUrl);
+		return this.fileService.moveFile(this.basePath, fromUrlSet, targetUrl);
 	}
 
 	@DeleteMapping("/delete/**")
