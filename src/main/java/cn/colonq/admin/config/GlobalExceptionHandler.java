@@ -2,6 +2,7 @@ package cn.colonq.admin.config;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -59,6 +60,12 @@ public class GlobalExceptionHandler {
 	public void handleHttpMessageNotReadable(HttpMessageNotReadableException e, HttpServletResponse res) {
 		// TODO 入日志库
 		sendError(Result.error("无法解析请求Body"), res);
+	}
+
+	@ExceptionHandler(UnsupportedEncodingException.class)
+	public void handleUnsupportedEncodingException(UnsupportedEncodingException e, HttpServletResponse res) {
+		// TODO 入日志库
+		sendError(Result.error("URL Decoder 解码 URL 错误"), res);
 	}
 
 	private void sendError(Result result, HttpServletResponse res) {

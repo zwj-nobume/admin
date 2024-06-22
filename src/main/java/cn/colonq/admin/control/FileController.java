@@ -1,5 +1,7 @@
 package cn.colonq.admin.control;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Set;
@@ -41,7 +43,7 @@ public class FileController {
 
 	@GetMapping("/list/**")
 	@PermissionAnnotation(":query")
-	public Result list() {
+	public Result list() throws UnsupportedEncodingException {
 		final String targetUrl = getTargetUrl();
 		Path path = Path.of(this.basePath, targetUrl);
 		if (!Files.exists(path)) {
@@ -58,7 +60,7 @@ public class FileController {
 
 	@PutMapping("/mkdir/**")
 	@PermissionAnnotation(":add")
-	public Result mkdir() {
+	public Result mkdir() throws UnsupportedEncodingException {
 		final String targetUrl = getTargetUrl();
 		Path path = Path.of(this.basePath, targetUrl);
 		if (Files.exists(path)) {
@@ -69,7 +71,7 @@ public class FileController {
 
 	@PutMapping("/upload/**")
 	@PermissionAnnotation(":add")
-	public Result upload(MultipartFile[] files) {
+	public Result upload(MultipartFile[] files) throws UnsupportedEncodingException {
 		final String targetUrl = getTargetUrl();
 		Path path = Path.of(this.basePath, targetUrl);
 		if (!Files.exists(path)) {
@@ -80,14 +82,14 @@ public class FileController {
 
 	@PostMapping("/move/**")
 	@PermissionAnnotation(":edit")
-	public Result move(@RequestBody Set<String> fromUrlSet) {
+	public Result move(@RequestBody Set<String> fromUrlSet) throws UnsupportedEncodingException {
 		final String targetUrl = getTargetUrl();
 		return this.fileService.moveFile(fromUrlSet, targetUrl);
 	}
 
 	@DeleteMapping("/delete/**")
 	@PermissionAnnotation(":delete")
-	public Result delete() {
+	public Result delete() throws UnsupportedEncodingException {
 		final String targetUrl = getTargetUrl();
 		Path path = Path.of(this.basePath, targetUrl);
 		if (!Files.exists(path)) {
@@ -98,7 +100,7 @@ public class FileController {
 
 	@DeleteMapping("/deleteBatch/**")
 	@PermissionAnnotation(":delete")
-	public Result deleteBatch(@RequestBody Set<String> names) {
+	public Result deleteBatch(@RequestBody Set<String> names) throws UnsupportedEncodingException {
 		final String targetUrl = getTargetUrl();
 		for (String name : names) {
 			Path path = Path.of(this.basePath, targetUrl, name);
@@ -112,7 +114,7 @@ public class FileController {
 
 	@GetMapping("/download/**")
 	@PermissionAnnotation(":download")
-	public ResponseEntity<Resource> download() {
+	public ResponseEntity<Resource> download() throws UnsupportedEncodingException {
 		final String targetUrl = getTargetUrl();
 		Path path = Path.of(this.basePath, targetUrl);
 		if (!Files.exists(path)) {
@@ -127,13 +129,13 @@ public class FileController {
 		return this.fileService.download(path);
 	}
 
-	private String getTargetUrl() {
+	private String getTargetUrl() throws UnsupportedEncodingException {
 		String methodName = Thread.currentThread().getStackTrace()[2].getMethodName();
 		final String url = this.request.getRequestURI();
 		final String targetUrl = url.substring(methodName.length() + 6);
 		if (targetUrl.indexOf("/../") != -1) {
 			throw new ServiceException("路径异常");
 		}
-		return targetUrl;
+		return URLDecoder.decode(targetUrl, "UTF-8");
 	}
 }
