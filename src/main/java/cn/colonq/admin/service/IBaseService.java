@@ -5,7 +5,7 @@ import java.util.Set;
 import cn.colonq.admin.entity.PageList;
 import cn.colonq.admin.entity.Result;
 
-public interface BaseService<T> {
+public interface IBaseService<T> {
 
 	T selectOne(final T param);
 

@@ -4,7 +4,7 @@ import cn.colonq.admin.entity.LinkInfo;
 import cn.colonq.admin.entity.Result;
 import cn.colonq.admin.entity.RoleInfo;
 
-public interface IRoleService extends BaseService<RoleInfo> {
+public interface IRoleService extends IBaseService<RoleInfo> {
 
 	Result selectUserIds(final String roleId);
 

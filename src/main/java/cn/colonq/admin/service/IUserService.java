@@ -4,7 +4,7 @@ import cn.colonq.admin.entity.LinkInfo;
 import cn.colonq.admin.entity.Result;
 import cn.colonq.admin.entity.UserInfo;
 
-public interface IUserService extends BaseService<UserInfo> {
+public interface IUserService extends IBaseService<UserInfo> {
 
 	Result login(final UserInfo info);
 

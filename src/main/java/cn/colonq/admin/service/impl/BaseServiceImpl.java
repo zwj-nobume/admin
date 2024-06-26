@@ -11,11 +11,11 @@ import cn.colonq.admin.entity.PageList;
 import cn.colonq.admin.entity.Result;
 import cn.colonq.admin.entity.UserInfo;
 import cn.colonq.admin.mapper.BaseMapper;
-import cn.colonq.admin.service.BaseService;
+import cn.colonq.admin.service.IBaseService;
 import cn.colonq.admin.utils.JWT;
 import cn.colonq.admin.utils.StringUtils;
 
-public class BaseServiceImpl<T, Tmapper extends BaseMapper<T>> implements BaseService<T> {
+public class BaseServiceImpl<T, Tmapper extends BaseMapper<T>> implements IBaseService<T> {
 	protected final StringUtils stringUtils;
 	protected final Class<? extends T> cls;
 	protected final Tmapper tmapper;

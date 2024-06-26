@@ -16,9 +16,9 @@ import cn.colonq.admin.entity.Result;
 import cn.colonq.admin.group.Insert;
 import cn.colonq.admin.group.Query;
 import cn.colonq.admin.group.Update;
-import cn.colonq.admin.service.BaseService;
+import cn.colonq.admin.service.IBaseService;
 
-public class BaseController<T, TService extends BaseService<T>> {
+public class BaseController<T, TService extends IBaseService<T>> {
 	protected final TService tService;
 
 	public BaseController(final TService tService) {
