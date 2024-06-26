@@ -34,7 +34,7 @@ public record UserInfo(
 				Insert.class, Update.class
 		}) @Pattern(regexp = "^(admin|.{6,20})$", message = "用户名长度必须在6到20之间", groups = {
 				Login.class
-		}) @TableField(comp = CompEnum.like) String userName,
+		}) @TableField(comp = CompEnum.LIKE) String userName,
 
 		@Null(message = "查询、修改时无需password", groups = {
 				Query.class, Update.class
@@ -42,13 +42,13 @@ public record UserInfo(
 				Insert.class, Login.class
 		}) @Size(min = 6, max = 20, message = "用户密码长度必须在6到20之间", groups = {
 				Insert.class, Login.class
-		}) @TableField(select = false, insert = TableFuncEnum.pwd, isUpdate = false) String password,
+		}) @TableField(select = false, insert = TableFuncEnum.PWD, isUpdate = false) String password,
 
 		@Null(message = "登录时无需邮箱", groups = {
 				Login.class
 		}) @Email(message = "邮箱格式不正确", groups = {
 				Insert.class, Update.class
-		}) @TableField(comp = CompEnum.like) String email,
+		}) @TableField(comp = CompEnum.LIKE) String email,
 
 		@Null(message = "无法接收盐值", groups = {
 				Query.class, Insert.class, Update.class, Login.class
@@ -56,9 +56,9 @@ public record UserInfo(
 
 		@Null(message = "新增、登录用户时无需createName", groups = {
 				Insert.class, Login.class
-		}) @TableField(comp = CompEnum.like, isUpdate = false) String createName,
+		}) @TableField(comp = CompEnum.LIKE, isUpdate = false) String createName,
 
 		@Null(message = "新增、登录用户时无需createTime", groups = {
 				Insert.class, Login.class
-		}) @TableField(comp = CompEnum.ge, isInsert = false, isUpdate = false) @JsonFormat(pattern = "yyyy-MM-dd HH:mm:dd", timezone = "GMT+8") Date createTime){
+		}) @TableField(comp = CompEnum.GE, isInsert = false, isUpdate = false) @JsonFormat(pattern = "yyyy-MM-dd HH:mm:dd", timezone = "GMT+8") Date createTime){
 }

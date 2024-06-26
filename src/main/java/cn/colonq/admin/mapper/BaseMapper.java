@@ -139,7 +139,7 @@ public class BaseMapper<T> {
 				builder.append(" AND ");
 				builder.append(stringUtils.humpToLine(field.getName()));
 				TableField tableField = field.getAnnotation(TableField.class);
-				if (tableField == null || CompEnum.eq == tableField.comp()) {
+				if (tableField == null || CompEnum.EQ == tableField.comp()) {
 					if ("NULL".equals(valueStr)) {
 						builder.append(" IS NULL");
 					} else {
@@ -147,23 +147,23 @@ public class BaseMapper<T> {
 						builder.append(valueStr);
 						builder.append('\'');
 					}
-				} else if (CompEnum.like == tableField.comp()) {
+				} else if (CompEnum.LIKE == tableField.comp()) {
 					builder.append(" LIKE CONCAT('%','");
 					builder.append(valueStr);
 					builder.append("','%')");
-				} else if (CompEnum.gt == tableField.comp()) {
+				} else if (CompEnum.GT == tableField.comp()) {
 					builder.append(">'");
 					builder.append(valueStr);
 					builder.append('\'');
-				} else if (CompEnum.lt == tableField.comp()) {
+				} else if (CompEnum.LT == tableField.comp()) {
 					builder.append("<'");
 					builder.append(valueStr);
 					builder.append('\'');
-				} else if (CompEnum.ge == tableField.comp()) {
+				} else if (CompEnum.GE == tableField.comp()) {
 					builder.append(">='");
 					builder.append(valueStr);
 					builder.append('\'');
-				} else if (CompEnum.le == tableField.comp()) {
+				} else if (CompEnum.LE == tableField.comp()) {
 					builder.append("<='");
 					builder.append(valueStr);
 					builder.append('\'');
@@ -233,11 +233,11 @@ public class BaseMapper<T> {
 				throw new ServiceException(e.getMessage());
 			}
 			// 新增语句，数据库函数定制
-			if (anno == null || anno.insert() == TableFuncEnum.def) {
+			if (anno == null || anno.insert() == TableFuncEnum.DEF) {
 				builder.append('\'');
 				builder.append(valueStr);
 				builder.append("',");
-			} else if (anno.insert() == TableFuncEnum.pwd) {
+			} else if (anno.insert() == TableFuncEnum.PWD) {
 				builder.append("PASSWORD('");
 				builder.append(valueStr);
 				builder.append("'),");
@@ -341,11 +341,11 @@ public class BaseMapper<T> {
 			}
 			builder.append(fieldName);
 			// 修改语句，数据库函数定制
-			if (anno == null || anno.insert() == TableFuncEnum.def) {
+			if (anno == null || anno.insert() == TableFuncEnum.DEF) {
 				builder.append("='");
 				builder.append(valueStr);
 				builder.append("',");
-			} else if (anno.insert() == TableFuncEnum.pwd) {
+			} else if (anno.insert() == TableFuncEnum.PWD) {
 				builder.append("=");
 				builder.append("PASSWORD('");
 				builder.append(valueStr);

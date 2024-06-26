@@ -29,19 +29,19 @@ public record MenuInfo(
 				Insert.class
 		}) @Size(max = 20, message = "菜单名长度不超过20", groups = {
 				Insert.class, Update.class
-		}) @TableField(comp = CompEnum.like) String menuName,
+		}) @TableField(comp = CompEnum.LIKE) String menuName,
 
 		@NotBlank(message = "菜单标签不得为空", groups = {
 				Insert.class
 		}) @Size(max = 50, message = "菜单标签长度不超过50", groups = {
 				Insert.class, Update.class
-		}) @TableField(comp = CompEnum.like) String menuLabel,
+		}) @TableField(comp = CompEnum.LIKE) String menuLabel,
 
 		@NotBlank(message = "权限标识不得为空", groups = {
 				Insert.class
 		}) @Size(max = 50, message = "权限标识长度不超过50", groups = {
 				Insert.class, Update.class
-		}) @TableField(comp = CompEnum.like) String permission,
+		}) @TableField(comp = CompEnum.LIKE) String permission,
 
 		@Pattern(regexp = "^(NULL|.{36,36})$", message = "父级ID长度异常", groups = {
 				Query.class, Insert.class, Update.class
@@ -49,9 +49,9 @@ public record MenuInfo(
 
 		@Null(message = "新增菜单时无需createName", groups = {
 				Insert.class
-		}) @TableField(comp = CompEnum.like, isUpdate = false) String createName,
+		}) @TableField(comp = CompEnum.LIKE, isUpdate = false) String createName,
 
 		@Null(message = "新增菜单时无需createTime", groups = {
 				Insert.class
-		}) @TableField(comp = CompEnum.ge, isInsert = false, isUpdate = false) @JsonFormat(pattern = "yyyy-MM-dd HH:mm:dd", timezone = "GMT+8") Date createTime){
+		}) @TableField(comp = CompEnum.GE, isInsert = false, isUpdate = false) @JsonFormat(pattern = "yyyy-MM-dd HH:mm:dd", timezone = "GMT+8") Date createTime){
 }

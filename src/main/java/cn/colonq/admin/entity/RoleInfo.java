@@ -26,17 +26,17 @@ public record RoleInfo(
 
 		@NotBlank(message = "角色名不得为空", groups = {
 				Insert.class
-		}) @TableField(comp = CompEnum.like) String roleName,
+		}) @TableField(comp = CompEnum.LIKE) String roleName,
 
 		@NotBlank(message = "角色标签不得为空", groups = {
 				Insert.class
-		}) @TableField(comp = CompEnum.like) String roleLabel,
+		}) @TableField(comp = CompEnum.LIKE) String roleLabel,
 
 		@Null(message = "新增时无需createName", groups = {
 				Insert.class
-		}) @TableField(comp = CompEnum.like, isUpdate = false) String createName,
+		}) @TableField(comp = CompEnum.LIKE, isUpdate = false) String createName,
 
 		@Null(message = "新增时无需createTime", groups = {
 				Insert.class
-		}) @TableField(comp = CompEnum.ge, isInsert = false, isUpdate = false) @JsonFormat(pattern = "yyyy-MM-dd HH:mm:dd", timezone = "GMT+8") Date createTime){
+		}) @TableField(comp = CompEnum.GE, isInsert = false, isUpdate = false) @JsonFormat(pattern = "yyyy-MM-dd HH:mm:dd", timezone = "GMT+8") Date createTime){
 }

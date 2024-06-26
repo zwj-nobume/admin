@@ -14,7 +14,7 @@ public @interface TableField {
 
     boolean select() default true;
 
-    TableFuncEnum insert() default TableFuncEnum.def;
+    TableFuncEnum insert() default TableFuncEnum.DEF;
 
     boolean isInsert() default true;
 
@@ -22,5 +22,5 @@ public @interface TableField {
 
     boolean isUpdate() default true;
 
-    CompEnum comp() default CompEnum.eq;
+    CompEnum comp() default CompEnum.EQ;
 }
