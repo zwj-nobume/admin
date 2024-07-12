@@ -33,7 +33,7 @@ public class DictController {
 
 	@GetMapping("/page")
 	@PermissionAnnotation(":query")
-	public PageList<String> page(@RequestParam(name = "key", required = false) String key,
+	public PageList<String> page(@RequestParam(name = "key", defaultValue = "") String key,
 			@RequestParam(name = "pageNum", defaultValue = "1") Long pageNum,
 			@RequestParam(name = "pageSize", defaultValue = "20") Long pageSize) {
 		return dictService.selectPage(key, pageNum, pageSize);
