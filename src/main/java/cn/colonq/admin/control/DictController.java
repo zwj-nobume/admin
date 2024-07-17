@@ -17,9 +17,9 @@ import cn.colonq.admin.entity.DictInfo;
 import cn.colonq.admin.entity.PageList;
 import cn.colonq.admin.entity.Result;
 import cn.colonq.admin.group.Insert;
+import cn.colonq.admin.group.Query;
 import cn.colonq.admin.group.Update;
 import cn.colonq.admin.service.IDictService;
-import jakarta.validation.constraints.NotBlank;
 
 @RestController
 @RequestMapping("/dict")
@@ -41,8 +41,8 @@ public class DictController {
 
 	@GetMapping("/value")
 	@PermissionAnnotation(":query")
-	public Result value(@NotBlank(message = "查询Key不得为空") final String key) {
-		return dictService.selectValue(key);
+	public Result value(@Validated(value = { Query.class }) DictInfo info) {
+		return dictService.selectValue(info.key());
 	}
 
 	@PutMapping("/add")
