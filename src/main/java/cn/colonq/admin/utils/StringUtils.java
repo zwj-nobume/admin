@@ -35,6 +35,23 @@ public class StringUtils {
 		return value == null || "".equals(value);
 	}
 
+	public <T> T redisValueToObject(String redisString, Class<? extends T> cls) {
+		if (!isEmpty(redisString)) {
+			String[] split = redisString.split(":", 2);
+			if (split.length == 2) {
+				final String type = split[0];
+				final String value = split[1];
+				if ("number".equals(type) && Integer.class == cls)
+					return jsonToObj(value, cls);
+				else if ("text".equals(type) && cls == String.class)
+					return jsonToObj(value, cls);
+				else if ("object".equals(type))
+					return jsonToObj(value, cls);
+			}
+		}
+		return null;
+	}
+
 	public <T> String toJsonString(T t) {
 		final ObjectMapper mapper = objectMapperPool.getItem();
 		String jsonString = null;

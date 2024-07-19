@@ -12,6 +12,8 @@ public interface IDictService {
 
 	Result selectValue(String key);
 
+	<T> T selectValue(String key, T defaultValue, Class<? extends T> cls);
+
 	Result insertDictInfo(DictInfo info);
 
 	Result updateDictInfo(DictInfo info);

@@ -13,12 +13,15 @@ import cn.colonq.admin.entity.DictInfo;
 import cn.colonq.admin.entity.PageList;
 import cn.colonq.admin.entity.Result;
 import cn.colonq.admin.service.IDictService;
+import cn.colonq.admin.utils.StringUtils;
 
 @Service(value = "dictService")
 public class DictServiceImpl implements IDictService {
+	private final StringUtils stringUtils;
 	private final BoundHashOperations<String, String, String> dictData;
 
-	public DictServiceImpl(final RedisTemplate<String, Object> redisTemplate) {
+	public DictServiceImpl(final StringUtils stringUtils, final RedisTemplate<String, Object> redisTemplate) {
+		this.stringUtils = stringUtils;
 		this.dictData = redisTemplate.boundHashOps("dictData");
 	}
 
@@ -37,6 +40,16 @@ public class DictServiceImpl implements IDictService {
 	public Result selectValue(String key) {
 		final String value = this.dictData.get(key);
 		return Result.ok("获取字典值成功", value);
+	}
+
+	@Override
+	public <T> T selectValue(String key, T defaultValue, Class<? extends T> cls) {
+		final String value = this.dictData.get(key);
+		if (!stringUtils.isEmpty(value)) {
+			final T returnValue = stringUtils.redisValueToObject(value, cls);
+			return returnValue == null ? defaultValue : returnValue;
+		}
+		return defaultValue;
 	}
 
 	@Override

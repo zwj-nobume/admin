@@ -6,7 +6,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import cn.colonq.admin.config.PermissionAnnotation;
 import cn.colonq.admin.config.ServiceException;
 import cn.colonq.admin.entity.Result;
+import cn.colonq.admin.service.IDictService;
 import cn.colonq.admin.service.IFileService;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -28,15 +28,20 @@ import jakarta.servlet.http.HttpServletRequest;
 @RequestMapping("/file")
 @PermissionAnnotation("system:file")
 public class FileController {
-	private final String basePath;
+	private final String defaultPath;
+	private final String basePathKey;
+	private final IDictService dictService;
 	private final IFileService fileService;
 	private final HttpServletRequest request;
 
 	public FileController(
-			@Value("${server.file.dir}") final String basePath,
+			final IDictService dictService,
 			final IFileService fileService,
 			final HttpServletRequest request) {
-		this.basePath = basePath;
+		final String home = (String) System.getProperties().get("user.home");
+		this.defaultPath = home + "/upload";
+		this.basePathKey = "server_file_dir";
+		this.dictService = dictService;
 		this.fileService = fileService;
 		this.request = request;
 	}
@@ -44,8 +49,9 @@ public class FileController {
 	@GetMapping("/list/**")
 	@PermissionAnnotation(":query")
 	public Result list() throws UnsupportedEncodingException {
+		final String basePath = dictService.selectValue(this.basePathKey, defaultPath, String.class);
 		final String targetUrl = getTargetUrl();
-		Path path = Path.of(this.basePath, targetUrl);
+		Path path = Path.of(basePath, targetUrl);
 		if (!Files.exists(path)) {
 			throw new ServiceException("文件夹路径不存在");
 		}
@@ -61,8 +67,9 @@ public class FileController {
 	@PutMapping("/mkdir/**")
 	@PermissionAnnotation(":add")
 	public Result mkdir() throws UnsupportedEncodingException {
+		final String basePath = dictService.selectValue(this.basePathKey, defaultPath, String.class);
 		final String targetUrl = getTargetUrl();
-		Path path = Path.of(this.basePath, targetUrl);
+		Path path = Path.of(basePath, targetUrl);
 		if (Files.exists(path)) {
 			throw new ServiceException("文件夹路径已存在");
 		}
@@ -72,8 +79,9 @@ public class FileController {
 	@PutMapping("/upload/**")
 	@PermissionAnnotation(":add")
 	public Result upload(MultipartFile[] files) throws UnsupportedEncodingException {
+		final String basePath = dictService.selectValue(this.basePathKey, defaultPath, String.class);
 		final String targetUrl = getTargetUrl();
-		Path path = Path.of(this.basePath, targetUrl);
+		Path path = Path.of(basePath, targetUrl);
 		if (!Files.exists(path)) {
 			throw new ServiceException("文件夹路径不存在");
 		}
@@ -83,15 +91,17 @@ public class FileController {
 	@PostMapping("/move/**")
 	@PermissionAnnotation(":edit")
 	public Result move(@RequestBody Set<String> fromUrlSet) throws UnsupportedEncodingException {
+		final String basePath = dictService.selectValue(this.basePathKey, defaultPath, String.class);
 		final String targetUrl = getTargetUrl();
-		return this.fileService.moveFile(this.basePath, fromUrlSet, targetUrl);
+		return this.fileService.moveFile(basePath, fromUrlSet, targetUrl);
 	}
 
 	@DeleteMapping("/delete/**")
 	@PermissionAnnotation(":delete")
 	public Result delete() throws UnsupportedEncodingException {
+		final String basePath = dictService.selectValue(this.basePathKey, defaultPath, String.class);
 		final String targetUrl = getTargetUrl();
-		Path path = Path.of(this.basePath, targetUrl);
+		Path path = Path.of(basePath, targetUrl);
 		if (!Files.exists(path)) {
 			throw new ServiceException("文件路径不存在");
 		}
@@ -101,9 +111,10 @@ public class FileController {
 	@DeleteMapping("/deleteBatch/**")
 	@PermissionAnnotation(":delete")
 	public Result deleteBatch(@RequestBody Set<String> names) throws UnsupportedEncodingException {
+		final String basePath = dictService.selectValue(this.basePathKey, defaultPath, String.class);
 		final String targetUrl = getTargetUrl();
 		for (String name : names) {
-			Path path = Path.of(this.basePath, targetUrl, name);
+			Path path = Path.of(basePath, targetUrl, name);
 			if (!Files.exists(path)) {
 				throw new ServiceException("文件路径不存在");
 			}
@@ -115,8 +126,9 @@ public class FileController {
 	@GetMapping("/download/**")
 	@PermissionAnnotation(":download")
 	public ResponseEntity<Resource> download() throws UnsupportedEncodingException {
+		final String basePath = dictService.selectValue(this.basePathKey, defaultPath, String.class);
 		final String targetUrl = getTargetUrl();
-		Path path = Path.of(this.basePath, targetUrl);
+		Path path = Path.of(basePath, targetUrl);
 		if (!Files.exists(path)) {
 			throw new ServiceException("文件不存在");
 		}
