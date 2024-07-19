@@ -45,6 +45,8 @@ public class StringUtils {
 					return jsonToObj(value, cls);
 				else if ("text".equals(type) && cls == String.class)
 					return jsonToObj(value, cls);
+				else if ("array".equals(type) && cls == String[].class)
+					return jsonToObj(value, cls);
 				else if ("object".equals(type))
 					return jsonToObj(value, cls);
 			}
