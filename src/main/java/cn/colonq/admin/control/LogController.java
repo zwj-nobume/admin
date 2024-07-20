@@ -12,7 +12,7 @@ import cn.colonq.admin.service.ILogService;
 @PermissionAnnotation("system:log")
 public class LogController extends BaseController<LogInfo, ILogService> {
 
-    public LogController(final ILogService tService) {
-        super(tService);
-    }
+	public LogController(final ILogService tService) {
+		super(tService);
+	}
 }
