@@ -17,6 +17,7 @@ import cn.colonq.admin.anno.TableField;
 import cn.colonq.admin.config.CacheAble;
 import cn.colonq.admin.config.CacheEvict;
 import cn.colonq.admin.config.CompEnum;
+import cn.colonq.admin.config.LogTypeEnum;
 import cn.colonq.admin.config.ServiceException;
 import cn.colonq.admin.config.TableFuncEnum;
 import cn.colonq.admin.entity.PageList;
@@ -137,7 +138,8 @@ public class BaseMapper<T> {
 			}
 			if (valueStr != null) {
 				builder.append(" AND ");
-				builder.append(stringUtils.humpToLine(field.getName()));
+				final String fieldName = stringUtils.humpToLine(field.getName());
+				builder.append(fieldName);
 				TableField tableField = field.getAnnotation(TableField.class);
 				if (tableField == null || CompEnum.EQ == tableField.comp()) {
 					if ("NULL".equals(valueStr)) {
@@ -420,17 +422,26 @@ public class BaseMapper<T> {
 					initargs[i] = null;
 					continue;
 				}
+				final String fieldName = stringUtils.humpToLine(field.getName());
 				if (String.class.isAssignableFrom(parameterTypes[i])) {
-					initargs[i] = rs.getString(stringUtils.humpToLine(field.getName()));
+					initargs[i] = rs.getString(fieldName);
+					continue;
 				}
 				if (Integer.class.isAssignableFrom(parameterTypes[i])) {
-					initargs[i] = rs.getInt(stringUtils.humpToLine(field.getName()));
+					initargs[i] = rs.getInt(fieldName);
+					continue;
 				}
 				if (Long.class.isAssignableFrom(parameterTypes[i])) {
-					initargs[i] = rs.getLong(stringUtils.humpToLine(field.getName()));
+					initargs[i] = rs.getLong(fieldName);
+					continue;
 				}
 				if (Date.class.isAssignableFrom(parameterTypes[i])) {
-					initargs[i] = rs.getTimestamp(stringUtils.humpToLine(field.getName()));
+					initargs[i] = rs.getTimestamp(fieldName);
+					continue;
+				}
+				if (LogTypeEnum.class.isAssignableFrom(parameterTypes[i])) {
+					initargs[i] = LogTypeEnum.valueOf(rs.getString(fieldName).toUpperCase());
+					continue;
 				}
 			}
 			try {
