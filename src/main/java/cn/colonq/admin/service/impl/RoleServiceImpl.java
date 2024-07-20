@@ -22,7 +22,7 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleInfo, RoleMapper> imple
 			final StringUtils stringUtils,
 			final RoleMapper roleMapper,
 			final JWT jwt) {
-		super(stringUtils, RoleInfo.class, roleMapper, jwt);
+		super(RoleInfo.class, stringUtils, roleMapper, jwt);
 	}
 
 	@Override

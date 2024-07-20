@@ -21,7 +21,7 @@ public class MenuServiceImpl extends BaseServiceImpl<MenuInfo, MenuMapper> imple
 			final StringUtils stringUtils,
 			final MenuMapper menuMapper,
 			final JWT jwt) {
-		super(stringUtils, MenuInfo.class, menuMapper, jwt);
+		super(MenuInfo.class, stringUtils, menuMapper, jwt);
 	}
 
 	@Override

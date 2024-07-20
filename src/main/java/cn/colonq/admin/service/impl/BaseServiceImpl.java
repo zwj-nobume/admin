@@ -16,18 +16,18 @@ import cn.colonq.admin.utils.JWT;
 import cn.colonq.admin.utils.StringUtils;
 
 public class BaseServiceImpl<T, Tmapper extends BaseMapper<T>> implements IBaseService<T> {
-	protected final StringUtils stringUtils;
 	protected final Class<? extends T> cls;
+	protected final StringUtils stringUtils;
 	protected final Tmapper tmapper;
 	protected final JWT jwt;
 
 	public BaseServiceImpl(
-			final StringUtils stringUtils,
 			final Class<? extends T> cls,
+			final StringUtils stringUtils,
 			final Tmapper tmapper,
 			final JWT jwt) {
-		this.stringUtils = stringUtils;
 		this.cls = cls;
+		this.stringUtils = stringUtils;
 		this.tmapper = tmapper;
 		this.jwt = jwt;
 	}

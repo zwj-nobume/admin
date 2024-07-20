@@ -28,7 +28,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfo, UserMapper> imple
 			final StringUtils stringUtils,
 			final UserMapper userMapper,
 			final JWT jwt) {
-		super(stringUtils, UserInfo.class, userMapper, jwt);
+		super(UserInfo.class, stringUtils, userMapper, jwt);
 	}
 
 	@Override
