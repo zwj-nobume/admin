@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import cn.colonq.admin.config.PermissionAnnotation;
+import cn.colonq.admin.anno.PermissionAnnotation;
 import cn.colonq.admin.config.ServiceException;
 import cn.colonq.admin.entity.Result;
 import cn.colonq.admin.service.IDictService;

@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Component;
 
-import cn.colonq.admin.config.CacheAble;
+import cn.colonq.admin.anno.CacheAble;
 import cn.colonq.admin.entity.UserInfo;
 import cn.colonq.admin.utils.DateUtils;
 import cn.colonq.admin.utils.StringUtils;

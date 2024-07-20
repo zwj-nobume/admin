@@ -5,8 +5,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import cn.colonq.admin.config.CompEnum;
-import cn.colonq.admin.config.TableFuncEnum;
+import cn.colonq.admin.enumcfg.CompEnum;
+import cn.colonq.admin.enumcfg.TableFuncEnum;
 
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)

@@ -1,4 +1,4 @@
-package cn.colonq.admin.config;
+package cn.colonq.admin.enumcfg;
 
 public enum CompEnum {
 	EQ, // 等于

@@ -6,8 +6,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import cn.colonq.admin.anno.Table;
 import cn.colonq.admin.anno.TableField;
-import cn.colonq.admin.config.CompEnum;
-import cn.colonq.admin.config.LogTypeEnum;
+import cn.colonq.admin.enumcfg.CompEnum;
+import cn.colonq.admin.enumcfg.LogTypeEnum;
 import cn.colonq.admin.group.Insert;
 import cn.colonq.admin.group.Query;
 import cn.colonq.admin.group.Update;

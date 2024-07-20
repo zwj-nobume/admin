@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import cn.colonq.admin.config.PermissionAnnotation;
+import cn.colonq.admin.anno.PermissionAnnotation;
 import cn.colonq.admin.entity.PageList;
 import cn.colonq.admin.entity.Result;
 import cn.colonq.admin.group.Insert;

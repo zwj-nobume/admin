@@ -17,6 +17,9 @@ import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import cn.colonq.admin.anno.CacheAble;
+import cn.colonq.admin.anno.CacheEvict;
+import cn.colonq.admin.anno.PermissionAnnotation;
 import cn.colonq.admin.service.IUserService;
 
 @Aspect
@@ -32,15 +35,15 @@ public class AspectConfig {
 		this.cacheData = redisTemplate.boundHashOps("cacheData");
 	}
 
-	@Pointcut("@annotation(cn.colonq.admin.config.PermissionAnnotation)")
+	@Pointcut("@annotation(cn.colonq.admin.anno.PermissionAnnotation)")
 	private void permissionPointcut() {
 	}
 
-	@Pointcut("@annotation(cn.colonq.admin.config.CacheAble)")
+	@Pointcut("@annotation(cn.colonq.admin.anno.CacheAble)")
 	private void cacheAblePointcut() {
 	}
 
-	@Pointcut("@annotation(cn.colonq.admin.config.CacheEvict)")
+	@Pointcut("@annotation(cn.colonq.admin.anno.CacheEvict)")
 	private void cacheEvictPointcut() {
 	}
 
