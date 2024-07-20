@@ -8,7 +8,7 @@ import cn.colonq.admin.utils.DateUtils;
 import cn.colonq.admin.utils.StringUtils;
 import cn.colonq.admin.utils.ThreadSafePool;
 
-@Component
+@Component(value = "menuMapper")
 public class MenuMapper extends BaseMapper<MenuInfo> {
 
     public MenuMapper(

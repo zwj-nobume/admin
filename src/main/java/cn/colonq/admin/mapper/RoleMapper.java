@@ -8,7 +8,7 @@ import cn.colonq.admin.utils.DateUtils;
 import cn.colonq.admin.utils.StringUtils;
 import cn.colonq.admin.utils.ThreadSafePool;
 
-@Component
+@Component(value = "roleMapper")
 public class RoleMapper extends BaseMapper<RoleInfo> {
 
 	public RoleMapper(
