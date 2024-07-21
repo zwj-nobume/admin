@@ -7,22 +7,34 @@ public enum LogTypeEnum {
             return "info";
         }
     },
-    INSERT {
+    ADD {
         @Override
         public String toString() {
-            return "insert";
+            return "add";
         }
     },
-    UPDATE {
+    EDIT {
         @Override
         public String toString() {
-            return "update";
+            return "edit";
         }
     },
     DELETE {
         @Override
         public String toString() {
             return "delete";
+        }
+    },
+    DOWNLOAD {
+        @Override
+        public String toString() {
+            return "download";
+        }
+    },
+    LOGIN {
+        @Override
+        public String toString() {
+            return "login";
         }
     },
     ERROR {

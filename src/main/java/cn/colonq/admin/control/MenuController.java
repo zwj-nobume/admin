@@ -7,9 +7,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.colonq.admin.anno.PermissionAnnotation;
+import cn.colonq.admin.anno.RecordLog;
 import cn.colonq.admin.entity.LinkInfo;
 import cn.colonq.admin.entity.MenuInfo;
 import cn.colonq.admin.entity.Result;
+import cn.colonq.admin.enumcfg.LogTypeEnum;
 import cn.colonq.admin.service.IMenuService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -31,6 +33,7 @@ public class MenuController extends BaseController<MenuInfo, IMenuService> {
 
 	@PostMapping("/link")
 	@PermissionAnnotation(":edit")
+	@RecordLog(type = LogTypeEnum.EDIT)
 	public Result link(@Valid @RequestBody LinkInfo info) {
 		return super.tService.linkRoleMenu(info);
 	}

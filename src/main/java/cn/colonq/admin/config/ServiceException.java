@@ -5,48 +5,29 @@ import org.springframework.http.HttpStatusCode;
 
 public class ServiceException extends RuntimeException {
     private final HttpStatusCode statusCode;
-    private final String msg;
 
-    public ServiceException(String msg) {
+    public ServiceException(String message) {
+        super(message);
         this.statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
-        this.msg = msg;
     }
 
-    public ServiceException(HttpStatusCode statusCode, String msg) {
-        this.statusCode = statusCode;
-        this.msg = msg;
-    }
-
-    public ServiceException(String message, HttpStatusCode statusCode, String msg) {
+    public ServiceException(String message, HttpStatusCode statusCode) {
         super(message);
         this.statusCode = statusCode;
-        this.msg = msg;
     }
 
-    public ServiceException(Throwable cause, HttpStatusCode statusCode, String msg) {
-        super(cause);
-        this.statusCode = statusCode;
-        this.msg = msg;
-    }
-
-    public ServiceException(String message, Throwable cause, HttpStatusCode statusCode, String msg) {
+    public ServiceException(String message, HttpStatusCode statusCode, Throwable cause) {
         super(message, cause);
         this.statusCode = statusCode;
-        this.msg = msg;
     }
 
-    public ServiceException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace,
-            HttpStatusCode statusCode, String msg) {
+    public ServiceException(String message, HttpStatusCode statusCode, Throwable cause, boolean enableSuppression,
+            boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
         this.statusCode = statusCode;
-        this.msg = msg;
     }
 
     public HttpStatusCode getStatusCode() {
         return statusCode;
-    }
-
-    public String getMsg() {
-        return msg;
     }
 }

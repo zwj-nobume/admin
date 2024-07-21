@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.colonq.admin.anno.PermissionAnnotation;
+import cn.colonq.admin.anno.RecordLog;
 import cn.colonq.admin.entity.DictInfo;
 import cn.colonq.admin.entity.PageList;
 import cn.colonq.admin.entity.Result;
+import cn.colonq.admin.enumcfg.LogTypeEnum;
 import cn.colonq.admin.group.Insert;
 import cn.colonq.admin.group.Query;
 import cn.colonq.admin.group.Update;
@@ -47,18 +49,21 @@ public class DictController {
 
 	@PutMapping("/add")
 	@PermissionAnnotation(":add")
+	@RecordLog(type = LogTypeEnum.ADD)
 	public Result insert(@Validated(value = { Insert.class }) @RequestBody DictInfo info) {
 		return dictService.insertDictInfo(info);
 	}
 
 	@PostMapping("/edit")
 	@PermissionAnnotation(":edit")
+	@RecordLog(type = LogTypeEnum.EDIT)
 	public Result update(@Validated(value = { Update.class }) @RequestBody DictInfo info) {
 		return dictService.updateDictInfo(info);
 	}
 
 	@DeleteMapping("/delete")
 	@PermissionAnnotation(":delete")
+	@RecordLog(type = LogTypeEnum.DELETE)
 	protected Result delete(@RequestBody Set<String> keys) {
 		return dictService.deleteDictInfo(keys);
 	}

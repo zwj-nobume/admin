@@ -60,31 +60,31 @@ public class TokenFilter implements Filter {
 			Header header = jwt.getHeader();
 			ServiceException err;
 			if (header == null) {
-				err = new ServiceException(HttpStatus.UNAUTHORIZED, "登录已过期, 请重新登录");
+				err = new ServiceException("登录已过期, 请重新登录", HttpStatus.UNAUTHORIZED);
 				handler.handleServiceError(err, response);
 				return;
 			}
 			UserInfo payload = jwt.getPayload();
 			if (payload == null) {
-				err = new ServiceException(HttpStatus.UNAUTHORIZED, "登录已过期, 请重新登录");
+				err = new ServiceException("登录已过期, 请重新登录", HttpStatus.UNAUTHORIZED);
 				handler.handleServiceError(err, response);
 				return;
 			}
 			UserInfo user = this.userMapper.selectOne("user_name", payload.userName());
 			if (user == null) {
-				err = new ServiceException(HttpStatus.UNAUTHORIZED, "用户信息错误, 请重新登录");
+				err = new ServiceException("用户信息错误, 请重新登录", HttpStatus.UNAUTHORIZED);
 				handler.handleServiceError(err, response);
 				return;
 			}
 			try {
 				String token = jwt.generateToken(header, payload, user.salt());
 				if (token == null) {
-					err = new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, "生成Token异常");
+					err = new ServiceException("生成Token异常", HttpStatus.INTERNAL_SERVER_ERROR);
 					handler.handleServiceError(err, response);
 					return;
 				}
 				if (!token.equals(jwt.getToken())) {
-					err = new ServiceException(HttpStatus.UNAUTHORIZED, "登录已过期, 请重新登录");
+					err = new ServiceException("登录已过期, 请重新登录", HttpStatus.UNAUTHORIZED);
 					handler.handleServiceError(err, response);
 					return;
 				}

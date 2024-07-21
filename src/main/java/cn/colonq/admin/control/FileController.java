@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import cn.colonq.admin.anno.PermissionAnnotation;
+import cn.colonq.admin.anno.RecordLog;
 import cn.colonq.admin.config.ServiceException;
 import cn.colonq.admin.entity.Result;
+import cn.colonq.admin.enumcfg.LogTypeEnum;
 import cn.colonq.admin.service.IDictService;
 import cn.colonq.admin.service.IFileService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -66,6 +68,7 @@ public class FileController {
 
 	@PutMapping("/mkdir/**")
 	@PermissionAnnotation(":add")
+	@RecordLog(type = LogTypeEnum.ADD)
 	public Result mkdir() throws UnsupportedEncodingException {
 		final String basePath = dictService.selectValue(this.basePathKey, defaultPath, String.class);
 		final String targetUrl = getTargetUrl();
@@ -78,6 +81,7 @@ public class FileController {
 
 	@PutMapping("/upload/**")
 	@PermissionAnnotation(":add")
+	@RecordLog(type = LogTypeEnum.ADD)
 	public Result upload(MultipartFile[] files) throws UnsupportedEncodingException {
 		final String basePath = dictService.selectValue(this.basePathKey, defaultPath, String.class);
 		final String targetUrl = getTargetUrl();
@@ -90,6 +94,7 @@ public class FileController {
 
 	@PostMapping("/move/**")
 	@PermissionAnnotation(":edit")
+	@RecordLog(type = LogTypeEnum.EDIT)
 	public Result move(@RequestBody Set<String> fromUrlSet) throws UnsupportedEncodingException {
 		final String basePath = dictService.selectValue(this.basePathKey, defaultPath, String.class);
 		final String targetUrl = getTargetUrl();
@@ -98,6 +103,7 @@ public class FileController {
 
 	@DeleteMapping("/delete/**")
 	@PermissionAnnotation(":delete")
+	@RecordLog(type = LogTypeEnum.DELETE)
 	public Result delete() throws UnsupportedEncodingException {
 		final String basePath = dictService.selectValue(this.basePathKey, defaultPath, String.class);
 		final String targetUrl = getTargetUrl();
@@ -110,6 +116,7 @@ public class FileController {
 
 	@DeleteMapping("/deleteBatch/**")
 	@PermissionAnnotation(":delete")
+	@RecordLog(type = LogTypeEnum.DELETE)
 	public Result deleteBatch(@RequestBody Set<String> names) throws UnsupportedEncodingException {
 		final String basePath = dictService.selectValue(this.basePathKey, defaultPath, String.class);
 		final String targetUrl = getTargetUrl();
@@ -125,6 +132,7 @@ public class FileController {
 
 	@GetMapping("/download/**")
 	@PermissionAnnotation(":download")
+	@RecordLog(type = LogTypeEnum.DOWNLOAD)
 	public ResponseEntity<Resource> download() throws UnsupportedEncodingException {
 		final String basePath = dictService.selectValue(this.basePathKey, defaultPath, String.class);
 		final String targetUrl = getTargetUrl();

@@ -8,9 +8,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.colonq.admin.anno.PermissionAnnotation;
+import cn.colonq.admin.anno.RecordLog;
 import cn.colonq.admin.entity.LinkInfo;
 import cn.colonq.admin.entity.Result;
 import cn.colonq.admin.entity.UserInfo;
+import cn.colonq.admin.enumcfg.LogTypeEnum;
 import cn.colonq.admin.group.Login;
 import cn.colonq.admin.service.IUserService;
 import jakarta.validation.Valid;
@@ -26,6 +28,7 @@ public class UserController extends BaseController<UserInfo, IUserService> {
 	}
 
 	@PostMapping("/login")
+	@RecordLog(type = LogTypeEnum.LOGIN)
 	public Result login(@Validated(value = { Login.class }) @RequestBody UserInfo info) {
 		return super.tService.login(info);
 	}
@@ -36,6 +39,7 @@ public class UserController extends BaseController<UserInfo, IUserService> {
 	 * @return
 	 */
 	@PostMapping("/salt")
+	@RecordLog(type = LogTypeEnum.EDIT)
 	public Result salt() {
 		return super.tService.regenerateSalt();
 	}
@@ -58,6 +62,7 @@ public class UserController extends BaseController<UserInfo, IUserService> {
 
 	@PostMapping("/link")
 	@PermissionAnnotation(":edit")
+	@RecordLog(type = LogTypeEnum.EDIT)
 	public Result link(@Valid @RequestBody LinkInfo info) {
 		return super.tService.linkUserRole(info);
 	}

@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import cn.colonq.admin.anno.PermissionAnnotation;
+import cn.colonq.admin.anno.RecordLog;
 import cn.colonq.admin.entity.PageList;
 import cn.colonq.admin.entity.Result;
+import cn.colonq.admin.enumcfg.LogTypeEnum;
 import cn.colonq.admin.group.Insert;
 import cn.colonq.admin.group.Query;
 import cn.colonq.admin.group.Update;
@@ -36,18 +38,21 @@ public class BaseController<T, TService extends IBaseService<T>> {
 
 	@PutMapping("/add")
 	@PermissionAnnotation(":add")
+	@RecordLog(type = LogTypeEnum.ADD)
 	protected Result insert(@Validated(value = { Insert.class }) @RequestBody T param) {
 		return tService.insert(param);
 	}
 
 	@PostMapping("/edit")
 	@PermissionAnnotation(":edit")
+	@RecordLog(type = LogTypeEnum.EDIT)
 	protected Result update(@Validated(value = { Update.class }) @RequestBody T param) {
 		return tService.update(param);
 	}
 
 	@DeleteMapping("/delete")
 	@PermissionAnnotation(":delete")
+	@RecordLog(type = LogTypeEnum.DELETE)
 	protected Result delete(@RequestBody Set<String> ids) {
 		return tService.delete(ids);
 	}

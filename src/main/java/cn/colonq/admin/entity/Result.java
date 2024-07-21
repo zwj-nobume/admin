@@ -38,7 +38,7 @@ public record Result(
 	}
 
 	public static Result error(ServiceException err) {
-		return new Result(err.getStatusCode().value(), err.getMsg(), null);
+		return new Result(err.getStatusCode().value(), err.getMessage(), null);
 	}
 
 	public static Result error(Throwable err) {

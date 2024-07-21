@@ -20,18 +20,33 @@ import org.springframework.stereotype.Component;
 import cn.colonq.admin.anno.CacheAble;
 import cn.colonq.admin.anno.CacheEvict;
 import cn.colonq.admin.anno.PermissionAnnotation;
+import cn.colonq.admin.anno.RecordLog;
+import cn.colonq.admin.entity.LogInfo;
+import cn.colonq.admin.enumcfg.LogTypeEnum;
+import cn.colonq.admin.service.ILogService;
 import cn.colonq.admin.service.IUserService;
+import cn.colonq.admin.utils.DateUtils;
+import cn.colonq.admin.utils.StringUtils;
 
 @Aspect
 @Component
 public class AspectConfig {
+	private final DateUtils dateUtils;
+	private final StringUtils stringUtils;
 	private final IUserService userService;
+	private final ILogService logService;
 	private final BoundHashOperations<String, String, Object> cacheData;
 
 	public AspectConfig(
+			final DateUtils dateUtils,
+			final StringUtils stringUtils,
+			final ILogService logService,
 			final IUserService userService,
 			final RedisTemplate<String, Object> redisTemplate) {
+		this.dateUtils = dateUtils;
+		this.stringUtils = stringUtils;
 		this.userService = userService;
+		this.logService = logService;
 		this.cacheData = redisTemplate.boundHashOps("cacheData");
 	}
 
@@ -45,6 +60,10 @@ public class AspectConfig {
 
 	@Pointcut("@annotation(cn.colonq.admin.anno.CacheEvict)")
 	private void cacheEvictPointcut() {
+	}
+
+	@Pointcut("@annotation(cn.colonq.admin.anno.RecordLog)")
+	private void recordLogPointcut() {
 	}
 
 	@Before("permissionPointcut()")
@@ -93,7 +112,7 @@ public class AspectConfig {
 			throw new ServiceException("CacheEvict methodSignature.getMethod null");
 		}
 		final String defaultControlName = point.getTarget().getClass().getName();
-		CacheEvict cacheEvict = method.getAnnotation(CacheEvict.class);
+		final CacheEvict cacheEvict = method.getAnnotation(CacheEvict.class);
 		for (String cacheName : cacheEvict.cacheName()) {
 			if (cacheEvict.controlNames().length == 0) {
 				final String cacheStart = defaultControlName + ':' + cacheName;
@@ -105,6 +124,26 @@ public class AspectConfig {
 				}
 			}
 		}
+	}
+
+	@After("recordLogPointcut()")
+	public void recordLog(JoinPoint point) {
+		final MethodSignature methodSignature = (MethodSignature) point.getSignature();
+		final Method method = methodSignature.getMethod();
+		if (method == null) {
+			throw new ServiceException("RecordLog methodSignature.getMethod null");
+		}
+		final RecordLog recordLog = method.getAnnotation(RecordLog.class);
+		final String nowDateFormat = dateUtils.format(dateUtils.getNowDate());
+		final String controlName = point.getTarget().getClass().getName();
+		final String methodName = method.getName();
+		final LogTypeEnum logType = recordLog.type();
+		final String apiParams = LogTypeEnum.LOGIN.equals(logType) ? null
+				: stringUtils.toJsonString(point.getArgs()).replaceAll("\\\\", "\\\\\\\\");
+		final String logIntro = String.format("%s -- Controller: %s; Method: %s; LogType: %s;", nowDateFormat,
+				controlName, methodName, logType.toString());
+		final LogInfo logInfo = new LogInfo(null, logType, apiParams, logIntro, null, null, null);
+		logService.insert(logInfo);
 	}
 
 	/**
