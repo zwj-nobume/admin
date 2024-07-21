@@ -56,7 +56,10 @@ public class BaseServiceImpl<T, Tmapper extends BaseMapper<T>> implements IBaseS
 			parameterTypes[i] = field.getType();
 			if ("createName".equals(field.getName())) {
 				UserInfo payload = jwt.getPayload();
-				initargs[i] = payload.userName();
+				if (payload != null)
+					initargs[i] = payload.userName();
+				else
+					initargs[i] = "admin";
 				continue;
 			}
 			final TableField anno = field.getAnnotation(TableField.class);
