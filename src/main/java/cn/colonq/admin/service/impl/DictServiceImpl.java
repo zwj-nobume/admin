@@ -1,6 +1,7 @@
 package cn.colonq.admin.service.impl;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -50,6 +51,14 @@ public class DictServiceImpl implements IDictService {
 			return returnValue == null ? defaultValue : returnValue;
 		}
 		return defaultValue;
+	}
+
+	@Override
+	public Result selectValue(Set<String> keys) {
+		final Set<String> keySet = this.dictData.keys();
+		final Map<String, String> data = keySet.stream().filter(keys::contains).sorted()
+				.collect(Collectors.toMap(String::toString, this.dictData::get));
+		return Result.ok("获取字典列表成功", data);
 	}
 
 	@Override
