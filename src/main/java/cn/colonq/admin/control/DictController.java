@@ -47,12 +47,6 @@ public class DictController {
 		return dictService.selectValue(info.key());
 	}
 
-	@PostMapping("/values")
-	@PermissionAnnotation(":query")
-	public Result values(@RequestBody Set<String> keys) {
-		return dictService.selectValue(keys);
-	}
-
 	@PutMapping("/add")
 	@PermissionAnnotation(":add")
 	@RecordLog(type = LogTypeEnum.ADD)

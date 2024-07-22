@@ -1,9 +1,9 @@
 package cn.colonq.admin.service.impl;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -30,10 +30,11 @@ public class DictServiceImpl implements IDictService {
 	public PageList<String> selectPage(final String key, final Long pageNum, final Long pageSize) {
 		final long start = pageSize * (pageNum - 1);
 		final Set<String> keySet = this.dictData.keys();
-		final List<String> data = keySet.stream()
-				.filter(item -> item.indexOf(key) != -1)
+		final Stream<String> stream = keySet.stream();
+		final List<String> data = stream.filter(item -> item.indexOf(key) != -1)
 				.sorted().skip(start).limit(pageSize)
 				.collect(Collectors.toList());
+		stream.close();
 		return new PageList<>(pageNum, pageSize, keySet.size(), data);
 	}
 
@@ -51,14 +52,6 @@ public class DictServiceImpl implements IDictService {
 			return returnValue == null ? defaultValue : returnValue;
 		}
 		return defaultValue;
-	}
-
-	@Override
-	public Result selectValue(final Set<String> keys) {
-		final Set<String> keySet = this.dictData.keys();
-		final Map<String, String> data = keySet.stream().filter(keys::contains).sorted()
-				.collect(Collectors.toMap(String::toString, this.dictData::get));
-		return Result.ok("获取字典列表成功", data);
 	}
 
 	@Override
@@ -84,7 +77,9 @@ public class DictServiceImpl implements IDictService {
 		if (keys == null || keys.size() == 0) {
 			throw new ServiceException("需删除的字典KEY不得为空");
 		}
-		final Object[] array = keys.stream().toArray();
+		final Stream<String> stream = keys.stream();
+		final Object[] array = stream.toArray();
+		stream.close();
 		final long row = this.dictData.delete(array);
 		if (row == 0) {
 			throw new ServiceException("删除字典值失败, row = " + row);

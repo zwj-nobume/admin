@@ -157,7 +157,7 @@ public class AspectConfig {
 			return;
 		}
 		final Stream<String> stream = keys.stream();
-		Object[] arr = stream.filter(key -> key.startsWith(cacheStart)).toArray();
+		final Object[] arr = stream.filter(key -> key.startsWith(cacheStart)).toArray();
 		if (arr.length != 0) {
 			cacheData.delete(arr);
 		}

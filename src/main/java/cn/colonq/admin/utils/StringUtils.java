@@ -95,6 +95,7 @@ public class StringUtils {
 	public boolean matches(final String uri, final Set<String> matches) {
 		final Stream<String> stream = matches.stream();
 		final List<String> matchesList = stream.collect(Collectors.toList());
+		stream.close();
 		return matches(uri, matchesList, 0);
 	}
 

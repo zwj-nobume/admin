@@ -74,7 +74,7 @@ public class BaseMapper<T> {
 		final StringBuilder builder = stringBuilderPool.getItem();
 		builder.setLength(0);
 		builder.append("SELECT ");
-		Stream<Field> fieldStream = Arrays.asList(cls.getDeclaredFields()).stream();
+		final Stream<Field> fieldStream = Arrays.asList(cls.getDeclaredFields()).stream();
 		fieldStream.map(Field::getName).map(str -> str + ',').map(stringUtils::humpToLine).forEach(builder::append);
 		fieldStream.close();
 		builder.deleteCharAt(builder.length() - 1);
@@ -85,10 +85,10 @@ public class BaseMapper<T> {
 		builder.append(" = '");
 		builder.append(indexValue);
 		builder.append('\'');
-		String sql = builder.toString();
+		final String sql = builder.toString();
 		stringBuilderPool.putItem(builder);
-		Stream<? extends T> stream = jdbcClient.sql(sql).query(cls).stream();
-		Optional<? extends T> first = stream.findFirst();
+		final Stream<? extends T> stream = jdbcClient.sql(sql).query(cls).stream();
+		final Optional<? extends T> first = stream.findFirst();
 		stream.close();
 		if (first.isPresent()) {
 			return first.get();
@@ -116,7 +116,7 @@ public class BaseMapper<T> {
 
 		stream = Arrays.asList(cls.getDeclaredFields()).stream();
 		stream.forEach(field -> {
-			TableField anno = field.getAnnotation(TableField.class);
+			final TableField anno = field.getAnnotation(TableField.class);
 			if (anno != null && !anno.select()) {
 				return;
 			}
@@ -140,7 +140,7 @@ public class BaseMapper<T> {
 				builder.append(" AND ");
 				final String fieldName = stringUtils.humpToLine(field.getName());
 				builder.append(fieldName);
-				TableField tableField = field.getAnnotation(TableField.class);
+				final TableField tableField = field.getAnnotation(TableField.class);
 				if (tableField == null || CompEnum.EQ == tableField.comp()) {
 					if ("NULL".equals(valueStr)) {
 						builder.append(" IS NULL");
@@ -206,7 +206,7 @@ public class BaseMapper<T> {
 		builder.append(" (");
 
 		Arrays.asList(cls.getDeclaredFields()).forEach(field -> {
-			TableField anno = field.getAnnotation(TableField.class);
+			final TableField anno = field.getAnnotation(TableField.class);
 			if (anno != null && !anno.isInsert()) {
 				return;
 			}
@@ -217,11 +217,11 @@ public class BaseMapper<T> {
 		builder.deleteCharAt(builder.length() - 1);
 		builder.append(") VALUES (");
 		Arrays.asList(cls.getDeclaredFields()).forEach(field -> {
-			TableField anno = field.getAnnotation(TableField.class);
+			final TableField anno = field.getAnnotation(TableField.class);
 			if (anno != null && !anno.isInsert()) {
 				return;
 			}
-			boolean canAccess = field.canAccess(param);
+			final boolean canAccess = field.canAccess(param);
 			field.setAccessible(true);
 			String valueStr = null;
 			try {
@@ -415,7 +415,7 @@ public class BaseMapper<T> {
 			final Class<?>[] parameterTypes = new Class<?>[fields.length];
 			final Object[] initargs = new Object[fields.length];
 			for (int i = 0; i < fields.length; i++) {
-				Field field = fields[i];
+				final Field field = fields[i];
 				parameterTypes[i] = field.getType();
 				final TableField anno = field.getAnnotation(TableField.class);
 				if (anno != null && !anno.select()) {
