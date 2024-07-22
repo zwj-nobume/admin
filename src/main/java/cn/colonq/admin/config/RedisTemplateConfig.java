@@ -10,8 +10,8 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 public class RedisTemplateConfig {
 
 	@Bean(name = "redisTemplate")
-	public RedisTemplate<String, Object> redisTemplate(LettuceConnectionFactory lettuceConnectionFactory) {
-		RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+	public RedisTemplate<String, Object> redisTemplate(final LettuceConnectionFactory lettuceConnectionFactory) {
+		final RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
 		redisTemplate.setConnectionFactory(lettuceConnectionFactory);
 		// 设置key序列化方式string，RedisSerializer.string() 等价于 new StringRedisSerializer()
 		redisTemplate.setKeySerializer(RedisSerializer.string());

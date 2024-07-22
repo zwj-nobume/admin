@@ -33,14 +33,14 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfo, UserMapper> imple
 
 	@Override
 	public Result login(final UserInfo info) {
-		boolean chk = super.tmapper.checkPwd(info.userName(), info.password());
+		final boolean chk = super.tmapper.checkPwd(info.userName(), info.password());
 		if (chk) {
 			final UserInfo user = super.tmapper.selectOne("user_name", info.userName());
 			final UserInfo payload = new UserInfo(user.userId(), user.userName(), null,
 					user.email(), null, user.createName(), user.createTime());
-			Header header = new Header("HmacSHA256", "JWT");
+			final Header header = new Header("HmacSHA256", "JWT");
 			try {
-				String token = super.jwt.generateToken(header, payload, user.salt());
+				final String token = super.jwt.generateToken(header, payload, user.salt());
 				if (token == null) {
 					throw new ServiceException("生成Token异常");
 				}
@@ -70,7 +70,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfo, UserMapper> imple
 	}
 
 	@Override
-	public Result selectRoleIds(String userId) {
+	public Result selectRoleIds(final String userId) {
 		final Set<String> roleIds = super.tmapper.selectLinkById("user_role_link", "user_id", "role_id", userId);
 		return Result.ok(roleIds);
 	}
@@ -96,8 +96,8 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfo, UserMapper> imple
 	public boolean checkPermission(String permission) {
 		final UserInfo payload = jwt.getPayload();
 		final List<String> permissionList = super.tmapper.selectUserPermission(payload.userId());
-		Stream<String> stream = permissionList.stream();
-		Optional<String> first = stream.filter(perm -> perm.equals(permission)).findFirst();
+		final Stream<String> stream = permissionList.stream();
+		final Optional<String> first = stream.filter(perm -> perm.equals(permission)).findFirst();
 		stream.close();
 		return first.isPresent();
 	}

@@ -16,5 +16,5 @@ public interface IUserService extends IBaseService<UserInfo> {
 
 	Result linkUserRole(final LinkInfo info);
 
-	boolean checkPermission(String value);
+	boolean checkPermission(final String value);
 }

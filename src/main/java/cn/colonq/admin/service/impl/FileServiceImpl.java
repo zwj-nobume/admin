@@ -25,7 +25,7 @@ import cn.colonq.admin.utils.StringUtils;
 public class FileServiceImpl implements IFileService {
 	private final StringUtils stringUtils;
 
-	public FileServiceImpl(StringUtils stringUtils) {
+	public FileServiceImpl(final StringUtils stringUtils) {
 		this.stringUtils = stringUtils;
 	}
 
@@ -34,8 +34,8 @@ public class FileServiceImpl implements IFileService {
 		final File[] files = path.toFile().listFiles();
 		final List<FileMsg> data = new ArrayList<>(files.length);
 		for (final File file : files) {
-			String fileName = file.getName();
-			boolean isHide = file.isHidden();
+			final String fileName = file.getName();
+			final boolean isHide = file.isHidden();
 			if (file.isDirectory()) {
 				data.add(new FileMsg(fileName, 0, true, isHide));
 			} else {

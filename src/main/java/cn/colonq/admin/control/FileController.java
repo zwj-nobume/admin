@@ -82,7 +82,7 @@ public class FileController {
 	@PutMapping("/upload/**")
 	@PermissionAnnotation(":add")
 	@RecordLog(type = LogTypeEnum.ADD)
-	public Result upload(MultipartFile[] files) throws UnsupportedEncodingException {
+	public Result upload(final MultipartFile[] files) throws UnsupportedEncodingException {
 		final String basePath = dictService.selectValue(this.basePathKey, defaultPath, String.class);
 		final String targetUrl = getTargetUrl();
 		Path path = Path.of(basePath, targetUrl);
@@ -95,7 +95,7 @@ public class FileController {
 	@PostMapping("/move/**")
 	@PermissionAnnotation(":edit")
 	@RecordLog(type = LogTypeEnum.EDIT)
-	public Result move(@RequestBody Set<String> fromUrlSet) throws UnsupportedEncodingException {
+	public Result move(@RequestBody final Set<String> fromUrlSet) throws UnsupportedEncodingException {
 		final String basePath = dictService.selectValue(this.basePathKey, defaultPath, String.class);
 		final String targetUrl = getTargetUrl();
 		return this.fileService.moveFile(basePath, fromUrlSet, targetUrl);
@@ -117,11 +117,11 @@ public class FileController {
 	@DeleteMapping("/deleteBatch/**")
 	@PermissionAnnotation(":delete")
 	@RecordLog(type = LogTypeEnum.DELETE)
-	public Result deleteBatch(@RequestBody Set<String> names) throws UnsupportedEncodingException {
+	public Result deleteBatch(@RequestBody final Set<String> names) throws UnsupportedEncodingException {
 		final String basePath = dictService.selectValue(this.basePathKey, defaultPath, String.class);
 		final String targetUrl = getTargetUrl();
-		for (String name : names) {
-			Path path = Path.of(basePath, targetUrl, name);
+		for (final String name : names) {
+			final Path path = Path.of(basePath, targetUrl, name);
 			if (!Files.exists(path)) {
 				throw new ServiceException("文件路径不存在");
 			}

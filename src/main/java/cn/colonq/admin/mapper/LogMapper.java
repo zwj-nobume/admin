@@ -12,10 +12,10 @@ import cn.colonq.admin.utils.ThreadSafePool;
 public class LogMapper extends BaseMapper<LogInfo> {
 
 	public LogMapper(
-			DateUtils dateUtils,
-			JdbcClient jdbcClient,
-			StringUtils stringUtils,
-			ThreadSafePool<StringBuilder> stringBuilderPool) {
+			final DateUtils dateUtils,
+			final JdbcClient jdbcClient,
+			final StringUtils stringUtils,
+			final ThreadSafePool<StringBuilder> stringBuilderPool) {
 		super(LogInfo.class, dateUtils, jdbcClient, stringUtils, stringBuilderPool);
 	}
 

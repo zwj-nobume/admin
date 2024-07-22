@@ -25,24 +25,24 @@ public class UserMapper extends BaseMapper<UserInfo> {
 	}
 
 	public boolean checkPwd(final String userName, final String password) {
-		String sql = "SELECT password = PASSWORD(:password) FROM user_info WHERE user_name = :userName";
-		Stream<Boolean> stream = super.jdbcClient.sql(sql)
+		final String sql = "SELECT password = PASSWORD(:password) FROM user_info WHERE user_name = :userName";
+		final Stream<Boolean> stream = super.jdbcClient.sql(sql)
 				.param("password", password)
 				.param("userName", userName)
 				.query(Boolean.class).stream();
-		Optional<Boolean> first = stream.findFirst();
+		final Optional<Boolean> first = stream.findFirst();
 		stream.close();
 		return first.isPresent() && first.get();
 	}
 
 	public int regenerateSalt(final String userId) {
-		String sql = "UPDATE user_info SET salt = SHA2(MD5(RAND()),256) WHERE user_id = '" + userId + '\'';
+		final String sql = "UPDATE user_info SET salt = SHA2(MD5(RAND()),256) WHERE user_id = '" + userId + '\'';
 		return super.jdbcClient.sql(sql).update();
 	}
 
 	@CacheAble(cacheName = "UserMapper.selectUserPermission")
-	public List<String> selectUserPermission(String userId) {
-		String sql = """
+	public List<String> selectUserPermission(final String userId) {
+		final String sql = """
 				SELECT mi.permission FROM menu_info mi
 				LEFT JOIN role_menu_link rml ON rml.menu_id = mi.menu_id
 				LEFT JOIN user_role_link url ON url.role_id = rml.role_id

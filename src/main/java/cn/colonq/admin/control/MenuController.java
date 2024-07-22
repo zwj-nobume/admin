@@ -27,14 +27,14 @@ public class MenuController extends BaseController<MenuInfo, IMenuService> {
 
 	@GetMapping("/roleIds")
 	@PermissionAnnotation(":query")
-	public Result roleIds(@NotBlank(message = "菜单ID不得为空") String menuId) {
+	public Result roleIds(@NotBlank(message = "菜单ID不得为空") final String menuId) {
 		return super.tService.selectRoleIds(menuId);
 	}
 
 	@PostMapping("/link")
 	@PermissionAnnotation(":edit")
 	@RecordLog(type = LogTypeEnum.EDIT)
-	public Result link(@Valid @RequestBody LinkInfo info) {
+	public Result link(@Valid @RequestBody final LinkInfo info) {
 		return super.tService.linkRoleMenu(info);
 	}
 }

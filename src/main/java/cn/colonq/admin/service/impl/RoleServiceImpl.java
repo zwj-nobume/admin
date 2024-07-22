@@ -26,13 +26,13 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleInfo, RoleMapper> imple
 	}
 
 	@Override
-	public Result selectUserIds(String roleId) {
+	public Result selectUserIds(final String roleId) {
 		final Set<String> userIds = super.tmapper.selectLinkById("user_role_link", "role_id", "user_id", roleId);
 		return Result.ok(userIds);
 	}
 
 	@Override
-	public Result selectMenuIds(String roleId) {
+	public Result selectMenuIds(final String roleId) {
 		final Set<String> menuIds = super.tmapper.selectLinkById("role_menu_link", "role_id", "menu_id", roleId);
 		return Result.ok(menuIds);
 	}
@@ -47,7 +47,7 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleInfo, RoleMapper> imple
 		if (count != info.ids().size()) {
 			throw new ServiceException("链接失败, ids数量不匹配, count = " + count);
 		}
-		int row = super.tmapper.link("user_role_link", "role_id", "user_id", info.id(), info.ids());
+		final int row = super.tmapper.link("user_role_link", "role_id", "user_id", info.id(), info.ids());
 		if (row != 0) {
 			return Result.ok("链接成功");
 		}
@@ -64,7 +64,7 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleInfo, RoleMapper> imple
 		if (count != info.ids().size()) {
 			throw new ServiceException("链接失败, ids数量不匹配, count = " + count);
 		}
-		int row = super.tmapper.link("role_menu_link", "role_id", "menu_id", info.id(), info.ids());
+		final int row = super.tmapper.link("role_menu_link", "role_id", "menu_id", info.id(), info.ids());
 		if (row != 0) {
 			return Result.ok("链接成功");
 		}

@@ -96,17 +96,17 @@ public class JWT {
 			return null;
 		}
 		mac.init(sks);
-		byte[] array = mac.doFinal((headerBase64 + '.' + payloadBase64).getBytes());
-		StringBuilder builder = stringBuilderPool.getItem();
+		final byte[] array = mac.doFinal((headerBase64 + '.' + payloadBase64).getBytes());
+		final StringBuilder builder = stringBuilderPool.getItem();
 		builder.setLength(0);
-		for (byte item : array) {
+		for (final byte item : array) {
 			builder.append(Integer.toHexString((item & 0xFF) | 0x100).substring(1, 3));
 		}
 		base64EncoderPool.putItem(encoder);
 		if ("HmacSHA256".equals(header.alg())) {
 			hmacSHA256Pool.putItem(mac);
 		}
-		String signature = encoder.encodeToString(builder.toString().getBytes());
+		final String signature = encoder.encodeToString(builder.toString().getBytes());
 		stringBuilderPool.putItem(builder);
 		return headerBase64 + '.' + payloadBase64 + '.' + signature;
 	}

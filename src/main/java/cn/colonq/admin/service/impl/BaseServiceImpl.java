@@ -33,8 +33,8 @@ public class BaseServiceImpl<T, Tmapper extends BaseMapper<T>> implements IBaseS
 	}
 
 	@Override
-	public T selectOne(T param) {
-		PageList<T> page = tmapper.selectPage(param, 1, 1, "create_time");
+	public T selectOne(final T param) {
+		final PageList<T> page = tmapper.selectPage(param, 1, 1, "create_time");
 		if (page != null && page.data() != null && page.data().size() >= 1) {
 			return page.data().get(0);
 		}
@@ -55,7 +55,7 @@ public class BaseServiceImpl<T, Tmapper extends BaseMapper<T>> implements IBaseS
 			final Field field = fields[i];
 			parameterTypes[i] = field.getType();
 			if ("createName".equals(field.getName())) {
-				UserInfo payload = jwt.getPayload();
+				final UserInfo payload = jwt.getPayload();
 				if (payload != null)
 					initargs[i] = payload.userName();
 				else
@@ -91,7 +91,7 @@ public class BaseServiceImpl<T, Tmapper extends BaseMapper<T>> implements IBaseS
 				| NoSuchMethodException | SecurityException e) {
 			throw new ServiceException(e.getMessage());
 		}
-		int row = tmapper.insert(insertParam);
+		final int row = tmapper.insert(insertParam);
 		if (row == 1) {
 			return Result.ok("新增成功");
 		}
@@ -120,7 +120,7 @@ public class BaseServiceImpl<T, Tmapper extends BaseMapper<T>> implements IBaseS
 			}
 			field.setAccessible(canAccess);
 		}
-		int row = tmapper.update(param);
+		final int row = tmapper.update(param);
 		if (row == 1) {
 			return Result.ok("修改成功");
 		}
@@ -129,10 +129,10 @@ public class BaseServiceImpl<T, Tmapper extends BaseMapper<T>> implements IBaseS
 
 	@Override
 	public Result delete(final Set<String> ids) {
-		int row = tmapper.delete(ids);
+		final int row = tmapper.delete(ids);
 		if (row > 0) {
 			final Table anno = cls.getAnnotation(Table.class);
-			for (Field field : cls.getDeclaredFields()) {
+			for (final Field field : cls.getDeclaredFields()) {
 				final TableField fieldAnno = field.getAnnotation(TableField.class);
 				if (fieldAnno != null && fieldAnno.parent()) {
 					final String tableName = anno.tableName();
@@ -141,7 +141,7 @@ public class BaseServiceImpl<T, Tmapper extends BaseMapper<T>> implements IBaseS
 				}
 			}
 			final String idName = anno.idName();
-			for (String tableName : anno.linkTable()) {
+			for (final String tableName : anno.linkTable()) {
 				tmapper.deleteLink(tableName, idName, ids);
 			}
 			return Result.ok("删除成功");

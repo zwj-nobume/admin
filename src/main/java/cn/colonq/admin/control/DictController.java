@@ -29,21 +29,21 @@ import cn.colonq.admin.service.IDictService;
 public class DictController {
 	private final IDictService dictService;
 
-	public DictController(IDictService dictService) {
+	public DictController(final IDictService dictService) {
 		this.dictService = dictService;
 	}
 
 	@GetMapping("/page")
 	@PermissionAnnotation(":query")
-	public PageList<String> page(@RequestParam(name = "key", defaultValue = "") String key,
-			@RequestParam(name = "pageNum", defaultValue = "1") Long pageNum,
-			@RequestParam(name = "pageSize", defaultValue = "20") Long pageSize) {
+	public PageList<String> page(@RequestParam(name = "key", defaultValue = "") final String key,
+			@RequestParam(name = "pageNum", defaultValue = "1") final Long pageNum,
+			@RequestParam(name = "pageSize", defaultValue = "20") final Long pageSize) {
 		return dictService.selectPage(key, pageNum, pageSize);
 	}
 
 	@GetMapping("/value")
 	@PermissionAnnotation(":query")
-	public Result value(@Validated(value = { Query.class }) DictInfo info) {
+	public Result value(@Validated(value = { Query.class }) final DictInfo info) {
 		return dictService.selectValue(info.key());
 	}
 
@@ -56,21 +56,21 @@ public class DictController {
 	@PutMapping("/add")
 	@PermissionAnnotation(":add")
 	@RecordLog(type = LogTypeEnum.ADD)
-	public Result insert(@Validated(value = { Insert.class }) @RequestBody DictInfo info) {
+	public Result insert(@Validated(value = { Insert.class }) @RequestBody final DictInfo info) {
 		return dictService.insertDictInfo(info);
 	}
 
 	@PostMapping("/edit")
 	@PermissionAnnotation(":edit")
 	@RecordLog(type = LogTypeEnum.EDIT)
-	public Result update(@Validated(value = { Update.class }) @RequestBody DictInfo info) {
+	public Result update(@Validated(value = { Update.class }) @RequestBody final DictInfo info) {
 		return dictService.updateDictInfo(info);
 	}
 
 	@DeleteMapping("/delete")
 	@PermissionAnnotation(":delete")
 	@RecordLog(type = LogTypeEnum.DELETE)
-	public Result delete(@RequestBody Set<String> keys) {
+	public Result delete(@RequestBody final Set<String> keys) {
 		return dictService.deleteDictInfo(keys);
 	}
 }

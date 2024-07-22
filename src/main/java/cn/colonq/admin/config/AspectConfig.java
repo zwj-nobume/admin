@@ -67,7 +67,7 @@ public class AspectConfig {
 	}
 
 	@Before("permissionPointcut()")
-	public void check(JoinPoint point) {
+	public void check(final JoinPoint point) {
 		final MethodSignature methodSignature = (MethodSignature) point.getSignature();
 		final Method method = methodSignature.getMethod();
 		if (method == null) {
@@ -86,7 +86,7 @@ public class AspectConfig {
 	}
 
 	@Around("cacheAblePointcut()")
-	public Object cacheAble(ProceedingJoinPoint point) throws Throwable {
+	public Object cacheAble(final ProceedingJoinPoint point) throws Throwable {
 		final MethodSignature methodSignature = (MethodSignature) point.getSignature();
 		final Method method = methodSignature.getMethod();
 		if (method == null) {
@@ -105,7 +105,7 @@ public class AspectConfig {
 	}
 
 	@After("cacheEvictPointcut()")
-	public void cacheEvict(JoinPoint point) {
+	public void cacheEvict(final JoinPoint point) {
 		final MethodSignature methodSignature = (MethodSignature) point.getSignature();
 		final Method method = methodSignature.getMethod();
 		if (method == null) {
@@ -113,12 +113,12 @@ public class AspectConfig {
 		}
 		final String defaultControlName = point.getTarget().getClass().getName();
 		final CacheEvict cacheEvict = method.getAnnotation(CacheEvict.class);
-		for (String cacheName : cacheEvict.cacheName()) {
+		for (final String cacheName : cacheEvict.cacheName()) {
 			if (cacheEvict.controlNames().length == 0) {
 				final String cacheStart = defaultControlName + ':' + cacheName;
 				deleteCache(cacheStart);
 			} else {
-				for (String controlName : cacheEvict.controlNames()) {
+				for (final String controlName : cacheEvict.controlNames()) {
 					final String cacheStart = controlName + ':' + cacheName;
 					deleteCache(cacheStart);
 				}
@@ -127,7 +127,7 @@ public class AspectConfig {
 	}
 
 	@After("recordLogPointcut()")
-	public void recordLog(JoinPoint point) {
+	public void recordLog(final JoinPoint point) {
 		final MethodSignature methodSignature = (MethodSignature) point.getSignature();
 		final Method method = methodSignature.getMethod();
 		if (method == null) {

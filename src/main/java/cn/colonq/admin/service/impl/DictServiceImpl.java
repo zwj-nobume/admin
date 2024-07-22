@@ -27,10 +27,10 @@ public class DictServiceImpl implements IDictService {
 	}
 
 	@Override
-	public PageList<String> selectPage(String key, Long pageNum, Long pageSize) {
+	public PageList<String> selectPage(final String key, final Long pageNum, final Long pageSize) {
 		final long start = pageSize * (pageNum - 1);
 		final Set<String> keySet = this.dictData.keys();
-		List<String> data = keySet.stream()
+		final List<String> data = keySet.stream()
 				.filter(item -> item.indexOf(key) != -1)
 				.sorted().skip(start).limit(pageSize)
 				.collect(Collectors.toList());
@@ -38,13 +38,13 @@ public class DictServiceImpl implements IDictService {
 	}
 
 	@Override
-	public Result selectValue(String key) {
+	public Result selectValue(final String key) {
 		final String value = this.dictData.get(key);
 		return Result.ok("获取字典值成功", value);
 	}
 
 	@Override
-	public <T> T selectValue(String key, T defaultValue, Class<? extends T> cls) {
+	public <T> T selectValue(final String key, final T defaultValue, final Class<? extends T> cls) {
 		final String value = this.dictData.get(key);
 		if (!stringUtils.isEmpty(value)) {
 			final T returnValue = stringUtils.redisValueToObject(value, cls);
@@ -54,7 +54,7 @@ public class DictServiceImpl implements IDictService {
 	}
 
 	@Override
-	public Result selectValue(Set<String> keys) {
+	public Result selectValue(final Set<String> keys) {
 		final Set<String> keySet = this.dictData.keys();
 		final Map<String, String> data = keySet.stream().filter(keys::contains).sorted()
 				.collect(Collectors.toMap(String::toString, this.dictData::get));
@@ -62,7 +62,7 @@ public class DictServiceImpl implements IDictService {
 	}
 
 	@Override
-	public Result insertDictInfo(DictInfo info) {
+	public Result insertDictInfo(final DictInfo info) {
 		if (this.dictData.hasKey(info.key())) {
 			throw new ServiceException("字典值已存在");
 		}
@@ -71,7 +71,7 @@ public class DictServiceImpl implements IDictService {
 	}
 
 	@Override
-	public Result updateDictInfo(DictInfo info) {
+	public Result updateDictInfo(final DictInfo info) {
 		if (!this.dictData.hasKey(info.key())) {
 			throw new ServiceException("字典KEY不存在");
 		}
@@ -80,7 +80,7 @@ public class DictServiceImpl implements IDictService {
 	}
 
 	@Override
-	public Result deleteDictInfo(Set<String> keys) {
+	public Result deleteDictInfo(final Set<String> keys) {
 		if (keys == null || keys.size() == 0) {
 			throw new ServiceException("需删除的字典KEY不得为空");
 		}

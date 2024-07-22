@@ -312,12 +312,12 @@ public class BaseMapper<T> {
 		builder.append("UPDATE ");
 		builder.append(tableName);
 		builder.append(" SET ");
-		for (Field field : cls.getDeclaredFields()) {
-			TableField anno = field.getAnnotation(TableField.class);
+		for (final Field field : cls.getDeclaredFields()) {
+			final TableField anno = field.getAnnotation(TableField.class);
 			if (anno != null && !anno.isUpdate()) {
 				continue;
 			}
-			boolean canAccess = field.canAccess(param);
+			final boolean canAccess = field.canAccess(param);
 			field.setAccessible(true);
 			String valueStr = null;
 			try {
@@ -393,12 +393,12 @@ public class BaseMapper<T> {
 		return defaultDelete(tableName, idName, ids);
 	}
 
-	private String getTableName(Class<?> clst) {
+	private String getTableName(final Class<?> clst) {
 		final Table anno = clst.getAnnotation(Table.class);
 		return anno.tableName();
 	}
 
-	private String getIdName(Class<?> clst) {
+	private String getIdName(final Class<?> clst) {
 		final Table anno = clst.getAnnotation(Table.class);
 		return anno.idName();
 	}
@@ -417,7 +417,7 @@ public class BaseMapper<T> {
 			for (int i = 0; i < fields.length; i++) {
 				Field field = fields[i];
 				parameterTypes[i] = field.getType();
-				TableField anno = field.getAnnotation(TableField.class);
+				final TableField anno = field.getAnnotation(TableField.class);
 				if (anno != null && !anno.select()) {
 					initargs[i] = null;
 					continue;

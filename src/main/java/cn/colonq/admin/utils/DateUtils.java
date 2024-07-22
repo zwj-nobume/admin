@@ -15,7 +15,7 @@ public class DateUtils {
 	private final ThreadSafePool<Calendar> calendarPool;
 	private final SimpleDateFormat sdf;
 
-	public DateUtils(ThreadSafePool<Calendar> calendarPool) {
+	public DateUtils(final ThreadSafePool<Calendar> calendarPool) {
 		this.calendarPool = calendarPool;
 		this.sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		this.sdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));

@@ -27,27 +27,27 @@ public class RoleController extends BaseController<RoleInfo, IRoleService> {
 
 	@GetMapping("/userIds")
 	@PermissionAnnotation(":query")
-	public Result userIds(@NotBlank(message = "角色ID不得为空") String roleId) {
+	public Result userIds(@NotBlank(message = "角色ID不得为空") final String roleId) {
 		return super.tService.selectUserIds(roleId);
 	}
 
 	@GetMapping("/menuIds")
 	@PermissionAnnotation(":query")
-	public Result menuIds(@NotBlank(message = "角色ID不得为空") String roleId) {
+	public Result menuIds(@NotBlank(message = "角色ID不得为空") final String roleId) {
 		return super.tService.selectMenuIds(roleId);
 	}
 
 	@PostMapping("/linkUR")
 	@PermissionAnnotation(":edit")
 	@RecordLog(type = LogTypeEnum.EDIT)
-	public Result linkUR(@Valid @RequestBody LinkInfo info) {
+	public Result linkUR(@Valid @RequestBody final LinkInfo info) {
 		return super.tService.linkUserRole(info);
 	}
 
 	@PostMapping("/linkRM")
 	@PermissionAnnotation(":edit")
 	@RecordLog(type = LogTypeEnum.EDIT)
-	public Result linkRM(@Valid @RequestBody LinkInfo info) {
+	public Result linkRM(@Valid @RequestBody final LinkInfo info) {
 		return super.tService.linkRoleMenu(info);
 	}
 }

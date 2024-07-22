@@ -25,7 +25,7 @@ public class MenuServiceImpl extends BaseServiceImpl<MenuInfo, MenuMapper> imple
 	}
 
 	@Override
-	public Result selectRoleIds(String menuId) {
+	public Result selectRoleIds(final String menuId) {
 		final Set<String> roleIds = super.tmapper.selectLinkById("role_menu_link", "menu_id", "role_id", menuId);
 		return Result.ok(roleIds);
 	}
@@ -40,7 +40,7 @@ public class MenuServiceImpl extends BaseServiceImpl<MenuInfo, MenuMapper> imple
 		if (count != info.ids().size()) {
 			throw new ServiceException("链接失败, ids数量不匹配, count = " + count);
 		}
-		int row = super.tmapper.link("role_menu_link", "menu_id", "role_id", info.id(), info.ids());
+		final int row = super.tmapper.link("role_menu_link", "menu_id", "role_id", info.id(), info.ids());
 		if (row != 0) {
 			return Result.ok("链接成功");
 		}

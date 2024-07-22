@@ -42,13 +42,13 @@ public class GlobalExceptionHandler {
 	}
 
 	@ExceptionHandler(NoResourceFoundException.class)
-	public void handleNoResourceFound(NoResourceFoundException e, HttpServletResponse res) {
+	public void handleNoResourceFound(final NoResourceFoundException e, final HttpServletResponse res) {
 		insertErrorLog(e, null);
 		sendError(Result.notFound(), res);
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public void handleValidated(MethodArgumentNotValidException e, HttpServletResponse res) {
+	public void handleValidated(final MethodArgumentNotValidException e, final HttpServletResponse res) {
 		final String message = e.getMessage();
 		final String shortMessage = message.substring(message.lastIndexOf("default message"), message.length() - 2);
 		insertErrorLog(e, shortMessage);
@@ -56,43 +56,45 @@ public class GlobalExceptionHandler {
 	}
 
 	@ExceptionHandler(DuplicateKeyException.class)
-	public void handleDuplicateKey(DuplicateKeyException e, HttpServletResponse res) {
+	public void handleDuplicateKey(final DuplicateKeyException e, final HttpServletResponse res) {
 		insertErrorLog(e, null);
 		sendError(Result.error("数据唯一值重复错误"), res);
 	}
 
 	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-	public void handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException e,
-			HttpServletResponse res) {
+	public void handleHttpRequestMethodNotSupported(
+			final HttpRequestMethodNotSupportedException e,
+			final HttpServletResponse res) {
 		insertErrorLog(e, null);
 		sendError(Result.error("请求类型错误, GET、PUT、POST、DELETE"), res);
 	}
 
 	@ExceptionHandler(ServiceException.class)
-	public void handleServiceError(ServiceException e, HttpServletResponse res) {
+	public void handleServiceError(final ServiceException e, final HttpServletResponse res) {
 		insertErrorLog(e, null);
 		sendError(Result.error(e), res);
 	}
 
 	@ExceptionHandler(HttpMessageNotReadableException.class)
-	public void handleHttpMessageNotReadable(HttpMessageNotReadableException e, HttpServletResponse res) {
+	public void handleHttpMessageNotReadable(final HttpMessageNotReadableException e, final HttpServletResponse res) {
 		insertErrorLog(e, null);
 		sendError(Result.error("无法解析请求Body"), res);
 	}
 
 	@ExceptionHandler(UnsupportedEncodingException.class)
-	public void handleUnsupportedEncodingException(UnsupportedEncodingException e, HttpServletResponse res) {
+	public void handleUnsupportedEncodingException(final UnsupportedEncodingException e,
+			final HttpServletResponse res) {
 		insertErrorLog(e, null);
 		sendError(Result.error("URL Decoder 解码 URL 错误"), res);
 	}
 
 	@ExceptionHandler(Throwable.class)
-	public void handleThrowable(Throwable e, HttpServletResponse res) {
+	public void handleThrowable(final Throwable e, final HttpServletResponse res) {
 		insertErrorLog(e, null);
 		sendError(Result.error(e), res);
 	}
 
-	private void sendError(Result result, HttpServletResponse res) {
+	private void sendError(final Result result, final HttpServletResponse res) {
 		res.setStatus(result.status());
 		res.setHeader("Access-Control-Allow-Origin", "*");
 		res.setHeader("Cache-Control", "no-cache");
@@ -108,7 +110,7 @@ public class GlobalExceptionHandler {
 		}
 	}
 
-	private void insertErrorLog(Throwable e, String message) {
+	private void insertErrorLog(final Throwable e, final String message) {
 		StackTraceElement stackTrace = e.getStackTrace()[0];
 		final String nowDateFormat = dateUtils.format(dateUtils.getNowDate());
 		final String controlName = stackTrace.getClassName();

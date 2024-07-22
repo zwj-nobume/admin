@@ -8,17 +8,17 @@ import cn.colonq.admin.entity.Result;
 
 public interface IDictService {
 
-	PageList<String> selectPage(String key, Long pageNum, Long pageSize);
+	PageList<String> selectPage(final String key, final Long pageNum, final Long pageSize);
 
-	Result selectValue(String key);
+	Result selectValue(final String key);
 
-	<T> T selectValue(String key, T defaultValue, Class<? extends T> cls);
+	<T> T selectValue(final String key, final T defaultValue, final Class<? extends T> cls);
 
-    Result selectValue(Set<String> keys);
+	Result selectValue(final Set<String> keys);
 
-	Result insertDictInfo(DictInfo info);
+	Result insertDictInfo(final DictInfo info);
 
-	Result updateDictInfo(DictInfo info);
+	Result updateDictInfo(final DictInfo info);
 
-	Result deleteDictInfo(Set<String> keys);
+	Result deleteDictInfo(final Set<String> keys);
 }

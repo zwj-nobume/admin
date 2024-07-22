@@ -31,13 +31,13 @@ public class StringUtils {
 		this.dateUtils = dateUtils;
 	}
 
-	public boolean isEmpty(Object value) {
+	public boolean isEmpty(final Object value) {
 		return value == null || "".equals(value);
 	}
 
-	public <T> T redisValueToObject(String redisString, Class<? extends T> cls) {
+	public <T> T redisValueToObject(final String redisString, final Class<? extends T> cls) {
 		if (!isEmpty(redisString)) {
-			String[] split = redisString.split(":", 2);
+			final String[] split = redisString.split(":", 2);
 			if (split.length == 2) {
 				final String type = split[0];
 				final String value = split[1];
@@ -66,7 +66,7 @@ public class StringUtils {
 		return jsonString;
 	}
 
-	public <T> T jsonToObj(String jsonString, Class<? extends T> cls) {
+	public <T> T jsonToObj(final String jsonString, final Class<? extends T> cls) {
 		final ObjectMapper mapper = objectMapperPool.getItem();
 		T value = null;
 		try {
@@ -78,7 +78,7 @@ public class StringUtils {
 		return value;
 	}
 
-	public String humpToLine(String str) {
+	public String humpToLine(final String str) {
 		final StringBuilder builder = stringBuilderPool.getItem();
 		builder.setLength(0);
 		final Matcher matcher = humpPattern.matcher(str);
@@ -92,17 +92,17 @@ public class StringUtils {
 		return value;
 	}
 
-	public boolean matches(String uri, Set<String> matches) {
-		Stream<String> stream = matches.stream();
-		List<String> matchesList = stream.collect(Collectors.toList());
+	public boolean matches(final String uri, final Set<String> matches) {
+		final Stream<String> stream = matches.stream();
+		final List<String> matchesList = stream.collect(Collectors.toList());
 		return matches(uri, matchesList, 0);
 	}
 
-	public boolean matches(String uri, List<String> matches) {
+	public boolean matches(final String uri, final List<String> matches) {
 		return matches(uri, matches, 0);
 	}
 
-	public boolean matches(String uri, List<String> matches, int i) {
+	public boolean matches(final String uri, final List<String> matches, final int i) {
 		if (matches == null || matches.size() == i) {
 			return false;
 		}
@@ -110,7 +110,7 @@ public class StringUtils {
 		return uri.matches(matchStr) || matches(uri, matches, i + 1);
 	}
 
-	public String objToString(Object value) {
+	public String objToString(final Object value) {
 		if (value == null) {
 			return null;
 		}

@@ -29,7 +29,7 @@ public class UserController extends BaseController<UserInfo, IUserService> {
 
 	@PostMapping("/login")
 	@RecordLog(type = LogTypeEnum.LOGIN)
-	public Result login(@Validated(value = { Login.class }) @RequestBody UserInfo info) {
+	public Result login(@Validated(value = { Login.class }) @RequestBody final UserInfo info) {
 		return super.tService.login(info);
 	}
 
@@ -56,14 +56,14 @@ public class UserController extends BaseController<UserInfo, IUserService> {
 
 	@GetMapping("/roleIds")
 	@PermissionAnnotation(":query")
-	public Result roleIds(@NotBlank(message = "用户ID不得为空") String userId) {
+	public Result roleIds(@NotBlank(message = "用户ID不得为空") final String userId) {
 		return super.tService.selectRoleIds(userId);
 	}
 
 	@PostMapping("/link")
 	@PermissionAnnotation(":edit")
 	@RecordLog(type = LogTypeEnum.EDIT)
-	public Result link(@Valid @RequestBody LinkInfo info) {
+	public Result link(@Valid @RequestBody final LinkInfo info) {
 		return super.tService.linkUserRole(info);
 	}
 }

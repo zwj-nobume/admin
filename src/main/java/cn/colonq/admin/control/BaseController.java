@@ -29,31 +29,31 @@ public class BaseController<T, TService extends IBaseService<T>> {
 
 	@GetMapping("/page")
 	@PermissionAnnotation(":query")
-	protected PageList<T> page(@Validated(value = { Query.class }) T param,
-			@RequestParam(name = "pageNum", defaultValue = "1") Long pageNum,
-			@RequestParam(name = "pageSize", defaultValue = "20") Long pageSize,
-			@RequestParam(name = "sortFlag", defaultValue = "create_time") String sortFlag) {
+	protected PageList<T> page(@Validated(value = { Query.class }) final T param,
+			@RequestParam(name = "pageNum", defaultValue = "1") final Long pageNum,
+			@RequestParam(name = "pageSize", defaultValue = "20") final Long pageSize,
+			@RequestParam(name = "sortFlag", defaultValue = "create_time") final String sortFlag) {
 		return tService.selectPage(param, pageNum, pageSize, sortFlag);
 	}
 
 	@PutMapping("/add")
 	@PermissionAnnotation(":add")
 	@RecordLog(type = LogTypeEnum.ADD)
-	protected Result insert(@Validated(value = { Insert.class }) @RequestBody T param) {
+	protected Result insert(@Validated(value = { Insert.class }) @RequestBody final T param) {
 		return tService.insert(param);
 	}
 
 	@PostMapping("/edit")
 	@PermissionAnnotation(":edit")
 	@RecordLog(type = LogTypeEnum.EDIT)
-	protected Result update(@Validated(value = { Update.class }) @RequestBody T param) {
+	protected Result update(@Validated(value = { Update.class }) @RequestBody final T param) {
 		return tService.update(param);
 	}
 
 	@DeleteMapping("/delete")
 	@PermissionAnnotation(":delete")
 	@RecordLog(type = LogTypeEnum.DELETE)
-	protected Result delete(@RequestBody Set<String> ids) {
+	protected Result delete(@RequestBody final Set<String> ids) {
 		return tService.delete(ids);
 	}
 }

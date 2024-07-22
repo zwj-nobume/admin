@@ -55,7 +55,7 @@ public class TokenFilter implements Filter {
 			throws IOException, ServletException {
 		final HttpServletRequest request = (HttpServletRequest) req;
 		final HttpServletResponse response = (HttpServletResponse) res;
-		String uri = request.getRequestURI();
+		final String uri = request.getRequestURI();
 		if (!stringUtils.matches(uri, this.openPath)) {
 			Header header = jwt.getHeader();
 			ServiceException err;
