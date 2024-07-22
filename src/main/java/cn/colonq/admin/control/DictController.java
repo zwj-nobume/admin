@@ -64,7 +64,7 @@ public class DictController {
 	@DeleteMapping("/delete")
 	@PermissionAnnotation(":delete")
 	@RecordLog(type = LogTypeEnum.DELETE)
-	protected Result delete(@RequestBody Set<String> keys) {
+	public Result delete(@RequestBody Set<String> keys) {
 		return dictService.deleteDictInfo(keys);
 	}
 }
