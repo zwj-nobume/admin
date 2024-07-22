@@ -114,13 +114,15 @@ public class GlobalExceptionHandler {
 		final String controlName = stackTrace.getClassName();
 		final String methodName = stackTrace.getMethodName();
 		final LogTypeEnum logType = LogTypeEnum.ERROR;
+		final String errMessage = message == null ? e.getMessage().replaceAll("'", "\\\\'")
+				: message.replaceAll("'", "\\\\'");
 		final String logIntro = String.format("%s -- Controller: %s; Method: %s; LogType: %s; ErrMessage: %s",
-				nowDateFormat, controlName, methodName, logType.toString(), message == null ? e.getMessage() : message);
+				nowDateFormat, controlName, methodName, logType.toString(), errMessage);
 		swriter.getBuffer().setLength(0);
 		e.printStackTrace(pwriter);
 		pwriter.flush();
 		swriter.flush();
-		final String logData = swriter.toString();
+		final String logData = swriter.toString().replaceAll("'", "\\\\'");
 		final LogInfo logInfo = new LogInfo(null, logType, null, logIntro, logData, null, null);
 		logService.insert(logInfo);
 	}
