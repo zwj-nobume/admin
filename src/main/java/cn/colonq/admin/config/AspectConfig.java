@@ -1,5 +1,7 @@
 package cn.colonq.admin.config;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Set;
@@ -21,7 +23,9 @@ import cn.colonq.admin.anno.CacheAble;
 import cn.colonq.admin.anno.CacheEvict;
 import cn.colonq.admin.anno.PermissionAnnotation;
 import cn.colonq.admin.anno.RecordLog;
+import cn.colonq.admin.anno.TableField;
 import cn.colonq.admin.entity.LogInfo;
+import cn.colonq.admin.entity.UserInfo;
 import cn.colonq.admin.enumcfg.LogTypeEnum;
 import cn.colonq.admin.service.ILogService;
 import cn.colonq.admin.service.IUserService;
@@ -133,17 +137,59 @@ public class AspectConfig {
 		if (method == null) {
 			throw new ServiceException("RecordLog methodSignature.getMethod null");
 		}
+		final Object[] args = point.getArgs();
+		final Object[] apiArgs = new Object[args.length];
+		for (int i = 0; i < args.length; i++) {
+			final Object arg = args[i];
+			if (arg instanceof UserInfo) {
+				final Object apiArg = getFilterArg(arg);
+				apiArgs[i] = apiArg;
+			} else
+				apiArgs[i] = args[i];
+		}
 		final RecordLog recordLog = method.getAnnotation(RecordLog.class);
 		final String nowDateFormat = dateUtils.format(dateUtils.getNowDate());
 		final String controlName = point.getTarget().getClass().getName();
 		final String methodName = method.getName();
 		final LogTypeEnum logType = recordLog.type();
 		final String apiParams = LogTypeEnum.LOGIN.equals(logType) ? null
-				: stringUtils.toJsonString(point.getArgs()).replaceAll("\\\\", "\\\\\\\\");
+				: stringUtils.toJsonString(apiArgs).replaceAll("\\\\", "\\\\\\\\");
 		final String logIntro = String.format("%s -- Controller: %s; Method: %s; LogType: %s;", nowDateFormat,
 				controlName, methodName, logType.toString());
 		final LogInfo logInfo = new LogInfo(null, logType, apiParams, logIntro, null, null, null);
 		logService.insert(logInfo);
+	}
+
+	private Object getFilterArg(final Object arg) {
+		final Class<? extends Object> cls = arg.getClass();
+		final Field[] fields = cls.getDeclaredFields();
+		final Class<?>[] parameterTypes = new Class<?>[fields.length];
+		final Object[] initargs = new Object[fields.length];
+		for (int i = 0; i < fields.length; i++) {
+			final Field field = fields[i];
+			parameterTypes[i] = field.getType();
+			final TableField anno = field.getAnnotation(TableField.class);
+			if (anno != null && !anno.select()) {
+				initargs[i] = null;
+				continue;
+			}
+			final boolean canAccess = field.canAccess(arg);
+			field.setAccessible(true);
+			Object value = null;
+			try {
+				value = field.get(arg);
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+				throw new ServiceException(e.getMessage());
+			}
+			initargs[i] = value;
+			field.setAccessible(canAccess);
+		}
+		try {
+			return cls.getDeclaredConstructor(parameterTypes).newInstance(initargs);
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+				| NoSuchMethodException | SecurityException e) {
+			throw new ServiceException(e.getMessage());
+		}
 	}
 
 	/**
