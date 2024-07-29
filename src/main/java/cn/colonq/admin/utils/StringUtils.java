@@ -1,5 +1,8 @@
 package cn.colonq.admin.utils;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -76,6 +79,26 @@ public class StringUtils {
 		}
 		objectMapperPool.putItem(mapper);
 		return value;
+	}
+
+	public String encodeURI(final String str) {
+		if (isEmpty(str))
+			return null;
+		try {
+			return URLEncoder.encode(str, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new ServiceException("StringUtils encodeURI 加密失败");
+		}
+	}
+
+	public String decodeURI(final String str) {
+		if (isEmpty(str))
+			return null;
+		try {
+			return URLDecoder.decode(str, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new ServiceException("StringUtils decodeURI 解密失败");
+		}
 	}
 
 	public String humpToLine(final String str) {

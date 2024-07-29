@@ -77,7 +77,7 @@ public class JWT {
 		final Decoder decoder = base64DecoderPool.getItem();
 		final String payloadStr = new String(decoder.decode(payloadBase64));
 		base64DecoderPool.putItem(decoder);
-		return stringUtils.jsonToObj(payloadStr, UserInfo.class);
+		return stringUtils.jsonToObj(stringUtils.decodeURI(payloadStr), UserInfo.class);
 	}
 
 	public String generateToken(final Header header, final UserInfo payload, final String salt)
@@ -86,7 +86,7 @@ public class JWT {
 		final String payloadJson = stringUtils.toJsonString(payload);
 		final Encoder encoder = base64EncoderPool.getItem();
 		final String headerBase64 = encoder.encodeToString(headerJson.getBytes());
-		final String payloadBase64 = encoder.encodeToString(payloadJson.getBytes());
+		final String payloadBase64 = encoder.encodeToString(stringUtils.encodeURI(payloadJson).getBytes());
 		SecretKeySpec sks = new SecretKeySpec(salt.getBytes(), header.alg());
 		Mac mac = null;
 		if ("HmacSHA256".equals(header.alg())) {
