@@ -57,7 +57,6 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(DuplicateKeyException.class)
 	public void handleDuplicateKey(final DuplicateKeyException e, final HttpServletResponse res) {
-		insertErrorLog(e, null);
 		sendError(Result.error("数据唯一值重复错误"), res);
 	}
 
@@ -65,26 +64,22 @@ public class GlobalExceptionHandler {
 	public void handleHttpRequestMethodNotSupported(
 			final HttpRequestMethodNotSupportedException e,
 			final HttpServletResponse res) {
-		insertErrorLog(e, null);
 		sendError(Result.error("请求类型错误, GET、PUT、POST、DELETE"), res);
 	}
 
 	@ExceptionHandler(ServiceException.class)
 	public void handleServiceError(final ServiceException e, final HttpServletResponse res) {
-		// insertErrorLog(e, null);
 		sendError(Result.error(e), res);
 	}
 
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	public void handleHttpMessageNotReadable(final HttpMessageNotReadableException e, final HttpServletResponse res) {
-		insertErrorLog(e, null);
 		sendError(Result.error("无法解析请求Body"), res);
 	}
 
 	@ExceptionHandler(UnsupportedEncodingException.class)
 	public void handleUnsupportedEncodingException(final UnsupportedEncodingException e,
 			final HttpServletResponse res) {
-		insertErrorLog(e, null);
 		sendError(Result.error("URL Decoder 解码 URL 错误"), res);
 	}
 
