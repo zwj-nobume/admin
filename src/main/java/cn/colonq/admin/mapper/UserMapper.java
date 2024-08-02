@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Component;
 
 import cn.colonq.admin.anno.CacheAble;
+import cn.colonq.admin.anno.CacheEvict;
 import cn.colonq.admin.entity.UserInfo;
 import cn.colonq.admin.utils.DateUtils;
 import cn.colonq.admin.utils.StringUtils;
@@ -35,6 +36,7 @@ public class UserMapper extends BaseMapper<UserInfo> {
 		return first.isPresent() && first.get();
 	}
 
+	@CacheEvict(cacheName = { "BaseMapper.selectOne" })
 	public int regenerateSalt(final String userId) {
 		final String sql = "UPDATE user_info SET salt = SHA2(MD5(RAND()),256) WHERE user_id = '" + userId + '\'';
 		return super.jdbcClient.sql(sql).update();
