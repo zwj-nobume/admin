@@ -42,7 +42,7 @@ public record UserInfo(
 				Insert.class, Login.class
 		}) @Size(min = 6, max = 20, message = "用户密码长度必须在6到20之间", groups = {
 				Insert.class, Login.class
-		}) @TableField(select = false, insert = TableFuncEnum.PWD, isUpdate = false) String password,
+		}) @TableField(select = false, insert = TableFuncEnum.PWD, update = TableFuncEnum.PWD, isUpdate = false) String password,
 
 		@Null(message = "登录时无需邮箱", groups = {
 				Login.class

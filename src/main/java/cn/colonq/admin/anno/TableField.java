@@ -22,5 +22,7 @@ public @interface TableField {
 
     boolean isUpdate() default true;
 
+    TableFuncEnum update() default TableFuncEnum.DEF;
+
     CompEnum comp() default CompEnum.EQ;
 }

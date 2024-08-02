@@ -343,11 +343,11 @@ public class BaseMapper<T> {
 			}
 			builder.append(fieldName);
 			// 修改语句，数据库函数定制
-			if (anno == null || anno.insert() == TableFuncEnum.DEF) {
+			if (anno == null || anno.update() == TableFuncEnum.DEF) {
 				builder.append("='");
 				builder.append(valueStr);
 				builder.append("',");
-			} else if (anno.insert() == TableFuncEnum.PWD) {
+			} else if (anno.update() == TableFuncEnum.PWD) {
 				builder.append("=");
 				builder.append("PASSWORD('");
 				builder.append(valueStr);
