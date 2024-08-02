@@ -71,7 +71,7 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(ServiceException.class)
 	public void handleServiceError(final ServiceException e, final HttpServletResponse res) {
-		insertErrorLog(e, null);
+		// insertErrorLog(e, null);
 		sendError(Result.error(e), res);
 	}
 
