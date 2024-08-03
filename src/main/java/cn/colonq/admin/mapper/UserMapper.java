@@ -52,4 +52,12 @@ public class UserMapper extends BaseMapper<UserInfo> {
 					""";
 		return super.jdbcClient.sql(sql).param("userId", userId).query(String.class).list();
 	}
+
+	@CacheEvict(cacheName = { "BaseMapper.selectOne" })
+	public int updatePassword(final String userId, final String newPassword) {
+		final String sql = "UPDATE user_info SET password = PASSWORD(:newPassword) WHERE user_id = :userId";
+		return super.jdbcClient.sql(sql)
+				.param("newPassword", newPassword)
+				.param("userId", userId).update();
+	}
 }

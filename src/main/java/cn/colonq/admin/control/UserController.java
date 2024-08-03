@@ -11,9 +11,11 @@ import cn.colonq.admin.anno.PermissionAnnotation;
 import cn.colonq.admin.anno.RecordLog;
 import cn.colonq.admin.entity.LinkInfo;
 import cn.colonq.admin.entity.Result;
+import cn.colonq.admin.entity.UserEditPwd;
 import cn.colonq.admin.entity.UserInfo;
 import cn.colonq.admin.enumcfg.LogTypeEnum;
 import cn.colonq.admin.group.Login;
+import cn.colonq.admin.group.Update;
 import cn.colonq.admin.service.IUserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -58,6 +60,11 @@ public class UserController extends BaseController<UserInfo, IUserService> {
 	@PermissionAnnotation(":query")
 	public Result roleIds(@NotBlank(message = "用户ID不得为空") final String userId) {
 		return super.tService.selectRoleIds(userId);
+	}
+
+	@PostMapping("/editpwd")
+	public Result editpwd(@Validated(value = { Update.class }) @RequestBody final UserEditPwd info) {
+		return super.tService.editpwd(info);
 	}
 
 	@PostMapping("/link")

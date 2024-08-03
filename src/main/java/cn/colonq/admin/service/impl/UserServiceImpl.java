@@ -15,6 +15,7 @@ import cn.colonq.admin.entity.Header;
 import cn.colonq.admin.entity.LinkInfo;
 import cn.colonq.admin.entity.Result;
 import cn.colonq.admin.entity.RoleInfo;
+import cn.colonq.admin.entity.UserEditPwd;
 import cn.colonq.admin.entity.UserInfo;
 import cn.colonq.admin.mapper.UserMapper;
 import cn.colonq.admin.service.IUserService;
@@ -73,6 +74,22 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfo, UserMapper> imple
 	public Result selectRoleIds(final String userId) {
 		final Set<String> roleIds = super.tmapper.selectLinkById("user_role_link", "user_id", "role_id", userId);
 		return Result.ok(roleIds);
+	}
+
+	@Override
+	public Result editpwd(UserEditPwd info) {
+		if (!info.chkPassword().equals(info.newPassword()))
+			throw new ServiceException("两次新密码不一致");
+		final UserInfo payload = super.jwt.getPayload();
+		final boolean chk = super.tmapper.checkPwd(payload.userName(), info.oldPassword());
+		if (chk) {
+			final int row = super.tmapper.updatePassword(payload.userId(), info.newPassword());
+			if (row != 0) {
+				return Result.ok("修改密码成功");
+			}
+			throw new ServiceException("修改密码失败, row = " + row);
+		}
+		throw new ServiceException("原密码错误");
 	}
 
 	@Override
