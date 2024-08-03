@@ -152,7 +152,7 @@ public class AspectConfig {
 		final String controlName = point.getTarget().getClass().getName();
 		final String methodName = method.getName();
 		final LogTypeEnum logType = recordLog.type();
-		final String apiParams = LogTypeEnum.LOGIN.equals(logType) ? null
+		final String apiParams = LogTypeEnum.LOGIN.equals(logType) || LogTypeEnum.UPLOAD.equals(logType) ? null
 				: stringUtils.toJsonString(apiArgs).replaceAll("\\\\", "\\\\\\\\");
 		final String logIntro = String.format("%s -- Controller: %s; Method: %s; LogType: %s;", nowDateFormat,
 				controlName, methodName, logType.toString());

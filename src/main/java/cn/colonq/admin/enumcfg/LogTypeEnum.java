@@ -25,6 +25,12 @@ public enum LogTypeEnum {
             return "delete";
         }
     },
+    UPLOAD {
+        @Override
+        public String toString() {
+            return "upload";
+        }
+    },
     DOWNLOAD {
         @Override
         public String toString() {

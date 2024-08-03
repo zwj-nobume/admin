@@ -81,7 +81,7 @@ public class FileController {
 
 	@PutMapping("/upload/**")
 	@PermissionAnnotation(":add")
-	@RecordLog(type = LogTypeEnum.ADD)
+	@RecordLog(type = LogTypeEnum.UPLOAD)
 	public Result upload(final MultipartFile[] files) throws UnsupportedEncodingException {
 		final String basePath = dictService.selectValue(this.basePathKey, defaultPath, String.class);
 		final String targetUrl = getTargetUrl();
