@@ -57,30 +57,41 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(DuplicateKeyException.class)
 	public void handleDuplicateKey(final DuplicateKeyException e, final HttpServletResponse res) {
-		sendError(Result.error("数据唯一值重复错误"), res);
+		final String errMsg = "数据唯一值重复错误";
+		insertErrorLog(e, errMsg);
+		sendError(Result.error(errMsg), res);
 	}
 
 	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
 	public void handleHttpRequestMethodNotSupported(
 			final HttpRequestMethodNotSupportedException e,
 			final HttpServletResponse res) {
-		sendError(Result.error("请求类型错误, GET、PUT、POST、DELETE"), res);
+		final String errMsg = "请求类型错误, GET、PUT、POST、DELETE";
+		insertErrorLog(e, errMsg);
+		sendError(Result.error(errMsg), res);
 	}
 
 	@ExceptionHandler(ServiceException.class)
 	public void handleServiceError(final ServiceException e, final HttpServletResponse res) {
+		insertErrorLog(e, null);
 		sendError(Result.error(e), res);
 	}
 
 	@ExceptionHandler(HttpMessageNotReadableException.class)
-	public void handleHttpMessageNotReadable(final HttpMessageNotReadableException e, final HttpServletResponse res) {
-		sendError(Result.error("无法解析请求Body"), res);
+	public void handleHttpMessageNotReadable(
+			final HttpMessageNotReadableException e,
+			final HttpServletResponse res) {
+		final String errMsg = "无法解析请求Body";
+		insertErrorLog(e, errMsg);
+		sendError(Result.error(errMsg), res);
 	}
 
 	@ExceptionHandler(UnsupportedEncodingException.class)
 	public void handleUnsupportedEncodingException(final UnsupportedEncodingException e,
 			final HttpServletResponse res) {
-		sendError(Result.error("URL Decoder 解码 URL 错误"), res);
+		final String errMsg = "URL Decoder 解码 URL 错误";
+		insertErrorLog(e, errMsg);
+		sendError(Result.error(errMsg), res);
 	}
 
 	@ExceptionHandler(Throwable.class)
